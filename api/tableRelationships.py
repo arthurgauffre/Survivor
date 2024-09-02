@@ -1,7 +1,7 @@
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from .database import Base
+from database import Base
 
 
 class User(Base):
@@ -15,6 +15,17 @@ class Roles(Base):
     name = Column(String, index=True)
 
 
+class payementHistory(Base):
+    __tablename__ = "payementHistory"
+    id = Column(Integer, primary_key=True, index=True)
+
+
+class events(Base):
+    __tablename__ = "events"
+    id = Column(Integer, primary_key=True, index=True)
+    location_x = Column(String, index=True)
+
+
 # Relation table between users and roles
 class user_roles(Base):
     __tablename__ = "user_roles"
@@ -23,4 +34,3 @@ class user_roles(Base):
     role_id = Column(Integer, ForeignKey("roles.id"))
     user = relationship("User", back_populates="user_roles")
     role = relationship("Roles", back_populates="user_roles")
-
