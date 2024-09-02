@@ -1,27 +1,26 @@
-# new install
 
-## install dependency
+# Install Front
 
 ```sh
-composer install
 npm install
 ```
 
-## setup environment
+# Install Back
 
 ```sh
-cp .env.example .env
+python -m venv .venv
 ```
 
-## generate app key
+# Run Front App
 
 ```sh
-php artisan key:generate
+npm run next-dev
 ```
 
-## create database
+# Run Back App
 
 ```sh
+<<<<<<< HEAD
 php artisan migrate
 ```
 
@@ -41,4 +40,8 @@ APP_DEBUG=false
 
 ```sh
 docker compose up --build -d
+=======
+source .venv/bin/activate
+npm run fastapi-dev
+>>>>>>> 277ea114f9101b41577374389ff8f13bf10328c1
 ```
