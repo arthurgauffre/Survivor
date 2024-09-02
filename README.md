@@ -1,12 +1,25 @@
 
-# Install
+# Install Front
 
 ```sh
 npm install
 ```
 
-# Run App
+# Install Back
 
 ```sh
-npm run dev
+python -m venv .venv
+```
+
+# Run Front App
+
+```sh
+npm run next-dev
+```
+
+# Run Back App
+
+```sh
+source .venv/bin/activate
+npm run fastapi-dev
 ```
