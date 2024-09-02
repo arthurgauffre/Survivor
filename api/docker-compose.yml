@@ -1,37 +1,37 @@
 version: '3.8'
 
 services:
-  mysql:
-    image: mysql:8.0
-    container_name: mysql_db
+  postgres:
+    image: postgres:13
+    container_name: postgres_db
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: mydatabase
-      MYSQL_USER: admin
-      MYSQL_PASSWORD: password
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
     ports:
-      - "3306:3306"
+      - "5432:5432"
     volumes:
-      - mysql_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     networks:
-      - mysql_network
+      - postgres_network
 
-  phpmyadmin:
-    image: phpmyadmin/phpmyadmin:latest
-    container_name: phpmyadmin
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
     environment:
-      PMA_HOST: mysql_db
-      MYSQL_ROOT_PASSWORD: password
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
     ports:
       - "8080:80"
     depends_on:
-      - mysql
+      - postgres
     networks:
-      - mysql_network
+      - postgres_network
 
 volumes:
-  mysql_data:
+  postgres_data:
 
 networks:
-  mysql_network:
+  postgres_network:
     driver: bridge

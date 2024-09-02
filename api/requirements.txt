@@ -3,3 +3,6 @@ uvicorn
 starlette
 pydantic
 sqlalchemy
+alembic
+# pymysql
+psycopg2-binary
