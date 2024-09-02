@@ -28,7 +28,7 @@ php artisan migrate
 ## for development
 
 ```sh
-artisan serve
+php artisan serve
 ```
 
 ## for production
