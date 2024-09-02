@@ -20,6 +20,12 @@ class payementHistory(Base):
     id = Column(Integer, primary_key=True, index=True)
 
 
+class events(Base):
+    __tablename__ = "events"
+    id = Column(Integer, primary_key=True, index=True)
+    location_x = Column(String, index=True)
+
+
 # Relation table between users and roles
 class user_roles(Base):
     __tablename__ = "user_roles"
