@@ -14,7 +14,6 @@ DB_PORT = os.getenv("DB_PORT")
 SQLALCHEMY_DATABASE_URL = "mysql://"
 f"{DB_USERNAME}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}/db"
 
-print(f"value of the string : {SQLALCHEMY_DATABASE_URL}")
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
