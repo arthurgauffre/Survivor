@@ -25,6 +25,12 @@ php artisan key:generate
 php artisan migrate
 ```
 
+## for development
+
+```sh
+artisan serve
+```
+
 ## for production
 
 ```sh
