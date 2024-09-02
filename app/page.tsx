@@ -1,9 +1,9 @@
-import Image from "next/image";
-import Link from "next/link";
-
+import SpawnHeadband from "./SpawnHeadband";
 
 export default function Home() {
   return (
-    "test"
+    <SpawnHeadband title="Dashboard">
+      <h1>Home</h1>
+    </SpawnHeadband>
   );
 }
