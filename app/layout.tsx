@@ -12,6 +12,8 @@ import {
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { Children } from "react";
 
+import rootProfil from "./profil/page";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -33,7 +35,7 @@ const navigation = [
   { name: "Reports", href: "#", current: false },
 ];
 const userNavigation = [
-  { name: "Your Profile", href: "#" },
+  { name: "Your Profile", href: "profil" },
   { name: "Settings", href: "#" },
   { name: "Sign out", href: "#" },
 ];
@@ -212,7 +214,7 @@ export default function RootLayout({
           </header>
           <main>
             <div className="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
-              {/* Your content */}
+              {children}
             </div>
           </main>
         </div>
