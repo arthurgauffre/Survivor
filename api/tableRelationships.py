@@ -3,27 +3,36 @@ from sqlalchemy.orm import relationship
 
 from database import Base
 
+# List of all tables in the database in relation with the API Soul connection
 
+# User table
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
 
-
+# Roles table
 class Roles(Base):
     __tablename__ = "roles"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
 
-
-class payementHistory(Base):
+# PayementHistory table
+class PayementHistory(Base):
     __tablename__ = "payementHistory"
     id = Column(Integer, primary_key=True, index=True)
 
-
-class events(Base):
+# Event table
+class Events(Base):
     __tablename__ = "events"
     id = Column(Integer, primary_key=True, index=True)
+    name = Column(String, index=True)
+    date = Column(String, index=True)
+    max_participants = Column(Integer, index=True)
     location_x = Column(String, index=True)
+    location_y = Column(String, index=True)
+    type = Column(String, index=True)
+    employee_id = Column(Integer, ForeignKey("employees.id"))
+    location_name = Column(String, index=True)
 
 
 # Employee table
@@ -78,3 +87,9 @@ class user_roles(Base):
     role_id = Column(Integer, ForeignKey("roles.id"))
     user = relationship("User", back_populates="user_roles")
     role = relationship("Roles", back_populates="user_roles")
+# Tips table
+class Tips(Base):
+    __tablename__ = "tips"
+    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    title = Column(String, index=True)
+    tip = Column(String, index=True)
