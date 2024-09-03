@@ -1,15 +1,10 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, Mapped
 
 from database import Base
 
 # List of all tables in the database in relation with the API Soul connection
 
-
-# User table
-class User(Base):
-    __tablename__ = "users"
-    id = Column(Integer, primary_key=True, index=True)
 
 
 # Roles table
@@ -17,12 +12,21 @@ class Roles(Base):
     __tablename__ = "roles"
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    user_role = relationship("User", back_populates="roles")
 
+# User table
+class User(Base):
+    __tablename__ = "users"
+    id = Column(Integer, primary_key=True, index=True)
+    roles = relationship("Roles", back_populates="user_role")
 
 # PayementHistory table
 class PayementHistory(Base):
     __tablename__ = "payementHistory"
     id = Column(Integer, primary_key=True, index=True)
+    customer_id = Column(Integer, ForeignKey("customers.id"))
+    customer = relationship("Customer", back_populates="payementHistory")
 
 
 # Event table
@@ -51,7 +55,7 @@ class Employee(Base):
     gender = Column(String, index=True)
     work = Column(String, index=True)
     profilePictureLink = Column(String, index=True)
-    role = relationship("Roles", back_populates="employees")
+    # role = relationship("roles", back_populates="employees")
 
 
 # Customer table
@@ -68,8 +72,8 @@ class Customer(Base):
     astrologicalSign = Column(String, index=True)
     clothesType = Column(String, index=True)
     payementHistory = relationship(
-        "payementHistory",
-        back_populates="customers")
+        "PayementHistory",
+        back_populates="customer")
 
 
 # Encounters table
@@ -81,17 +85,6 @@ class Encounter(Base):
     rating = Column(Integer, index=True)
     comment = Column(String, index=True)
     source = Column(String, index=True)
-
-
-# Relation table between users and roles
-class user_roles(Base):
-    __tablename__ = "user_roles"
-    id = Column(Integer, primary_key=True, index=True)
-    user_id = Column(Integer, ForeignKey("users.id"))
-    role_id = Column(Integer, ForeignKey("roles.id"))
-    user = relationship("User", back_populates="user_roles")
-    role = relationship("Roles", back_populates="user_roles")
-
 
 # Tips table
 class Tips(Base):
