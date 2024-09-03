@@ -3,7 +3,6 @@ from sqlalchemy.orm import Session
 from database import get_db
 from fetch.fetchingCustomer import fetchingAllCustomer, fetchingCustomerDetail
 from fetch.fetchingEmployee import getAllEmployees
-from fetch.fetchingCustomer import fetchingCustomersInfo
 
 from loginTokenRetriever import loginToken
 
