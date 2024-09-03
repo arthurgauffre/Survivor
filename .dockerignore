@@ -1,0 +1,11 @@
+.dockerignore
+Dockerfile
+docker-compose.yml
+
+
+.venv
+__pycache__
+
+
+.next
+node_modules

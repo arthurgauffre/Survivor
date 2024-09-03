@@ -1,0 +1,69 @@
+services:
+  nextjs:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: nextjs
+    ports:
+      - "3000:3000"
+    depends_on:
+      - fastapi
+    volumes:
+      - ./app:/app/app
+    networks:
+      - frontend-backend
+
+  fastapi:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: fastapi
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    volumes:
+      - ./api:/app/api
+    networks:
+      - frontend-backend
+      - backend-database
+
+  postgres:
+    image: postgres:13
+    container_name: postgres_db
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - backend-database
+      - database-monitoring
+
+  pgadmin:
+    image: elestio/pgadmin:latest
+    container_name: pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
+      PGADMIN_CONFIG_SERVER_MODE: "False"
+      PGADMIN_LISTEN_PORT: 8080
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    networks:
+      - database-monitoring
+    volumes:
+      - ./servers.json:/pgadmin4/servers.json
+
+volumes:
+  postgres_data:
+
+networks:
+  frontend-backend:
+  backend-database:
+  database-monitoring:
