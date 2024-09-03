@@ -1,10 +1,9 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy.orm import relationship
 
-from database import Base
+from database.database import Base
 
 # List of all tables in the database in relation with the API Soul connection
-
 
 
 # Roles table
@@ -15,16 +14,22 @@ class Roles(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     user_role = relationship("User", back_populates="roles")
 
+
 # User table
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     roles = relationship("Roles", back_populates="user_role")
 
+
 # PayementHistory table
 class PayementHistory(Base):
     __tablename__ = "payementHistory"
     id = Column(Integer, primary_key=True, index=True)
+    date = Column(String, index=True)
+    amount = Column(Integer, index=True)
+    comment = Column(String, index=True)
+    payment_method = Column(String, index=True)
     customer_id = Column(Integer, ForeignKey("customers.id"))
     customer = relationship("Customer", back_populates="payementHistory")
 
@@ -71,9 +76,8 @@ class Customer(Base):
     description = Column(String, index=True)
     astrologicalSign = Column(String, index=True)
     clothesType = Column(String, index=True)
-    payementHistory = relationship(
-        "PayementHistory",
-        back_populates="customer")
+    payementHistory = relationship("PayementHistory", back_populates="customer")
+    clothes = relationship("Clothes", back_populates="customer")
 
 
 # Encounters table
@@ -92,3 +96,11 @@ class Tips(Base):
     id = Column(Integer, primary_key=True, index=True, nullable=False)
     title = Column(String, index=True)
     tip = Column(String, index=True)
+
+# Clothes table
+class Clothes(Base):
+    __tablename__ = "clothes"
+    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    type = Column(String, index=True)
+    customer_id = Column(Integer, ForeignKey("customers.id"))
+    customer = relationship("Customer", back_populates="clothes")
