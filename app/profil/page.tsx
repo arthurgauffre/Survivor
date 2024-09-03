@@ -1,6 +1,6 @@
 /*
   This example requires some changes to your config:
-  
+
   ```
   // tailwind.config.js
   module.exports = {
@@ -13,9 +13,12 @@
   ```
 */
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
+import SpawnHeadband from '../SpawnHeadband'
+
 
 export default function ClientProfilPage() {
   return (
+    <SpawnHeadband title="Your Profile">
     <form>
       <div className="space-y-12">
         <div className="border-b border-gray-900/10 pb-12">
@@ -142,5 +145,6 @@ export default function ClientProfilPage() {
         </div>
       </div>
     </form>
+    </SpawnHeadband>
   )
 }
