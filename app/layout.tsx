@@ -29,10 +29,10 @@ const user = {
 };
 const navigation = [
   { name: "Dashboard", href: "/", current: true },
-  { name: "Team", href: "/team", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
-  { name: "Reports", href: "#", current: false },
+  { name: "Coaches", href: "/coaches", current: false },
+  { name: "Customers", href: "/customers", current: false },
+  { name: "Tips", href: "/tips", current: false },
+  { name: "Events", href: "/events", current: false },
 ];
 const userNavigation = [
   { name: "Your Profile", href: "profil" },
