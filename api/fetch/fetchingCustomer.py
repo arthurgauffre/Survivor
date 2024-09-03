@@ -11,7 +11,7 @@ TOKEN_API = os.getenv("TOKEN_API")
 AUTH_EMAIL = os.getenv("AUTH_EMAIL")
 AUTH_PASSWORD = os.getenv("AUTH_PASSWORD")
 
-def fetchingCustomersInfo(acccess_token, database):
+def fetchingAllCustomer(acccess_token, database):
     url = 'https://soul-connection.fr/api/customers'
 
     headers = {
@@ -25,7 +25,7 @@ def fetchingCustomersInfo(acccess_token, database):
 
     if response.status_code == 401:
         acccess_token = loginToken()
-        fetchingCustomersInfo(acccess_token)
+        fetchingAllCustomer(acccess_token)
 
     # Parse JSON response and create Customer instances
     customers_data = response.json()
@@ -37,7 +37,7 @@ def fetchingCustomersInfo(acccess_token, database):
             email=customer_data.get('email'),
             password=customer_data.get('password'),  # You should hash this before saving it
             name=customer_data.get('name'),
-            surname=customer_data.get('surname'),
+            surname=customer_data.get('surname'),   
             birthdate=customer_data.get('birthdate'),
             gender=customer_data.get('gender'),
             description=customer_data.get('description'),
@@ -47,9 +47,49 @@ def fetchingCustomersInfo(acccess_token, database):
         )
 
         # Add the new customer to the customers table
-        database.add(customer)
+        if not database.query(Customer).filter(Customer.id == customer.id).first():
+            database.add(customer)
 
     # Commit the session to save all changes
+    database.commit()
+
+    return response.json()
+
+def fetchingCustomerDetail(acccess_token, database):
+    headers = {
+        'accept': 'application/json',
+        'X-Group-Authorization': TOKEN_API,
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + acccess_token["access_token"],
+    }
+
+    for customerId in database.query(Customer).all():
+        url = f'https://soul-connection.fr/api/customers/{customerId.id}'
+        response = requests.get(url, json=None, headers=headers)
+        if response.status_code == 401:
+            acccess_token = loginToken()
+            fetchingCustomerDetail(acccess_token)
+        customer_data = response.json()
+        customer = database.query(Customer).filter(Customer.id == customerId.id).first()
+        customer.email = customer_data.get('email')
+        customer.password = customer_data.get('password')
+        customer.name = customer_data.get('name')
+        customer.surname = customer_data.get('surname')
+        customer.birthdate = customer_data.get('birth_date')
+        customer.gender = customer_data.get('gender')
+        customer.description = customer_data.get('description')
+        customer.astrologicalSign = customer_data.get('astrological_sign')
+
+        image_url = f'https://soul-connection.fr/api/customers/{customer.id}/image'
+        image_response = requests.get(image_url, headers=headers)
+        
+        if image_response.status_code == 401:
+            acccess_token = loginToken()
+            fetchingCustomerDetail(acccess_token)
+        image_path = f'images/customers/{customer.id}.jpg'
+        with open(image_path, 'wb') as image_file:
+            image_file.write(image_response.content)
+
     database.commit()
 
     return response.json()
