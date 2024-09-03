@@ -34,3 +34,17 @@ class user_roles(Base):
     role_id = Column(Integer, ForeignKey("roles.id"))
     user = relationship("User", back_populates="user_roles")
     role = relationship("Roles", back_populates="user_roles")
+
+# Employee table
+class Employee(Base):
+    __tablename__ = "employees"
+    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    email = Column(String, unique=True, index=True)
+    password = Column(String, index=True)
+    name = Column(String, index=True)
+    surname = Column(String, index=True)
+    birthdate = Column(String, index=True)
+    gender = Column(String, index=True)
+    work = Column(String, index=True)
+    profilePictureLink = Column(String, index=True)
+    role = relationship("Roles", back_populates="employees")
