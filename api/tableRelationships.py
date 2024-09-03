@@ -5,10 +5,12 @@ from database import Base
 
 # List of all tables in the database in relation with the API Soul connection
 
+
 # User table
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
+
 
 # Roles table
 class Roles(Base):
@@ -16,10 +18,12 @@ class Roles(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
 
+
 # PayementHistory table
 class PayementHistory(Base):
     __tablename__ = "payementHistory"
     id = Column(Integer, primary_key=True, index=True)
+
 
 # Event table
 class Events(Base):

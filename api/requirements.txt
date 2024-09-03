@@ -5,3 +5,5 @@ pydantic
 sqlalchemy
 alembic
 psycopg2-binary
+flake8
+pydantic
