@@ -48,3 +48,13 @@ class Employee(Base):
     work = Column(String, index=True)
     profilePictureLink = Column(String, index=True)
     role = relationship("Roles", back_populates="employees")
+
+# Encounters table
+class Encounter(Base):
+    __tablename__ = "encounters"
+    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    customer_id = Column(Integer, ForeignKey("customers.id"))
+    date  = Column(String, index=True)
+    rating = Column(Integer, index=True)
+    comment = Column(String, index=True)
+    source = Column(String, index=True)
