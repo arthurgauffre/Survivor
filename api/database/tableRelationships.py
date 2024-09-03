@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from api.database.database import Base
+from database.database import Base
 
 # List of all tables in the database in relation with the API Soul connection
 

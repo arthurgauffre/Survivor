@@ -3,7 +3,7 @@ import os
 from dotenv import load_dotenv
 
 from loginTokenRetriever import loginToken
-from api.database.tableRelationships import Customer
+from database.tableRelationships import Customer
 
 load_dotenv()
 
