@@ -11,6 +11,12 @@ npm install
 python -m venv .venv
 ```
 
+# Setup Environment
+
+```sh
+cp .env.example .env
+```
+
 # Run Front App
 
 ```sh
