@@ -134,7 +134,7 @@ export default function NavBar() {
                 href={item.href}
                 aria-current={item.current ? "page" : undefined}
                 className={classNames(
-                  item.current ? "text-blue-500" : "text-gray-500",
+                  item.current && "text-[#1267c5]",
                   "rounded-md px-3 py-2 text-sm font-medium"
                 )}
               >
