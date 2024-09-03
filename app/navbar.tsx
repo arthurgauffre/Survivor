@@ -18,8 +18,8 @@ import {
 } from "@headlessui/react";
 import {
   ArrowPathIcon,
-  BellIcon,
   Bars3Icon,
+  ChatBubbleLeftEllipsisIcon,
   ChartPieIcon,
   CursorArrowRaysIcon,
   FingerPrintIcon,
@@ -97,7 +97,11 @@ export default function NavBar() {
   const navigation = [
     { name: "Dashboard", href: "/", current: "/" === pathname },
     { name: "Coaches", href: "/coaches", current: "/coaches" === pathname },
-    { name: "Customers", href: "/customers", current: "/customers" === pathname },
+    {
+      name: "Customers",
+      href: "/customers",
+      current: "/customers" === pathname,
+    },
     { name: "Tips", href: "/tips", current: "/tips" === pathname },
     { name: "Events", href: "/events", current: "/events" === pathname },
   ];
@@ -105,23 +109,18 @@ export default function NavBar() {
     <header className="bg-white">
       <nav
         aria-label="Global"
-        className="mx-auto flex max-w-7xl items-center justify-between p-6 lg:px-8"
+        className="mx-auto flex items-center justify-between p-6 lg:px-8"
       >
         <div className="flex lg:flex-1">
-          <a href="#" className="-m-1.5 p-1.5">
-            <span className="sr-only">Your Company</span>
-            <img
-              alt=""
-              src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-              className="h-8 w-auto"
-            />
+          <a href="/" className="-m-1.5 p-1.5">
+            Soul Connection
           </a>
         </div>
         <div className="flex lg:hidden">
           <button
             type="button"
             onClick={() => setMobileMenuOpen(true)}
-            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700"
+            className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 "
           >
             <span className="sr-only">Open main menu</span>
             <Bars3Icon aria-hidden="true" className="h-6 w-6" />
@@ -148,11 +147,14 @@ export default function NavBar() {
           {/* NOTIFICATIONS */}
           <button
             type="button"
-            className="relative rounded-full p-1 text-gray-400 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+            className="relative rounded-full p-1 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
           >
             <span className="absolute -inset-1.5" />
             <span className="sr-only">View notifications</span>
-            <BellIcon aria-hidden="true" className="h-6 w-6" />
+            <ChatBubbleLeftEllipsisIcon
+              aria-hidden="true"
+              className="h-6 w-6"
+            />
           </button>
           {/* LANGUAGE */}
           <img alt="" src={user.language} className="h-8 w-8 rounded-full" />
@@ -197,12 +199,7 @@ export default function NavBar() {
         <DialogPanel className="fixed inset-y-0 right-0 z-10 w-full overflow-y-auto bg-white px-6 py-6 sm:max-w-sm sm:ring-1 sm:ring-gray-900/10">
           <div className="flex items-center justify-between">
             <a href="#" className="-m-1.5 p-1.5">
-              <span className="sr-only">Your Company</span>
-              <img
-                alt=""
-                src="https://tailwindui.com/img/logos/mark.svg?color=indigo&shade=600"
-                className="h-8 w-auto"
-              />
+              Soul Connection
             </a>
             <button
               type="button"
@@ -216,45 +213,15 @@ export default function NavBar() {
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
-                <Disclosure as="div" className="-mx-3">
-                  <DisclosureButton className="group flex w-full items-center justify-between rounded-lg py-2 pl-3 pr-3.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
-                    Product
-                    <ChevronDownIcon
-                      aria-hidden="true"
-                      className="h-5 w-5 flex-none group-data-[open]:rotate-180"
-                    />
-                  </DisclosureButton>
-                  <DisclosurePanel className="mt-2 space-y-2">
-                    {[...products, ...callsToAction].map((item) => (
-                      <DisclosureButton
-                        key={item.name}
-                        as="a"
-                        href={item.href}
-                        className="block rounded-lg py-2 pl-6 pr-3 text-sm font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                      >
-                        {item.name}
-                      </DisclosureButton>
-                    ))}
-                  </DisclosurePanel>
-                </Disclosure>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Features
-                </a>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Marketplace
-                </a>
-                <a
-                  href="#"
-                  className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                >
-                  Company
-                </a>
+                {navigation.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.href}
+                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
+                  >
+                    {item.name}
+                  </a>
+                ))}
               </div>
               <div className="py-6">
                 <a
@@ -263,6 +230,55 @@ export default function NavBar() {
                 >
                   Log in
                 </a>
+                <div className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
+                  <div className="flex items-center px-5">
+                    <div className="flex-shrink-0">
+                      <img
+                        alt=""
+                        src={user.imageUrl}
+                        className="h-10 w-10 rounded-full"
+                      />
+                    </div>
+                    <div className="ml-3">
+                      <div className="text-base font-medium leading-none text-white">
+                        {user.name}
+                      </div>
+                      <div className="text-sm font-medium leading-none">
+                        {user.email}
+                      </div>
+                    </div>
+                    {/* LANGUAGE */}
+                    <div className="ml-auto flex-none">
+                      <img
+                        alt=""
+                        src={user.language}
+                        className="h-8 w-8 rounded-full"
+                      />
+                      <button
+                        type="button"
+                        className="relative ml-auto flex-shrink-0 rounded-full p-1 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+                      >
+                        <span className="absolute -inset-1.5" />
+                        <span className="sr-only">View notifications</span>
+                        <ChatBubbleLeftEllipsisIcon
+                          aria-hidden="true"
+                          className="h-6 w-6"
+                        />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="mt-3 space-y-1 px-2">
+                    {userNavigation.map((item) => (
+                      <a
+                        key={item.name}
+                        href={item.href}
+                        className="block rounded-md px-3 py-2 text-base font-medium hover:bg-gray-700 hover:text-white"
+                      >
+                        {item.name}
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
