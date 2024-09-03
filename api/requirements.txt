@@ -1,7 +1,0 @@
-fastapi[standard]
-uvicorn
-starlette
-pydantic
-sqlalchemy
-alembic
-psycopg2-binary
