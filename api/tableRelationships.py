@@ -59,6 +59,17 @@ class Customer(Base):
         back_populates="customers")
 
 
+# Encounters table
+class Encounter(Base):
+    __tablename__ = "encounters"
+    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    customer_id = Column(Integer, ForeignKey("customers.id"))
+    date = Column(String, index=True)
+    rating = Column(Integer, index=True)
+    comment = Column(String, index=True)
+    source = Column(String, index=True)
+
+
 # Relation table between users and roles
 class user_roles(Base):
     __tablename__ = "user_roles"
