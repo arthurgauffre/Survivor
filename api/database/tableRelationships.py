@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
-from api.database.database import Base
+from database.database import Base
 
 # List of all tables in the database in relation with the API Soul connection
 
@@ -26,6 +26,10 @@ class User(Base):
 class PayementHistory(Base):
     __tablename__ = "payementHistory"
     id = Column(Integer, primary_key=True, index=True)
+    date = Column(String, index=True)
+    amount = Column(Integer, index=True)
+    comment = Column(String, index=True)
+    payment_method = Column(String, index=True)
     customer_id = Column(Integer, ForeignKey("customers.id"))
     customer = relationship("Customer", back_populates="payementHistory")
 
@@ -72,9 +76,7 @@ class Customer(Base):
     description = Column(String, index=True)
     astrologicalSign = Column(String, index=True)
     clothesType = Column(String, index=True)
-    payementHistory = relationship(
-        "PayementHistory",
-        back_populates="customer")
+    payementHistory = relationship("PayementHistory", back_populates="customer")
 
 
 # Encounters table
