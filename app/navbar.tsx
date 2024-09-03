@@ -112,8 +112,8 @@ export default function NavBar() {
         className="mx-auto flex items-center justify-between p-6 lg:px-8"
       >
         <div className="flex lg:flex-1">
-          <a href="/" className="-m-1.5 p-1.5">
-            Soul Connection
+          <a href="/" className="-m-1.5 p-1.5 text-2xl">
+            <h1 className="font-bold">Soul Connection</h1>
           </a>
         </div>
         <div className="flex lg:hidden">
@@ -135,7 +135,7 @@ export default function NavBar() {
                 aria-current={item.current ? "page" : undefined}
                 className={classNames(
                   item.current && "text-[#1267c5]",
-                  "rounded-md px-3 py-2 text-sm font-medium"
+                  "rounded-md px-3 py-2 text-sm font-bold"
                 )}
               >
                 {item.name}
