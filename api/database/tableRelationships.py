@@ -77,6 +77,7 @@ class Customer(Base):
     astrologicalSign = Column(String, index=True)
     clothesType = Column(String, index=True)
     payementHistory = relationship("PayementHistory", back_populates="customer")
+    clothes = relationship("Clothes", back_populates="customer")
 
 
 # Encounters table
@@ -95,3 +96,11 @@ class Tips(Base):
     id = Column(Integer, primary_key=True, index=True, nullable=False)
     title = Column(String, index=True)
     tip = Column(String, index=True)
+
+# Clothes table
+class Clothes(Base):
+    __tablename__ = "clothes"
+    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    type = Column(String, index=True)
+    customer_id = Column(Integer, ForeignKey("customers.id"))
+    customer = relationship("Customer", back_populates="clothes")
