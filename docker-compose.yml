@@ -1,0 +1,27 @@
+services:
+  nextjs:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: nextjs
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./app:/app/app
+    networks:
+      - soul
+
+  fastapi:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+      target: fastapi
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api:/app/api
+    networks:
+      - soul
+
+networks:
+  soul:
