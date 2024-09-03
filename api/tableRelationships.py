@@ -87,6 +87,8 @@ class user_roles(Base):
     role_id = Column(Integer, ForeignKey("roles.id"))
     user = relationship("User", back_populates="user_roles")
     role = relationship("Roles", back_populates="user_roles")
+
+
 # Tips table
 class Tips(Base):
     __tablename__ = "tips"
