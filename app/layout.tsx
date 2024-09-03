@@ -51,10 +51,9 @@ export default function RootLayout({
   const sticky: React.CSSProperties = { position: "sticky", top: "0" };
   return (
     <html lang="en">
-      <body className="{inter.className} text-gray-700">
-        <div className="min-h-screen bg-gray-300">
-
-          <NavBar />
+      <body className="{inter.className} text-[#334760]">
+        <div className="min-h-screen bg-[#f5f6fa]">
+          <NavBar/>
           {children}
         </div>
       </body>
