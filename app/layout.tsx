@@ -49,11 +49,12 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const sticky: React.CSSProperties = { position: "sticky", top: "0" };
   return (
     <html lang="en">
       <body className={inter.className}>
         <div className="min-h-screen bg-gray-300">
-          <Disclosure as="nav" className="bg-gray-800">
+          <Disclosure as="nav" className="bg-gray-800" style={sticky}>
             <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
               <div className="flex h-16 items-center justify-between">
                 <div className="flex items-center">
@@ -206,7 +207,6 @@ export default function RootLayout({
           </Disclosure>
 
           {children}
-
         </div>
       </body>
     </html>
