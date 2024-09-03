@@ -7,7 +7,7 @@ from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
-from tableRelationships import Base
+from api.database.tableRelationships import Base
 
 load_dotenv()
 

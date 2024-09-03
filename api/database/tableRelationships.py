@@ -1,10 +1,9 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship, Mapped
+from sqlalchemy.orm import relationship
 
-from database import Base
+from api.database.database import Base
 
 # List of all tables in the database in relation with the API Soul connection
-
 
 
 # Roles table
@@ -15,11 +14,13 @@ class Roles(Base):
     user_id = Column(Integer, ForeignKey("users.id"))
     user_role = relationship("User", back_populates="roles")
 
+
 # User table
 class User(Base):
     __tablename__ = "users"
     id = Column(Integer, primary_key=True, index=True)
     roles = relationship("Roles", back_populates="user_role")
+
 
 # PayementHistory table
 class PayementHistory(Base):

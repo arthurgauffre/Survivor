@@ -3,13 +3,14 @@ import os
 from dotenv import load_dotenv
 
 from loginTokenRetriever import loginToken
-from tableRelationships import Customer
+from api.database.tableRelationships import Customer
 
 load_dotenv()
 
 TOKEN_API = os.getenv("TOKEN_API")
 AUTH_EMAIL = os.getenv("AUTH_EMAIL")
 AUTH_PASSWORD = os.getenv("AUTH_PASSWORD")
+
 
 def fetchingAllCustomer(acccess_token, database):
     url = 'https://soul-connection.fr/api/customers'
@@ -35,25 +36,25 @@ def fetchingAllCustomer(acccess_token, database):
         customer = Customer(
             id=customer_data.get('id'),
             email=customer_data.get('email'),
-            password=customer_data.get('password'),  # You should hash this before saving it
+            password=customer_data.get('password'),
             name=customer_data.get('name'),
-            surname=customer_data.get('surname'),   
+            surname=customer_data.get('surname'),
             birthdate=customer_data.get('birthdate'),
             gender=customer_data.get('gender'),
             description=customer_data.get('description'),
             astrologicalSign=customer_data.get('astrologicalSign'),
             clothesType=customer_data.get('clothesType'),
-            # Payment history would need to be handled separately if it's not a simple field
         )
 
         # Add the new customer to the customers table
-        if not database.query(Customer).filter(Customer.id == customer.id).first():
+        if not database.query(Customer).filter(
+                Customer.id == customer.id).first():
             database.add(customer)
 
     # Commit the session to save all changes
     database.commit()
-
     return response.json()
+
 
 def fetchingCustomerDetail(acccess_token, database):
     headers = {
@@ -70,7 +71,8 @@ def fetchingCustomerDetail(acccess_token, database):
             acccess_token = loginToken()
             fetchingCustomerDetail(acccess_token)
         customer_data = response.json()
-        customer = database.query(Customer).filter(Customer.id == customerId.id).first()
+        customer = database.query(Customer).filter(
+            Customer.id == customerId.id).first()
         customer.email = customer_data.get('email')
         customer.password = customer_data.get('password')
         customer.name = customer_data.get('name')
@@ -80,9 +82,10 @@ def fetchingCustomerDetail(acccess_token, database):
         customer.description = customer_data.get('description')
         customer.astrologicalSign = customer_data.get('astrological_sign')
 
-        image_url = f'https://soul-connection.fr/api/customers/{customer.id}/image'
+        image_url = f'https://soul-connection.fr/api/customers/{
+            customer.id}/image'
         image_response = requests.get(image_url, headers=headers)
-        
+
         if image_response.status_code == 401:
             acccess_token = loginToken()
             fetchingCustomerDetail(acccess_token)
