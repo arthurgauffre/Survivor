@@ -1,3 +1,5 @@
+"use client";
+
 import SpawnHeadband from "../SpawnHeadband";
 import InputRequest from "./inputRequest";
 import DropdownMenu from "../component/DropdownMenu";
@@ -9,8 +11,14 @@ import {
   CloudArrowDownIcon,
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
+import { MenuButton, Menu, MenuItem, MenuItems } from "@headlessui/react";
 
-const people = [
+const ActionsActions = [
+  { name: "Edit", href: "coaches", class: "" },
+  { name: "Delete", href: "#", class: " text-red-500" },
+];
+
+const coaches = [
   {
     id: 13085,
     name: "Leslie",
@@ -54,9 +62,16 @@ const people = [
 ];
 
 export default function Home() {
-  let numberOfCoaches = 0;
-  // calculate number of coaches
-  let littletext = "You have total of " + numberOfCoaches + " coaches";
+  let littletext = "You have total of " + coaches.length + " coaches";
+
+  function handleAllBoxClick() {
+    let allBox = document.getElementById("AllBox");
+    let rowBox = Array.from(document.getElementsByClassName("RowBox"));
+    if (!allBox || !rowBox) return;
+    rowBox.forEach((e) => {
+      e.checked = allBox.checked;
+    });
+  }
 
   return (
     <SpawnHeadband
@@ -103,18 +118,24 @@ export default function Home() {
               <tbody>
                 <tr className="border">
                   <th className="p-2">
-                    <input id="AllBox" type="checkbox" />
+                    <input
+                      id="AllBox"
+                      type="checkbox"
+                      onClick={handleAllBoxClick}
+                    />
                   </th>
                   <th>Coach</th>
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Number of customers</th>
-                  <th>Actions</th>
+                  <th align="right" className="pr-2">
+                    Actions
+                  </th>
                 </tr>
-                {people.map((person) => (
+                {coaches.map((person) => (
                   <tr className="border" key={person.id}>
                     <td className="p-2">
-                      <input id="RowBox" type="checkbox" />
+                      <input className="RowBox" type="checkbox" />
                     </td>
                     <td>
                       <div className="flex items-center">
@@ -128,8 +149,28 @@ export default function Home() {
                     </td>
                     <td>{person.email}</td>
                     <td>{person.birth_date}</td>
+                    <td>{person.gender}</td>
                     <td className="pr-2" align="right">
-                      <EllipsisHorizontalIcon className="h-6 text-gray-400 px-2"></EllipsisHorizontalIcon>
+                      <Menu>
+                        <MenuButton className="relative flex max-w-xs items-center">
+                          <EllipsisHorizontalIcon className="h-6 text-gray-400 px-2"></EllipsisHorizontalIcon>
+                        </MenuButton>
+                        <MenuItems
+                          transition
+                          className="absolute right-8 z-10 mt-2 px-2 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                        >
+                          {ActionsActions.map((item) => (
+                            <MenuItem key={item.name}>
+                              <a
+                                href={item.href + "/" + person.id}
+                                className={"block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" + item.class}
+                              >
+                                {item.name}
+                              </a>
+                            </MenuItem>
+                          ))}
+                        </MenuItems>
+                      </Menu>
                     </td>
                   </tr>
                 ))}
