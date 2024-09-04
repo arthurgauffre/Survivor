@@ -15,7 +15,7 @@ CMD ["python3", "-m", "uvicorn", "api.index:app", "--reload", "--host", "0.0.0.0
 
 
 
-FROM node:slim as nextjs
+FROM node:alpine as nextjs
 
 WORKDIR /app
 
