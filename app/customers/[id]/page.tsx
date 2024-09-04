@@ -1,6 +1,221 @@
+"use client";
+
+import "./../../component/table.css";
+import { useState } from "react";
 import React from "react";
-import { EnvelopeIcon, BookmarkIcon } from "@heroicons/react/24/outline";
-import SpawnHeadband from "../../SpawnHeadband";
+import {
+  EnvelopeIcon,
+  BookmarkIcon,
+  StarIcon,
+} from "@heroicons/react/24/outline";
+import { StarIcon as BlackStarIcon } from "@heroicons/react/24/solid";
+import SpawnHeadband from "../../component/SpawnHeadband";
+
+const meetings = [
+  {
+    id: 1,
+    customer_id: 17,
+    date: "2023-12-21",
+    rating: 2,
+    comment: "A very good moment!",
+    source: "school",
+  },
+  {
+    id: 2,
+    customer_id: 17,
+    date: "2023-12-21",
+    rating: 2,
+    comment: "A very good moment!",
+    source: "school",
+  },
+  {
+    id: 3,
+    customer_id: 17,
+    date: "2023-12-21",
+    rating: 2,
+    comment: "A very good moment!",
+    source: "school",
+  },
+  {
+    id: 4,
+    customer_id: 17,
+    date: "2023-12-21",
+    rating: 2,
+    comment: "A very good moment!",
+    source: "school",
+  },
+  {
+    id: 5,
+    customer_id: 17,
+    date: "2023-12-21",
+    rating: 2,
+    comment: "A very good moment!",
+    source: "school",
+  },
+];
+
+const payments = [
+  {
+    id: 7,
+    date: "2024-05-31",
+    payment_method: "PayPal",
+    amount: -78.44,
+    comment: "Discount applied",
+  },
+  {
+    id: 1,
+    date: "2024-05-25",
+    payment_method: "Bank Transfer",
+    amount: 646.94,
+    comment: "Annual subscription payment",
+  },
+  {
+    id: 8,
+    date: "2024-04-15",
+    payment_method: "Bank Transfer",
+    amount: 202.17,
+    comment: "Annual subscription payment",
+  },
+  {
+    id: 6,
+    date: "2024-04-05",
+    payment_method: "PayPal",
+    amount: 0.16,
+    comment: "Late fee included",
+  },
+  {
+    id: 3,
+    date: "2024-03-08",
+    payment_method: "Credit Card",
+    amount: -24.8,
+    comment: "Discount applied",
+  },
+  {
+    id: 2,
+    date: "2024-02-08",
+    payment_method: "PayPal",
+    amount: 7.42,
+    comment: "Monthly subscription payment",
+  },
+  {
+    id: 5,
+    date: "2024-02-04",
+    payment_method: "Bank Transfer",
+    amount: -48.91,
+    comment: "Discount applied",
+  },
+  {
+    id: 4,
+    date: "2023-12-04",
+    payment_method: "PayPal",
+    amount: 89.82,
+    comment: "Quarterly subscription payment",
+  },
+];
+
+function Rating(numberStar: number) {
+  const rating = [];
+
+  for (let i = 0; i < numberStar; i++) {
+    rating.push(<BlackStarIcon key={i} className="h-4 w-4" />);
+  }
+  for (let i = numberStar; i < 5; i++) {
+    rating.push(<StarIcon key={i} className="h-4 w-4" />);
+  }
+  return rating;
+}
+
+function MeetingTable({
+  meetings,
+}: {
+  meetings: {
+    id: number;
+    customer_id: number;
+    date: string;
+    rating: number;
+    comment: string;
+    source: string;
+  }[];
+}) {
+  return (
+    <table className="w-full border text-left border-collapse">
+      <tbody>
+        <tr>
+          <th>Date</th>
+          <th>Rating</th>
+          <th>Report</th>
+          <th>Source</th>
+        </tr>
+        {meetings.map((meeting) => (
+          <tr key={meeting.id}>
+            <td className="text-[#1267c5]">
+              <span className="cell-header">Date:</span>
+              {new Date(meeting.date).toDateString()}
+            </td>
+            <td>
+              {" "}
+              <span className="cell-header">Rating:</span>
+              <div className="flex">
+                {Rating(meeting.rating).map((star) => star)}
+              </div>
+            </td>
+            <td>
+              <span className="cell-header">Report:</span> {meeting.comment}
+            </td>
+            <td>
+              <span className="cell-header">Source:</span> {meeting.source}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
+
+function PaymentHistoryTable({
+  paymentsHistory,
+}: {
+  paymentsHistory: {
+    id: number;
+    date: string;
+    payment_method: string;
+    amount: number;
+    comment: string;
+  }[];
+}) {
+  return (
+    <table>
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Payment Method</th>
+          <th>Amount</th>
+          <th>Commit</th>
+        </tr>
+      </thead>
+      <tbody>
+        {paymentsHistory.map((payment) => (
+          <tr key={payment.id}>
+            <td className="text-[#1267c5]">
+              <span className="cell-header">Date:</span>{" "}
+              {new Date(payment.date).toDateString()}
+            </td>
+            <td>
+              <span className="cell-header">Payment Method:</span>{" "}
+              {payment.payment_method}
+            </td>
+            <td>
+              <span className="cell-header">Amount:</span> {payment.amount}
+            </td>
+            <td>
+              <span className="cell-header">Commit:</span> {payment.comment}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  );
+}
 
 export default function Page({ params }: { params: { id: string } }) {
   return (
@@ -45,7 +260,9 @@ export default function Page({ params }: { params: { id: string } }) {
         </div>
         <div className="flex-none border bg-white p-2 grow">
           <p>Recent Meeting</p>
+          <MeetingTable meetings={meetings} />
           <p>Payment History</p>
+          <PaymentHistoryTable paymentsHistory={payments} />
         </div>
       </div>
     </SpawnHeadband>

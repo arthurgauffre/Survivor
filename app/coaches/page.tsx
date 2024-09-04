@@ -1,10 +1,13 @@
-import SpawnHeadband from "../SpawnHeadband";
+import SpawnHeadband from "../component/SpawnHeadband";
 import InputRequest from "./inputRequest";
 import DropdownMenu from "../component/DropdownMenu";
 import {
   MagnifyingGlassIcon,
   AdjustmentsHorizontalIcon,
   Cog8ToothIcon,
+  PlusIcon,
+  CloudArrowDownIcon,
+  EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
 
 const people = [
@@ -56,9 +59,23 @@ export default function Home() {
   let littletext = "You have total of " + numberOfCoaches + " coaches";
 
   return (
-    <SpawnHeadband title="Coaches" litletext={littletext}>
+    <SpawnHeadband
+      title="Coaches"
+      litletext={littletext}
+      elemRight={
+        <div className="flex">
+          <button className="ml-4 bg-blue-500 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
+            <CloudArrowDownIcon className="h-6 w-6 mr-2"></CloudArrowDownIcon>
+            <p>Export</p>
+          </button>
+          <button className="ml-4 bg-blue-500 bg-[#2263b3] text-white py-2 px-2 rounded text-sm">
+            <PlusIcon className="h-6 w-6"></PlusIcon>
+          </button>
+        </div>
+      }
+    >
       <div style={{ color: "Black" }}>
-        <ul role="list" className="divide-y-2 divide-gray-100 ">
+        <ul role="list" className="divide-y-2 divide-gray-100">
           <li className="flex gap-x-6 py-5 justify-between border-1 bg-white rounded-t-md px-4">
             <div className="flex">
               <DropdownMenu
@@ -84,7 +101,7 @@ export default function Home() {
           <li>
             <table className="bg-white" style={{ width: "100%" }}>
               <tbody>
-                <tr>
+                <tr className="border">
                   <th className="p-2">
                     <input id="AllBox" type="checkbox" />
                   </th>
@@ -95,7 +112,7 @@ export default function Home() {
                   <th>Actions</th>
                 </tr>
                 {people.map((person) => (
-                  <tr key={person.id}>
+                  <tr className="border" key={person.id}>
                     <td className="p-2">
                       <input id="RowBox" type="checkbox" />
                     </td>
@@ -111,6 +128,9 @@ export default function Home() {
                     </td>
                     <td>{person.email}</td>
                     <td>{person.birth_date}</td>
+                    <td className="pr-2" align="right">
+                      <EllipsisHorizontalIcon className="h-6 text-gray-400 px-2"></EllipsisHorizontalIcon>
+                    </td>
                   </tr>
                 ))}
               </tbody>
