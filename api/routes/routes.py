@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from fetch.fetchingEncounter import getAllEncounters, getEncounterById
 from fetch.fetchingCustomer import fetchingAllCustomer, fetchingCustomerDetail
 from database.database import get_db
 from fetch.fetchingEmployee import (getAllEmployees, getEmployeeById,
@@ -31,3 +32,10 @@ def getAPICustomersInfos(db: Session = Depends(get_db)):
 def getTips(db: Session = Depends(get_db)):
     fetchingAllTips(access_token, db)
     return {"message": "Database seeded with tips"}
+
+
+@router.get("/getAPIEncountersInfos/")
+def getAPIEncountersInfos(db: Session = Depends(get_db)):
+    getAllEncounters(access_token, db)
+    getEncounterById(access_token, db)
+    return {"message": "Database seeded with encounters"}

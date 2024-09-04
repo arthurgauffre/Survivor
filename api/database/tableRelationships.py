@@ -60,7 +60,6 @@ class Employee(Base):
     gender = Column(String, index=True)
     work = Column(String, index=True)
     profilePictureLink = Column(String, index=True)
-    # role = relationship("roles", back_populates="employees")
 
 
 # Customer table
@@ -75,8 +74,8 @@ class Customer(Base):
     gender = Column(String, index=True)
     description = Column(String, index=True)
     astrologicalSign = Column(String, index=True)
-    clothesType = Column(String, index=True)
-    payementHistory = relationship("PayementHistory", back_populates="customer")
+    payementHistory = relationship("PayementHistory",
+                                   back_populates="customer")
     clothes = relationship("Clothes", back_populates="customer")
 
 
@@ -90,12 +89,14 @@ class Encounter(Base):
     comment = Column(String, index=True)
     source = Column(String, index=True)
 
+
 # Tips table
 class Tips(Base):
     __tablename__ = "tips"
     id = Column(Integer, primary_key=True, index=True, nullable=False)
     title = Column(String, index=True)
     tip = Column(String, index=True)
+
 
 # Clothes table
 class Clothes(Base):
