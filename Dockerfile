@@ -1,18 +1,17 @@
 FROM python:alpine as fastapi
 
-WORKDIR /app
+WORKDIR /app/api
 
 RUN python -m venv .venv
 RUN source .venv/bin/activate
 
-COPY ./requirements.txt requirements.txt
+COPY ./requirements.txt /app/requirements.txt
 
-RUN pip install -r requirements.txt
+RUN pip install -r /app/requirements.txt
 
-COPY ./api/ ./api/
+COPY ./api/ ./
 
-CMD ["python3", "-m", "uvicorn", "api.index:app", "--reload", "--host", "0.0.0.0" ]
-
+CMD ["python3", "-m", "uvicorn", "index:app", "--reload", "--host", "0.0.0.0" ]
 
 
 FROM node:alpine as nextjs

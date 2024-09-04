@@ -15,6 +15,8 @@ router = APIRouter()
 access_token = loginToken()
 
 ###################### TEMP ROUTES THAT SEED THE DB ######################
+
+
 @router.get("/getAPIEmployeesInfos/")
 def getAPIEmployeesInfos(db: Session = Depends(get_db)):
     getAllEmployees(access_token, db)
@@ -48,6 +50,7 @@ def getEvents(db: Session = Depends(get_db)):
     fetchingAllEvents(access_token, db)
     return {"message": "Database seeded with events"}
 ###########################################################################
+
 
 @router.get("/api/employees/")
 def getEmployees(db: Session = Depends(get_db)):
