@@ -76,7 +76,6 @@ class Customer(Base):
     gender = Column(String, index=True)
     description = Column(String, index=True)
     astrologicalSign = Column(String, index=True)
-    clothesType = Column(String, index=True)
     payementHistory = relationship("PayementHistory", back_populates="customer")
     clothes = relationship("Clothes", back_populates="customer")
 
