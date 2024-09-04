@@ -53,7 +53,7 @@ const people = [
 export default function Home() {
   let numberOfCoaches = 0;
   // calculate number of coaches
-  let littletext = "You have total of " + numberOfCoaches + " coaches"
+  let littletext = "You have total of " + numberOfCoaches + " coaches";
 
   return (
     <SpawnHeadband title="Coaches" litletext={littletext}>
@@ -81,37 +81,41 @@ export default function Home() {
             </div>
           </li>
 
-          <table className="bg-white" style={{ width: "100%" }}>
-            <tr>
-              <td className="p-2">
-                <input id="AllBox" type="checkbox" />
-              </td>
-              <td>Coach</td>
-              <td>Email</td>
-              <td>Phone</td>
-              <td>Number of customers</td>
-              <td>Actions</td>
-            </tr>
-            {people.map((person) => (
-              <tr>
-                <td className="p-2">
-                  <input id="RowBox" type="checkbox" />
-                </td>
-                <td>
-                  <div className="flex items-center">
-                    <img
-                      alt=""
-                      src="https://media.tenor.com/6uPPCdKYocAAAAAe/panik-kalm.png"
-                      className="h-12 w-12 flex-none rounded-full bg-gray-50 mr-4 my-1"
-                    />
-                    {person.name} {person.surname}
-                  </div>
-                </td>
-                <td>{person.email}</td>
-                <td>{person.birth_date}</td>
-              </tr>
-            ))}
-          </table>
+          <li>
+            <table className="bg-white" style={{ width: "100%" }}>
+              <tbody>
+                <tr>
+                  <th className="p-2">
+                    <input id="AllBox" type="checkbox" />
+                  </th>
+                  <th>Coach</th>
+                  <th>Email</th>
+                  <th>Phone</th>
+                  <th>Number of customers</th>
+                  <th>Actions</th>
+                </tr>
+                {people.map((person) => (
+                  <tr key={person.id}>
+                    <td className="p-2">
+                      <input id="RowBox" type="checkbox" />
+                    </td>
+                    <td>
+                      <div className="flex items-center">
+                        <img
+                          alt=""
+                          src="https://media.tenor.com/6uPPCdKYocAAAAAe/panik-kalm.png"
+                          className="h-12 w-12 flex-none rounded-full bg-gray-50 mr-4 my-1"
+                        />
+                        {person.name} {person.surname}
+                      </div>
+                    </td>
+                    <td>{person.email}</td>
+                    <td>{person.birth_date}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </li>
         </ul>
       </div>
     </SpawnHeadband>
