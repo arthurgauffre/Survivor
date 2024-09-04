@@ -40,6 +40,7 @@ class Events(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String, index=True)
     date = Column(String, index=True)
+    duration = Column(Integer, index=True)
     max_participants = Column(Integer, index=True)
     location_x = Column(String, index=True)
     location_y = Column(String, index=True)

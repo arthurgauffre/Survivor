@@ -36,7 +36,7 @@ def fetchingAllTips(acccess_token, database):
         tip = Tips(
             id=tip_data.get('id'),
             title=tip_data.get('title'),
-            tip=tip_data.get('tip'),
+            tip=tip_data.get('tip')
         )
 
         # Add the new customer to the customers table

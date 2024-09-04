@@ -6,6 +6,8 @@ from database.database import get_db
 from fetch.fetchingEmployee import (getAllEmployees, getEmployeeById,
                                     getEmployeeImg)
 from fetch.fetchingTips import fetchingAllTips
+from fetch.fetchingEvents import fetchingAllEvents
+
 from loginTokenRetriever import loginToken
 
 router = APIRouter()
@@ -39,3 +41,9 @@ def getAPIEncountersInfos(db: Session = Depends(get_db)):
     getAllEncounters(access_token, db)
     getEncounterById(access_token, db)
     return {"message": "Database seeded with encounters"}
+
+
+@router.get("/getAPIEventsInfos/")
+def getEvents(db: Session = Depends(get_db)):
+    fetchingAllEvents(access_token, db)
+    return {"message": "Database seeded with events"}
