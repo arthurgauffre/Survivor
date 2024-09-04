@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from crud.encounters.encountersGet import getEncounterForCustomer
+from schemas.encounterSchemas import EncounterByCustomerSchema
 from fetch.fetchingEncounter import getAllEncounters, getEncounterById
 from fetch.fetchingCustomer import fetchingAllCustomer, fetchingCustomerDetail
 from database.database import get_db
@@ -52,6 +54,8 @@ def getEvents(db: Session = Depends(get_db)):
 ###########################################################################
 
 
-@router.get("/api/employees/")
-def getEmployees(db: Session = Depends(get_db)):
-    return {"message": "testing the route"}
+@router.get("/api/encounters/customer/{customer_id}",
+            response_model=list[EncounterByCustomerSchema])
+def getEmployees(customer_id: int, db: Session = Depends(get_db)) -> list[
+        EncounterByCustomerSchema]:
+    return getEncounterForCustomer(db, customer_id)
