@@ -82,11 +82,6 @@ const products = [
 
 import { usePathname } from "next/navigation";
 
-const callsToAction = [
-  { name: "Watch demo", href: "#", icon: PlayCircleIcon },
-  { name: "Contact sales", href: "#", icon: PhoneIcon },
-];
-
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }

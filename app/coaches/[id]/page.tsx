@@ -1,6 +1,6 @@
 
 import React from 'react'
-import SpawnHeadband from '../../SpawnHeadband'
+import SpawnHeadband from '../../component/SpawnHeadband'
 
 
 export default function Page({ params }: { params: { id: string } }) {
