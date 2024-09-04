@@ -43,7 +43,6 @@ def fetchingAllCustomer(acccess_token, database):
             gender=customer_data.get('gender'),
             description=customer_data.get('description'),
             astrologicalSign=customer_data.get('astrologicalSign'),
-            clothesType=customer_data.get('clothesType'),
         )
 
         # Add the new customer to the customers table
@@ -75,7 +74,7 @@ def fetchingCustomerDetail(acccess_token, database):
         getClothesImage(customer, database, headers)
         database.commit()
 
-    return { "message": "All customers have been fetched" }
+    return {"message": "All customers have been fetched"}
 
 
 def getCustomerDetail(url, headers, customerId, database):
