@@ -1,5 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from crud.employees.employeesGet import getAllRealEmployees
+from schemas.userSchemas import BasicUserSchema
 from crud.encounters.encountersGet import getEncounterForCustomer
 from schemas.encounterSchemas import EncounterByCustomerSchema
 from fetch.fetchingEncounter import getAllEncounters, getEncounterById
@@ -56,6 +58,12 @@ def getEvents(db: Session = Depends(get_db)):
 
 @router.get("/api/encounters/customer/{customer_id}",
             response_model=list[EncounterByCustomerSchema])
-def getEmployees(customer_id: int, db: Session = Depends(get_db)) -> list[
-        EncounterByCustomerSchema]:
+def getEmployeesEncounter(customer_id: int, db: Session = Depends(
+        get_db)) -> list[EncounterByCustomerSchema]:
     return getEncounterForCustomer(db, customer_id)
+
+
+@router.get("/api/employees/", response_model=list[BasicUserSchema])
+def getEmployees(db: Session = Depends(get_db)) -> list[
+        BasicUserSchema]:
+    return getAllRealEmployees(db)
