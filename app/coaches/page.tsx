@@ -52,9 +52,11 @@ const people = [
 
 export default function Home() {
   let numberOfCoaches = 0;
+  // calculate number of coaches
+  let littletext = "You have total of " + numberOfCoaches + " coaches"
 
   return (
-    <SpawnHeadband title="Coaches" litletext="You have total of ... coaches">
+    <SpawnHeadband title="Coaches" litletext={littletext}>
       <div style={{ color: "Black" }}>
         <ul role="list" className="divide-y-2 divide-gray-100 ">
           <li className="flex gap-x-6 py-5 justify-between border-1 bg-white rounded-t-md px-4">
