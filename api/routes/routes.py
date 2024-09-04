@@ -1,5 +1,10 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from crud.customers.customerGet import getAllRealCustomers
+from crud.employees.employeesGet import getAllRealEmployees
+from schemas.userSchemas import BasicUserSchema
+from crud.encounters.encountersGet import getEncounterForCustomer
+from schemas.encounterSchemas import EncounterByCustomerSchema
 from fetch.fetchingEncounter import getAllEncounters, getEncounterById
 from fetch.fetchingCustomer import fetchingAllCustomer, fetchingCustomerDetail
 from database.database import get_db
@@ -17,7 +22,7 @@ access_token = loginToken()
 ###################### TEMP ROUTES THAT SEED THE DB ######################
 
 
-@router.get("/getAPIEmployeesInfos/")
+@router.get("/getAPIEmployeesInfos/", tags=["seed"])
 def getAPIEmployeesInfos(db: Session = Depends(get_db)):
     getAllEmployees(access_token, db)
     getEmployeeById(access_token, db)
@@ -25,33 +30,50 @@ def getAPIEmployeesInfos(db: Session = Depends(get_db)):
     return {"message": "Database seeded with employees"}
 
 
-@router.get("/getAPICustomersInfos/")
+@router.get("/getAPICustomersInfos/", tags=["seed"])
 def getAPICustomersInfos(db: Session = Depends(get_db)):
     fetchingAllCustomer(access_token, db)
     fetchingCustomerDetail(access_token, db)
     return {"message": "Database seeded with customers"}
 
 
-@router.get("/getAPITipsInfos/")
+@router.get("/getAPITipsInfos/", tags=["seed"])
 def getTips(db: Session = Depends(get_db)):
     fetchingAllTips(access_token, db)
     return {"message": "Database seeded with tips"}
 
 
-@router.get("/getAPIEncountersInfos/")
+@router.get("/getAPIEncountersInfos/", tags=["seed"])
 def getAPIEncountersInfos(db: Session = Depends(get_db)):
     getAllEncounters(access_token, db)
     getEncounterById(access_token, db)
     return {"message": "Database seeded with encounters"}
 
 
-@router.get("/getAPIEventsInfos/")
+@router.get("/getAPIEventsInfos/", tags=["seed"])
 def getEvents(db: Session = Depends(get_db)):
     fetchingAllEvents(access_token, db)
     return {"message": "Database seeded with events"}
 ###########################################################################
 
 
-@router.get("/api/employees/")
-def getEmployees(db: Session = Depends(get_db)):
-    return {"message": "testing the route"}
+@router.get("/api/encounters/customer/{customer_id}",
+            response_model=list[EncounterByCustomerSchema], tags=["encounters"]
+            )
+def getEmployeesEncounter(customer_id: int, db: Session = Depends(
+        get_db)) -> list[EncounterByCustomerSchema]:
+    return getEncounterForCustomer(db, customer_id)
+
+
+@router.get("/api/employees/", response_model=list[BasicUserSchema],
+            tags=["employees"])
+def getEmployees(db: Session = Depends(get_db)) -> list[
+        BasicUserSchema]:
+    return getAllRealEmployees(db)
+
+
+@router.get("/api/customers/", response_model=list[BasicUserSchema],
+            tags=["customers"])
+def getCustomers(db: Session = Depends(get_db)) -> list[
+        BasicUserSchema]:
+    return getAllRealCustomers(db)
