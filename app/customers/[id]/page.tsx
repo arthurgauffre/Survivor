@@ -138,7 +138,7 @@ function MeetingTable({
   }[];
 }) {
   return (
-    <table className="w-full border text-left border-collapse">
+    <table>
       <tbody>
         <tr>
           <th>Date</th>
@@ -148,12 +148,13 @@ function MeetingTable({
         </tr>
         {meetings.map((meeting) => (
           <tr key={meeting.id}>
-            <td className="text-[#1267c5]">
+            <td>
               <span className="cell-header">Date:</span>
-              {new Date(meeting.date).toDateString()}
+              <div className="text-[#1267c5]">
+                {new Date(meeting.date).toDateString()}
+              </div>
             </td>
             <td>
-              {" "}
               <span className="cell-header">Rating:</span>
               <div className="flex">
                 {Rating(meeting.rating).map((star) => star)}
@@ -196,12 +197,12 @@ function PaymentHistoryTable({
       <tbody>
         {paymentsHistory.map((payment) => (
           <tr key={payment.id}>
-            <td className="text-[#1267c5]">
-              <span className="cell-header">Date:</span>{" "}
-              {new Date(payment.date).toDateString()}
+            <td>
+              <span className="cell-header">Date:</span>
+              <div className="text-[#1267c5]">{new Date(payment.date).toDateString()}</div>
             </td>
             <td>
-              <span className="cell-header">Payment Method:</span>{" "}
+              <span className="cell-header">Payment Method:</span>
               {payment.payment_method}
             </td>
             <td>
