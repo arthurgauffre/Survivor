@@ -1,6 +1,7 @@
 "use client";
 
 import "./../../component/table.css";
+import PaymentMethod from "../../component/PaymentMethod";
 import React from "react";
 import {
   EnvelopeIcon,
@@ -183,7 +184,7 @@ function PaymentHistoryTable({
     amount: number;
     comment: string;
   }[];
-}) {
+}): JSX.Element {
   return (
     <table>
       <thead>
@@ -205,7 +206,7 @@ function PaymentHistoryTable({
             </td>
             <td>
               <span className="cell-header">Payment Method:</span>
-              {payment.payment_method}
+              <PaymentMethod payment={payment.payment_method} />
             </td>
             <td>
               <span className="cell-header">Amount:</span> {payment.amount}
@@ -220,7 +221,7 @@ function PaymentHistoryTable({
   );
 }
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page({ params }: { params: { id: string } }) : JSX.Element {
   return (
     <SpawnHeadband
       title={params.id}
