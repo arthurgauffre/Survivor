@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
+from schemas.employeeSchemas import EmployeePersonalInfoSchema
 from crud.customers.customerGet import getAllRealCustomers
-from crud.employees.employeesGet import getAllRealEmployees
+from crud.employees.employeesGet import (getAllRealEmployees,
+                                         getAnEmployeePersonalInfos)
 from schemas.userSchemas import BasicUserSchema
 from crud.encounters.encountersGet import getEncounterForCustomer
 from schemas.encounterSchemas import EncounterByCustomerSchema
@@ -77,3 +79,10 @@ def getEmployees(db: Session = Depends(get_db)) -> list[
 def getCustomers(db: Session = Depends(get_db)) -> list[
         BasicUserSchema]:
     return getAllRealCustomers(db)
+
+
+@router.get("/api/employees/{employee_id}",
+            response_model=EmployeePersonalInfoSchema, tags=["employees"])
+def getAnEmployeeInfos(employee_id: int, db: Session = Depends(
+        get_db)) -> EmployeePersonalInfoSchema:
+    return getAnEmployeePersonalInfos(db, employee_id)
