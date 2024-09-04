@@ -1,3 +1,4 @@
+import "../component/table.css";
 import SpawnHeadband from "../component/SpawnHeadband";
 import InputRequest from "./inputRequest";
 import DropdownMenu from "../component/DropdownMenu";
@@ -99,9 +100,9 @@ export default function Home() {
           </li>
 
           <li>
-            <table className="bg-white" style={{ width: "100%" }}>
-              <tbody>
-                <tr className="border">
+            <table className="bg-white">
+              <thead>
+                <tr>
                   <th className="p-2">
                     <input id="AllBox" type="checkbox" />
                   </th>
@@ -111,12 +112,15 @@ export default function Home() {
                   <th>Number of customers</th>
                   <th>Actions</th>
                 </tr>
+              </thead>
+              <tbody>
                 {people.map((person) => (
-                  <tr className="border" key={person.id}>
+                  <tr key={person.id}>
                     <td className="p-2">
                       <input id="RowBox" type="checkbox" />
                     </td>
                     <td>
+                      <span className="cell-header">Coach:</span>
                       <div className="flex items-center">
                         <img
                           alt=""
@@ -126,9 +130,20 @@ export default function Home() {
                         {person.name} {person.surname}
                       </div>
                     </td>
-                    <td>{person.email}</td>
-                    <td>{person.birth_date}</td>
-                    <td className="pr-2" align="right">
+                    <td>
+                      <span className="cell-header">Email:</span>
+                      {person.email}
+                    </td>
+                    <td>
+                      <span className="cell-header">Phone:</span>
+                      {person.birth_date}
+                    </td>
+                    <td>
+                      <span className="cell-header">Number of customers:</span>
+                      {person.birth_date}
+                    </td>
+                    <td>
+                      <span className="cell-header">Actions:</span>
                       <EllipsisHorizontalIcon className="h-6 text-gray-400 px-2"></EllipsisHorizontalIcon>
                     </td>
                   </tr>
