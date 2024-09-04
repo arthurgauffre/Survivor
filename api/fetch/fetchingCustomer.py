@@ -93,35 +93,44 @@ def fetchingCustomerDetail(acccess_token, database):
         with open(image_path, 'wb') as image_file:
             image_file.write(image_response.content)
 
-        payement_history_url = f'https://soul-connection.fr/api/customers/{customer.id}/payments_history'
-        payement_history_response = requests.get(payement_history_url, headers=headers)
+        payement_history_url = f'https://soul-connection.fr/api/customers/{
+            customer.id}/payments_history'
+        payement_history_response = requests.get(
+            payement_history_url, headers=headers)
         if payement_history_response.status_code == 401:
             acccess_token = loginToken()
             fetchingCustomerDetail(acccess_token)
         payement_history_datas = payement_history_response.json()
-        if database.query(PayementHistory).filter(PayementHistory.customer_id == customer.id).first():
-            database.query(PayementHistory).filter(PayementHistory.customer_id == customer.id).delete()
+        if database.query(PayementHistory).filter(
+                PayementHistory.customer_id == customer.id).first():
+            database.query(PayementHistory).filter(
+                PayementHistory.customer_id == customer.id).delete()
         for payment_history_date in payement_history_datas:
             payement_history = PayementHistory(
                 customer_id=customer.id,
-                id = payment_history_date.get('id'),
-                date = payment_history_date.get('date'),
-                amount = payment_history_date.get('amount'),
-                comment = payment_history_date.get('comment'),
-                payment_method = payment_history_date.get('payment_method')
+                id=payment_history_date.get('id'),
+                date=payment_history_date.get('date'),
+                amount=payment_history_date.get('amount'),
+                comment=payment_history_date.get('comment'),
+                payment_method=payment_history_date.get('payment_method')
             )
-            if not database.query(PayementHistory).filter(PayementHistory.id == payement_history.id).first():
+            if not database.query(PayementHistory).filter(
+                    PayementHistory.id == payement_history.id).first():
                 database.add(payement_history)
-        clothes_url = f'https://soul-connection.fr/api/customers/{customer.id}/clothes'
+        clothes_url = f'https://soul-connection.fr/api/customers/{
+            customer.id}/clothes'
         clothes_response = requests.get(clothes_url, headers=headers)
         if clothes_response.status_code == 401:
             acccess_token = loginToken()
             fetchingCustomerDetail(acccess_token)
         clothes_datas = clothes_response.json()
-        if database.query(Clothes).filter(Clothes.customer_id == customer.id).first():
-            database.query(Clothes).filter(Clothes.customer_id == customer.id).delete()
+        if database.query(Clothes).filter(
+                Clothes.customer_id == customer.id).first():
+            database.query(Clothes).filter(
+                Clothes.customer_id == customer.id).delete()
         for clothes_data in clothes_datas:
-            clothe_image = f'https://soul-connection.fr/api/clothes/{clothes_data.get("id")}/image'
+            clothe_image = f'https://soul-connection.fr/api/clothes/{
+                clothes_data.get("id")}/image'
             clothe_image_response = requests.get(clothe_image, headers=headers)
             if clothe_image_response.status_code == 401:
                 acccess_token = loginToken()
@@ -135,7 +144,8 @@ def fetchingCustomerDetail(acccess_token, database):
                 id=clothes_data.get('id'),
                 type=clothes_data.get('type'),
             )
-            if not database.query(Clothes).filter(Clothes.id == clothes_data.get('id')).first():
+            if not database.query(Clothes).filter(
+                    Clothes.id == clothes_data.get('id')).first():
                 database.add(clothe)
 
     database.commit()

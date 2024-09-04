@@ -67,3 +67,26 @@ def getEmployeeById(access_token, db):
         actualEmployee.work = employee_data.get("work")
     db.commit()
     return response.json()
+
+
+def getEmployeeImg(access_token, db):
+
+    headers = {
+        'accept': 'application/json',
+        'X-Group-Authorization': TOKEN_API,
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + access_token["access_token"],
+    }
+
+    for employeeId in db.query(Employee).all():
+        url = f'https://soul-connection.fr/api/employees/{employeeId.id}/image'
+        response = requests.get(url, headers=headers)
+        if response.status_code == 401:
+            access_token = loginToken()
+            getEmployeeImg(access_token, db)
+        employee = db.query(Employee).filter(
+            Employee.id == employeeId.id).first()
+        img_path = f'./images/employees/{employee.id}.jpg'
+        with open(img_path, 'wb') as file:
+            file.write(response.content)
+    return {"message": "Images downloaded"}
