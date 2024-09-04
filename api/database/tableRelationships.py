@@ -60,7 +60,6 @@ class Employee(Base):
     birthdate = Column(String, index=True)
     gender = Column(String, index=True)
     work = Column(String, index=True)
-    profilePictureLink = Column(String, index=True)
 
 
 # Customer table
