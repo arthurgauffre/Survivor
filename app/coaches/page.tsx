@@ -7,6 +7,7 @@ import {
   Cog8ToothIcon,
   PlusIcon,
   CloudArrowDownIcon,
+  EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
 
 const people = [
@@ -100,7 +101,7 @@ export default function Home() {
           <li>
             <table className="bg-white" style={{ width: "100%" }}>
               <tbody>
-                <tr>
+                <tr className="border">
                   <th className="p-2">
                     <input id="AllBox" type="checkbox" />
                   </th>
@@ -111,7 +112,7 @@ export default function Home() {
                   <th>Actions</th>
                 </tr>
                 {people.map((person) => (
-                  <tr key={person.id}>
+                  <tr className="border" key={person.id}>
                     <td className="p-2">
                       <input id="RowBox" type="checkbox" />
                     </td>
@@ -127,6 +128,9 @@ export default function Home() {
                     </td>
                     <td>{person.email}</td>
                     <td>{person.birth_date}</td>
+                    <td className="pr-2" align="right">
+                      <EllipsisHorizontalIcon className="h-6 text-gray-400 px-2"></EllipsisHorizontalIcon>
+                    </td>
                   </tr>
                 ))}
               </tbody>
