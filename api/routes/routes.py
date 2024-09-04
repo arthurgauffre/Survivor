@@ -2,8 +2,9 @@ from fastapi import APIRouter, Depends
 from sqlalchemy.orm import Session
 from fetch.fetchingCustomer import fetchingAllCustomer, fetchingCustomerDetail
 from database.database import get_db
-from fetch.fetchingEmployee import getAllEmployees, getEmployeeById, getEmployeeImg
-
+from fetch.fetchingEmployee import (getAllEmployees, getEmployeeById,
+                                    getEmployeeImg)
+from fetch.fetchingTips import fetchingAllTips
 from loginTokenRetriever import loginToken
 
 router = APIRouter()
@@ -24,3 +25,9 @@ def getAPICustomersInfos(db: Session = Depends(get_db)):
     fetchingAllCustomer(access_token, db)
     fetchingCustomerDetail(access_token, db)
     return {"message": "Database seeded with customers"}
+
+
+@router.get("/getAPITipsInfos/")
+def getTips(db: Session = Depends(get_db)):
+    fetchingAllTips(access_token, db)
+    return {"message": "Database seeded with tips"}
