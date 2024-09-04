@@ -121,6 +121,15 @@ def fetchingCustomerDetail(acccess_token, database):
         if database.query(Clothes).filter(Clothes.customer_id == customer.id).first():
             database.query(Clothes).filter(Clothes.customer_id == customer.id).delete()
         for clothes_data in clothes_datas:
+            clothe_image = f'https://soul-connection.fr/api/clothes/{clothes_data.get("id")}/image'
+            clothe_image_response = requests.get(clothe_image, headers=headers)
+            if clothe_image_response.status_code == 401:
+                acccess_token = loginToken()
+                fetchingCustomerDetail(acccess_token)
+            clothe_image_path = f'images/clothes/{clothes_data.get("id")}.jpg'
+            with open(clothe_image_path, 'wb') as image_file:
+                image_file.write(clothe_image_response.content)
+
             clothe = Clothes(
                 customer_id=customer.id,
                 id=clothes_data.get('id'),
