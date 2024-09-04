@@ -5,6 +5,8 @@ import {
   MagnifyingGlassIcon,
   AdjustmentsHorizontalIcon,
   Cog8ToothIcon,
+  PlusIcon,
+  CloudArrowDownIcon,
 } from "@heroicons/react/20/solid";
 
 const people = [
@@ -56,9 +58,23 @@ export default function Home() {
   let littletext = "You have total of " + numberOfCoaches + " coaches";
 
   return (
-    <SpawnHeadband title="Coaches" litletext={littletext}>
+    <SpawnHeadband
+      title="Coaches"
+      litletext={littletext}
+      elemRight={
+        <div className="flex">
+          <button className="ml-4 bg-blue-500 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
+            <CloudArrowDownIcon className="h-6 w-6 mr-2"></CloudArrowDownIcon>
+            <p>Export</p>
+          </button>
+          <button className="ml-4 bg-blue-500 bg-[#2263b3] text-white py-2 px-2 rounded text-sm">
+            <PlusIcon className="h-6 w-6"></PlusIcon>
+          </button>
+        </div>
+      }
+    >
       <div style={{ color: "Black" }}>
-        <ul role="list" className="divide-y-2 divide-gray-100 ">
+        <ul role="list" className="divide-y-2 divide-gray-100">
           <li className="flex gap-x-6 py-5 justify-between border-1 bg-white rounded-t-md px-4">
             <div className="flex">
               <DropdownMenu
