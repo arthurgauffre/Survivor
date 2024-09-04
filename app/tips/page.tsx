@@ -1,5 +1,5 @@
-import SpawnHeadband from "../SpawnHeadband";
-import Collapsible from "./collapse";
+import SpawnHeadband from "../component/SpawnHeadband";
+import Collapsible from "../component/collapse";
 
 export default function Home() {
   return (

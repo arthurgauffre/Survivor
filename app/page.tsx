@@ -1,4 +1,4 @@
-import SpawnHeadband from "./SpawnHeadband";
+import SpawnHeadband from "./component/SpawnHeadband";
 import Spawnbox from "./box";
 
 let text_tyle = {

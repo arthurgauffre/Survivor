@@ -1,4 +1,4 @@
-import SpawnHeadband from "../SpawnHeadband";
+import SpawnHeadband from "../component/SpawnHeadband";
 import InputRequest from "./inputRequest";
 import ProfileOverview from "./profileOverview";
 import DropdownMenu from "../component/DropdownMenu";
