@@ -1,17 +1,13 @@
+"use client";
 import React, { useState } from 'react';
 
-interface AstroDropdownMenuProps {
-    options: string[]; // List of options for the dropdown
-    onSelect: (value: string) => void; // Callback when an option is selected
-}
-
-const AstroDropdownMenu: React.FC<AstroDropdownMenuProps> = ({ options, onSelect }) => {
+export default function  NewDropdownMenu({ options, updateSelectedValue }: {options: string[], updateSelectedValue: (arg: string) => void}) {
     const [selectedValue, setSelectedValue] = useState<string>("");
 
     const handleChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const value = event.target.value;
         setSelectedValue(value);
-        onSelect(value); // Call the onSelect function passed via props
+        updateSelectedValue(value);
     };
 
     return (
@@ -38,4 +34,3 @@ const AstroDropdownMenu: React.FC<AstroDropdownMenuProps> = ({ options, onSelect
     );
 };
 
-export default AstroDropdownMenu;
