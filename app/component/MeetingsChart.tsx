@@ -1,4 +1,4 @@
-"use client"; // Ensure this is at the top
+"use client";
 
 import React, { useEffect } from "react";
 import {
@@ -10,12 +10,12 @@ import {
   Title,
 } from "chart.js";
 
-const MeetingChart: React.FC = () => {
+const MeetingsChart: React.FC = () => {
   useEffect(() => {
     // Register the necessary components
     Chart.register(DoughnutController, ArcElement, Tooltip, Legend, Title);
 
-    const ctx = document.getElementById("MeetingChart") as HTMLCanvasElement | null;
+    const ctx = document.getElementById("meetingsChart") as HTMLCanvasElement | null;
     if (ctx) {
       new Chart(ctx, {
         type: "doughnut",
@@ -43,8 +43,8 @@ const MeetingChart: React.FC = () => {
           plugins: {
             legend: {
               display: true,
-              position: "bottom", // This positions the legend below the doughnut
-              align: "center",    // Center-align the legend
+              position: "bottom",
+              align: "center",
             },
             title: {
               display: true,
@@ -56,7 +56,7 @@ const MeetingChart: React.FC = () => {
     }
   }, []);
 
-  return null;
+  return <canvas id="meetingsChart"></canvas>;
 };
 
-export default MeetingChart;
+export default MeetingsChart; 

@@ -99,6 +99,8 @@ export default function NavBar() {
     },
     { name: "Tips", href: "/tips", current: "/tips" === pathname },
     { name: "Events", href: "/events", current: "/events" === pathname },
+    { name: "Clothes", href: "/clothes", current: "/clothes" === pathname },
+    { name: "compatibility", href: "/compatibility", current: "/compatibility" === pathname },
   ];
   return (
     <header className="bg-white">
