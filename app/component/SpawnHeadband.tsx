@@ -4,12 +4,12 @@
 // use as : <SpawnHeadband title="..."> content </SpawnHeadband>
 export default function SpawnHeadband({
   title,
-  litletext,
+  littleText,
   elemRight,
   children,
 }: {
   title: string;
-  litletext?: string;
+  littleText?: string;
   elemRight?: React.ReactNode;
   children: React.ReactNode;
 }) {
@@ -21,9 +21,9 @@ export default function SpawnHeadband({
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">
               {title}
             </h1>
-            {litletext && (
+            {littleText && (
               <div className="py-4">
-                <p className="text-sm text-gray-500">{litletext}</p>
+                <p className="text-sm text-gray-500">{littleText}</p>
               </div>
             )}
           </div>
