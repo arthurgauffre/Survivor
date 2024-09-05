@@ -74,22 +74,23 @@ const people = [
   },
 ];
 
-export default function Home() {
+export default async function Home() {
   let numberOfCustomers = 0;
   // calculate number of Customers
-  let littletext = "You have total of " + numberOfCustomers + " Customers";
-
+  let littleText = "You have total of " + numberOfCustomers + " Customers";
+  let data = await fetch('http://fastapi:8000/api/customers');
+  let posts = await data.json();
   return (
     <SpawnHeadband
       title="Customers"
-      litletext={littletext}
+      littleText={littleText}
       elemRight={
         <div className="flex">
-          <button className="ml-4 bg-blue-500 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
+          <button className="ml-4 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
             <CloudArrowDownIcon className="h-6 w-6 mr-2"></CloudArrowDownIcon>
             <p>Export</p>
           </button>
-          <button className="ml-4 bg-blue-500 bg-[#2263b3] text-white py-2 px-2 rounded text-sm">
+          <button className="ml-4 bg-[#2263b3] text-white py-2 px-2 rounded text-sm">
             <PlusIcon className="h-6 w-6"></PlusIcon>
           </button>
         </div>
@@ -136,7 +137,7 @@ export default function Home() {
                 </tr>
               </thead>
               <tbody>
-                {people.map((person) => (
+                {posts.map((person) => (
                   <tr key={person.id}>
                     <td>
                       <input id="RowBox" type="checkbox" />

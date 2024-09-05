@@ -62,7 +62,7 @@ export default function Home() {
   return (
     <SpawnHeadband
       title="Coaches"
-      litletext={littletext}
+      littleText={littletext}
       elemRight={
         <div className="flex">
           <button className="ml-4 bg-blue-500 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
