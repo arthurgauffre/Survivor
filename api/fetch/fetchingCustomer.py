@@ -84,9 +84,9 @@ def fetchingCustomerDetail(acccess_token, database):
 
 def getCustomerDetail(url, headers, customerId, database):
     response = requests.get(url, headers=headers)
-    if response.status_code != 401:
+    if response.status_code == 401:
         acccess_token = loginToken()
-        getCustomerDetail(acccess_token)
+        getCustomerDetail(url, headers, customerId, database)
     customer_data = response.json()
     customer = database.query(Customer).filter(
         Customer.id == customerId.id).first()
@@ -122,7 +122,7 @@ def getCustomerPaymentHistory(customer, headers, database):
         payement_history_url, headers=headers)
     if payement_history_response.status_code == 401:
         acccess_token = loginToken()
-        getCustomerPaymentHistory(acccess_token)
+        getCustomerPaymentHistory(customer, headers, database)
     payement_history_datas = payement_history_response.json()
     if database.query(PayementHistory).filter(
             PayementHistory.customer_id == customer.id).first():
@@ -149,7 +149,7 @@ def getClothesImage(customer, database, headers):
     clothes_response = requests.get(clothes_url, headers=headers)
     if clothes_response.status_code == 401:
         acccess_token = loginToken()
-        getClothesImage(acccess_token)
+        getClothesImage(customer, database, headers)
     clothes_datas = clothes_response.json()
     if database.query(Clothes).filter(
             Clothes.customer_id == customer.id).first():
@@ -161,7 +161,7 @@ def getClothesImage(customer, database, headers):
         clothe_image_response = requests.get(clothe_image, headers=headers)
         if clothe_image_response.status_code == 401:
             acccess_token = loginToken()
-            getClothesImage(acccess_token)
+            getClothesImage(customer, database, headers)
         clothe_image_path = f'images/clothes/{clothes_data.get("id")}.jpg'
         with open(clothe_image_path, 'wb') as image_file:
             image_file.write(clothe_image_response.content)
