@@ -60,7 +60,6 @@ def fetchingAllCustomer(acccess_token, database):
     database.commit()
     return response.json()
 
-
 def fetchingCustomerDetail(acccess_token, database):
     headers = {
         'accept': 'application/json',
@@ -249,6 +248,7 @@ def getClothesImage(customer, headers, database):
 
         # Use a ThreadPoolExecutor to handle concurrent tasks
         num_cores = os.cpu_count()
+        os.write(1, f"Number of cores: {num_cores}\n".encode())
         with ThreadPoolExecutor(max_workers=num_cores) as executor:
             futures = [executor.submit(download_image, clothe_data, headers) for clothe_data in clothes_datas]
             for future in futures:
