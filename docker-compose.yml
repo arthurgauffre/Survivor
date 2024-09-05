@@ -69,11 +69,12 @@ services:
     networks:
       - database-monitoring
     volumes:
-      - ./servers.json:/pgadmin4/servers.json
-      - ./config_local.py:/pgadmin4/config_local.py
+      - pgadmin_data:/pgadmin4
+    attach: false
 
 volumes:
   postgres_data:
+  pgadmin_data:
 
 networks:
   frontend-backend:

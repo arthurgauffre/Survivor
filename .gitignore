@@ -40,6 +40,5 @@ next-env.d.ts
 
 api/images/*/*.jpg
 .env
-servers.json
 
 api/alembic/versions/*
