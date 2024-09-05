@@ -109,7 +109,7 @@ export default async function Home() {
               </button>
             </div>
             <div className="flex">
-              <InputRequest title="Search" placeholderString="Search" />
+              {/* <InputRequest title="Search" placeholderString="Search" /> */}
               <div className="flex items-center border-r-2">
                 <MagnifyingGlassIcon className="h-6 text-gray-400 px-2" />
               </div>
