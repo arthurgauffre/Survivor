@@ -4,6 +4,7 @@ services:
       context: ./
       dockerfile: Dockerfile
       target: nextjs
+    container_name: nextjs
     ports:
       - "3000:3000"
     depends_on:
@@ -18,10 +19,12 @@ services:
       context: ./
       dockerfile: Dockerfile
       target: fastapi
+    container_name: fastapi
     ports:
       - "8000:8000"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     volumes:
       - ./api:/app/api
     networks:
@@ -30,7 +33,7 @@ services:
 
   postgres:
     image: postgres:13
-    container_name: postgres_db
+    container_name: postgres
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       POSTGRES_DB: ${POSTGRES_DB}
@@ -43,6 +46,11 @@ services:
     networks:
       - backend-database
       - database-monitoring
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   pgadmin:
     image: elestio/pgadmin:latest

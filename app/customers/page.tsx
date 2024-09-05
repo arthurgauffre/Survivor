@@ -1,4 +1,4 @@
-import "../component/table.css"
+import "../component/table.css";
 import SpawnHeadband from "../component/SpawnHeadband";
 import InputRequest from "./inputRequest";
 import DropdownMenu from "../component/DropdownMenu";
@@ -123,14 +123,14 @@ export default function Home() {
             <table className="bg-white">
               <thead>
                 <tr>
-                <th className="p-2">
+                  <th>
                     <input id="AllBox" type="checkbox" />
                   </th>
                   <th>Coach</th>
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Payement Method</th>
-                  <th align="right" className="pr-2">
+                  <th align="right">
                     Actions
                   </th>
                 </tr>
@@ -138,7 +138,7 @@ export default function Home() {
               <tbody>
                 {people.map((person) => (
                   <tr key={person.id}>
-                    <td className="p-2">
+                    <td>
                       <input id="RowBox" type="checkbox" />
                     </td>
                     <td>
@@ -161,9 +161,8 @@ export default function Home() {
                       {person.birth_date}
                     </td>
                     <td>
-                      <span className="cell-header">Number of customers:</span>
+                      <span className="cell-header">Payement Method:</span>
                       Ta mère
-
                     </td>
                     <td>
                       <span className="cell-header">Actions:</span>
@@ -173,19 +172,6 @@ export default function Home() {
                 ))}
               </tbody>
             </table>
-
-
-
-
-
-
-
-
-
-
-
-
-
           </li>
         </ul>
       </div>
