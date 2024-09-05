@@ -3,7 +3,9 @@ from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
 from crud.events.eventsGet import getAllEventsPerEmployee
 from schemas.eventsSchemas import EmployeeEventsSchema
-from crud.clothes.clothesGet import getAllClothesImgs, getAllHatFromAUser
+from crud.clothes.clothesGet import (getAllBottomFromAUser,
+                                     getAllClothesImgs, getAllHatFromAUser, getAllShoesFromAUser,
+                                     getAllTopFromAUser)
 from fetch.fetchingEvents import fetchingAllEvents
 from fetch.fetchingEncounter import getAllEncounters, getEncounterById
 from fetch.fetchingTips import fetchingAllTips
@@ -127,14 +129,28 @@ def getClothes(db: Session = Depends(get_db)) -> list[ClothesAllSchema]:
     return getAllClothesImgs(db)
 
 
-# /api/customers/{customer_id}/clothes/hat
 @router.get("/api/customers/{customer_id}/clothes/hat",
             tags=["clothes"])
 def getGivenCustomerHat(customer_id: int, db: Session = Depends(get_db)):
     return getAllHatFromAUser(db, customer_id)
-# /api/customers/{customer_id}/clothes/top
-# /api/customers/{customer_id}/clothes/bottom
-# /api/customers/{customer_id}/clothes/shoes
+
+
+@router.get("/api/customers/{customer_id}/clothes/top",
+            tags=["clothes"])
+def getGivenCustomerTop(customer_id: int, db: Session = Depends(get_db)):
+    return getAllTopFromAUser(db, customer_id)
+
+
+@router.get("/api/customers/{customer_id}/clothes/bottom",
+            tags=["clothes"])
+def getGivenCustomerBottom(customer_id: int, db: Session = Depends(get_db)):
+    return getAllBottomFromAUser(db, customer_id)
+
+
+@router.get("/api/customers/{customer_id}/clothes/shoes",
+            tags=["clothes"])
+def getGivenCustomerShoes(customer_id: int, db: Session = Depends(get_db)):
+    return getAllShoesFromAUser(db, customer_id)
 
 
 @router.get("/api/events/{employee_id}",

@@ -70,13 +70,14 @@ def fetchingCustomerDetail(acccess_token, database):
     for customerId in database.query(Customer).all():
         url = f'https://soul-connection.fr/api/customers/{customerId.id}'
         customer = getCustomerDetail(url, headers, customerId, database)
+        customer_copy = customer.copy()
         database.commit()
         getCustomerImage(acccess_token, customer, headers)
         database.commit()
         getCustomerPaymentHistory(customer, headers, database)
         database.commit()
-        # getClothesImage(customer, headers, database)
-        # database.commit()
+        getClothesImage(customer_copy, headers, database)
+        database.commit()
 
     return {"message": "All customers have been fetched"}
 
