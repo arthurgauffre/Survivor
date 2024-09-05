@@ -9,7 +9,7 @@ let text_style = {
 
 export default function Home() {
   return (
-    <SpawnHeadband title="Dashboard" litletext="Welcome!">
+    <SpawnHeadband title="Dashboard" littleText="Welcome!">
       <div className="flex flex-wrap gap-6" style={text_style}>
         {/* Row 1, Column 1 */}
         <div className="w-full lg:w-[48%] bg-white shadow-md rounded-md p-4">
