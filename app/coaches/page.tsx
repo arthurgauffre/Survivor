@@ -11,54 +11,12 @@ import {
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
 
-const people = [
-  {
-    id: 13085,
-    name: "Leslie",
-    surname: "Alexander",
-    email: "leslie.alexander@example.com",
-    birth_date: "1990-01-01",
-    gender: "female",
-  },
-  {
-    id: 10344,
-    name: "Truc",
-    surname: "Moose",
-    email: "leslie.alexander@example.com",
-    birth_date: "1990-01-01",
-    gender: "male",
-  },
-  {
-    id: 50933,
-    name: "Muche",
-    surname: "Moose",
-    email: "leslie.alexander@example.com",
-    birth_date: "1990-01-01",
-    gender: "male",
-  },
-  {
-    id: 24425,
-    name: "Koda",
-    surname: "Bear",
-    email: "leslie.alexander@example.com",
-    birth_date: "1990-01-01",
-    gender: "male",
-  },
-  {
-    id: 12482,
-    name: "Keenai",
-    surname: "Bear",
-    email: "leslie.alexander@example.com",
-    birth_date: "1990-01-01",
-    gender: "male",
-  },
-];
-
-export default function Home() {
+export default async function Home() {
   let numberOfCoaches = 0;
   // calculate number of coaches
   let littletext = "You have total of " + numberOfCoaches + " coaches";
-
+  let data = await fetch('http://fastapi:8000/api/employees');
+  let coaches = await data.json();
   return (
     <SpawnHeadband
       title="Coaches"
@@ -114,7 +72,7 @@ export default function Home() {
                 </tr>
               </thead>
               <tbody>
-                {people.map((person) => (
+                {coaches.map((person) => (
                   <tr key={person.id}>
                     <td className="p-2">
                       <input id="RowBox" type="checkbox" />
