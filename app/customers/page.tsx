@@ -10,6 +10,7 @@ import {
   CloudArrowDownIcon,
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
+import CheckBoxAll from "../component/CheckBoxAll";
 
 const people = [
   {
@@ -125,7 +126,7 @@ export default async function Home() {
               <thead>
                 <tr>
                   <th>
-                    <input id="AllBox" type="checkbox" />
+                    <CheckBoxAll />
                   </th>
                   <th>Coach</th>
                   <th>Email</th>
@@ -140,7 +141,7 @@ export default async function Home() {
                 {posts.map((person) => (
                   <tr key={person.id}>
                     <td>
-                      <input id="RowBox" type="checkbox" />
+                      <input className="RowBox" type="checkbox" />
                     </td>
                     <td>
                       <span className="cell-header">Coach:</span>

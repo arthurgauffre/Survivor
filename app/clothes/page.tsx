@@ -1,46 +1,30 @@
-import React from "react";
 import SpawnHeadband from "../component/SpawnHeadband";
+import ImgDisplay from "./imgDisplay";
 
 const images = [
   {
     id: 1,
-    imageUrl: "https://thispersondoesnotexist.com/",
+    imageUrl: "https://http.cat/images/530.jpg",
   },
   {
     id: 2,
-    imageUrl: "https://thispersondoesnotexist.com/",
+    imageUrl:
+      "https://i.kym-cdn.com/photos/images/newsfeed/002/422/058/391.jpg",
   },
   {
     id: 3,
-    imageUrl: "https://thispersondoesnotexist.com/",
+    imageUrl:
+      "https://image.spreadshirtmedia.net/image-server/v1/compositions/T235A1PA4253PT17X33Y9D186071565W6476H9353/views/1,width=1200,height=630,appearanceId=1,backgroundColor=F2F2F2/gnome-meme-dank-vous-avez-ete-gnomed-bavoir-bebe.jpg",
   },
   {
     id: 4,
-    imageUrl: "https://thispersondoesnotexist.com/",
+    imageUrl:
+      "https://media.threatpost.com/wp-content/uploads/sites/103/2021/10/14162918/rickroll-e1634243370645.jpg",
   },
   {
     id: 5,
-    imageUrl: "https://thispersondoesnotexist.com/",
-  },
-  {
-    id: 6,
-    imageUrl: "https://thispersondoesnotexist.com/",
-  },
-  {
-    id: 7,
-    imageUrl: "https://thispersondoesnotexist.com/",
-  },
-  {
-    id: 8,
-    imageUrl: "https://thispersondoesnotexist.com/",
-  },
-  {
-    id: 9,
-    imageUrl: "https://thispersondoesnotexist.com/",
-  },
-  {
-    id: 10,
-    imageUrl: "https://thispersondoesnotexist.com/",
+    imageUrl:
+      "https://http.cat/images/202.jpg",
   },
 ];
 
@@ -48,40 +32,10 @@ export default function Home() {
   return (
     <SpawnHeadband title="Clothes">
       <div className="bg-white">
-        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8">
-          <h2 className="text-2xl font-bold tracking-tight text-gray-900">
-            Customers also purchased
-          </h2>
-
-          <div className="mt-6 grid grid-cols-1 gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-4 xl:gap-x-8">
-            {images.map((product) => (
-              <div key={product.id} className="group relative">
-                <div className="aspect-h-1 aspect-w-1 w-full overflow-hidden rounded-md bg-gray-200 lg:aspect-none group-hover:opacity-75 lg:h-80">
-                  <img
-                    alt={product.id}
-                    src={product.imageUrl}
-                    className="h-full w-full object-cover object-center lg:h-full lg:w-full"
-                  />
-                </div>
-                <div className="mt-4 flex justify-between">
-                  <div>
-                    <h3 className="text-sm text-gray-700">
-                      <a href={product.href}>
-                        <span aria-hidden="true" className="absolute inset-0" />
-                        {product.name}
-                      </a>
-                    </h3>
-                    <p className="mt-1 text-sm text-gray-500">
-                      {product.color}
-                    </p>
-                  </div>
-                  <p className="text-sm font-medium text-gray-900">
-                    {product.price}
-                  </p>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div className="mx-auto max-w-2xl px-4 py-16 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 space-y-1">
+          <ImgDisplay images={images}></ImgDisplay>
+          <ImgDisplay images={images}></ImgDisplay>
+          <ImgDisplay images={images}></ImgDisplay>
         </div>
       </div>
     </SpawnHeadband>
