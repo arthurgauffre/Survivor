@@ -1,18 +1,15 @@
 import SpawnHeadband from "../component/SpawnHeadband";
+import AstroDropDownMenu from './AstroCompatibility';
 
-// async function getCoaches() {
-// let data = await fetch('http://fastapi:8000/api/clothes');
-// let posts = await data.json();
-// console.log(posts);
-// };
+export default async function Home() {
+    let data = await fetch('http://fastapi:8000/api/customers');
+    let posts = await data.json();
 
-// getCoaches();
-
-export default function Home() {
-  return (
-    <SpawnHeadband title="Compatibility">
-      <div className="flex">
-      </div>
-    </SpawnHeadband>
-  );
+    const customerList: [string, string][] = posts.map((customer: any) => [customer.name, customer.astrologicalSign]);
+    console.log(customerList);
+    return (
+        <SpawnHeadband title="Compatibility">
+            <AstroDropDownMenu data={customerList} />
+        </SpawnHeadband>
+    );
 }
