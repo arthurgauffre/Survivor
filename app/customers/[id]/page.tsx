@@ -1,6 +1,6 @@
 "use client";
 
-import "./../../component/table.css";
+import "../../component/table.css";
 import { useState } from "react";
 import React from "react";
 import {

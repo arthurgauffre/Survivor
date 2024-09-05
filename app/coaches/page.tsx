@@ -1,3 +1,6 @@
+'use client'
+
+import "../component/table.css";
 import SpawnHeadband from "../component/SpawnHeadband";
 import InputRequest from "./inputRequest";
 import DropdownMenu from "../component/DropdownMenu";
@@ -15,6 +18,15 @@ const ActionsActions = [
   { name: "Edit", href: "coaches", class: "" },
   { name: "Delete", href: "#", class: " text-red-500" },
 ];
+
+async function getCoaches() {
+  let data = await fetch("http://fastapi:8000/api/employees");
+  console.log(data);
+  let posts = await data.json();
+  console.log(posts);
+}
+
+// getCoaches();
 
 const coaches = [
   {
@@ -77,11 +89,11 @@ export default function Home() {
       litletext={littletext}
       elemRight={
         <div className="flex">
-          <button className="ml-4 bg-blue-500 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
+          <button className="ml-4 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
             <CloudArrowDownIcon className="h-6 w-6 mr-2"></CloudArrowDownIcon>
             <p>Export</p>
           </button>
-          <button className="ml-4 bg-blue-500 bg-[#2263b3] text-white py-2 px-2 rounded text-sm">
+          <button className="ml-4 bg-[#2263b3] text-white py-2 px-2 rounded text-sm">
             <PlusIcon className="h-6 w-6"></PlusIcon>
           </button>
         </div>
@@ -116,24 +128,24 @@ export default function Home() {
               <thead>
                 <tr>
                   <th className="p-2">
-                    <input
-                      id="AllBox"
-                      type="checkbox"
-                      onClick={handleAllBoxClick}
-                    />
+                    <input id="AllBox" type="checkbox" onClick={handleAllBoxClick}/>
                   </th>
                   <th>Coach</th>
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Number of customers</th>
-                  <th align="right" className="pr-2">
-                    Actions
-                  </th>
+                  <th align="right">Actions</th>
                 </tr>
-                {people.map((person) => (
-                  <tr className="border" key={person.id}>
+              </thead>
+              <tbody>
+                {coaches.map((person) => (
+                  <tr key={person.id} className="border">
                     <td className="p-2">
-                      <input className="RowBox" type="checkbox" />
+                      <input
+                        type="checkbox"
+                        className="RowBox"
+                        onClick={handleAllBoxClick}
+                      />
                     </td>
                     <td>
                       <span className="cell-header">Coach:</span>
@@ -146,10 +158,40 @@ export default function Home() {
                         {person.name} {person.surname}
                       </div>
                     </td>
-                    <td>{person.email}</td>
-                    <td>{person.birth_date}</td>
-                    <td className="pr-2" align="right">
-                      <EllipsisHorizontalIcon className="h-6 text-gray-400 px-2"></EllipsisHorizontalIcon>
+                    <td>
+                      <span className="cell-header">Email:</span>
+                      {person.email}
+                    </td>
+                    <td>
+                      <span className="cell-header">Phone:</span>
+                      {person.birth_date}
+                    </td>
+                    <td>
+                      <span className="cell-header">Number of customers:</span>
+                      {person.birth_date}
+                    </td>
+                    <td align="right">
+                      <span className="cell-header">Actions:</span>
+                      <Menu>
+                        <MenuButton className="relative flex max-w-xs items-center">
+                          <EllipsisHorizontalIcon className="h-6 text-gray-400 px-2"></EllipsisHorizontalIcon>
+                        </MenuButton>
+                        <MenuItems
+                          transition
+                          className="absolute right-8 z-10 mt-2 px-2 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                        >
+                          {ActionsActions.map((item) => (
+                            <MenuItem key={item.name}>
+                              <a
+                                href={item.href + "/" + person.id}
+                                className={"block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" + item.class}
+                              >
+                                {item.name}
+                              </a>
+                            </MenuItem>
+                          ))}
+                        </MenuItems>
+                      </Menu>
                     </td>
                   </tr>
                 ))}
