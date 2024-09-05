@@ -42,4 +42,4 @@ api/images/*/*.jpg
 .env
 servers.json
 
-# api/alembic/versions/*
+api/alembic/versions/*
