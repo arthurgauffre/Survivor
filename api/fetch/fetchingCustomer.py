@@ -97,7 +97,6 @@ def getCustomerDetail(url, headers, customerId, database):
     customer.gender = customer_data.get('gender')
     customer.description = customer_data.get('description')
     customer.astrologicalSign = customer_data.get('astrological_sign')
-    # database.add(customer)
     return customer
 
 

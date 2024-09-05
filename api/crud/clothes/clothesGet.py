@@ -22,3 +22,21 @@ def getAllClothesImgs(db: Session):
         ))
     return listOfAllClothes
 
+
+def getAllHatFromAUser(db: Session, customer_id: int):
+    allClothes = db.query(Clothes).filter(
+        Clothes.customer_id == customer_id).all()
+    listOfAllClothes = []
+    for clothe in allClothes:
+        image_path = f"/app/api/images/clothes/{clothe.id}.jpg"
+        image_url = f"http://fastapi:8000/static/clothes/{clothe.id}.jpg"
+        if not os.path.exists(image_path):
+            raise HTTPException(status_code=404, detail="Image not found")
+        if clothe.type == "hat":
+            listOfAllClothes.append(ClothesAllSchema(
+                id=clothe.id,
+                customer_id=clothe.customer_id,
+                type=clothe.type,
+                link=image_url
+            ))
+    return listOfAllClothes

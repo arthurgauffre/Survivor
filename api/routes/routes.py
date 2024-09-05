@@ -1,7 +1,9 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
-from crud.clothes.clothesGet import getAllClothesImgs
+from crud.events.eventsGet import getAllEventsPerEmployee
+from schemas.eventsSchemas import EmployeeEventsSchema
+from crud.clothes.clothesGet import getAllClothesImgs, getAllHatFromAUser
 from fetch.fetchingEvents import fetchingAllEvents
 from fetch.fetchingEncounter import getAllEncounters, getEncounterById
 from fetch.fetchingTips import fetchingAllTips
@@ -123,3 +125,20 @@ def getTheCurrentEmployeeImg(employee_id: int, db: Session = Depends(
             tags=["clothes"], response_model=list[ClothesAllSchema])
 def getClothes(db: Session = Depends(get_db)) -> list[ClothesAllSchema]:
     return getAllClothesImgs(db)
+
+
+# /api/customers/{customer_id}/clothes/hat
+@router.get("/api/customers/{customer_id}/clothes/hat",
+            tags=["clothes"])
+def getGivenCustomerHat(customer_id: int, db: Session = Depends(get_db)):
+    return getAllHatFromAUser(db, customer_id)
+# /api/customers/{customer_id}/clothes/top
+# /api/customers/{customer_id}/clothes/bottom
+# /api/customers/{customer_id}/clothes/shoes
+
+
+@router.get("/api/events/{employee_id}",
+            tags=["events"],
+            response_model=list[EmployeeEventsSchema])
+def getEmployeeEvents(employee_id: int, db: Session = Depends(get_db)):
+    return getAllEventsPerEmployee(db, employee_id)
