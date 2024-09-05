@@ -34,31 +34,29 @@ def fetchingAllCustomer(acccess_token, database):
         acccess_token = loginToken()
         fetchingAllCustomer(acccess_token)
 
-    # Parse JSON response and create Customer instances
     customers_data = response.json()
 
     for customer_data in customers_data:
-        # Create a new Customer object
         customer = Customer(
             id=customer_data.get('id'),
             email=customer_data.get('email'),
-            password=customer_data.get('password'),
             name=customer_data.get('name'),
-            surname=customer_data.get('surname'),
-            birthdate=customer_data.get('birthdate'),
-            gender=customer_data.get('gender'),
-            description=customer_data.get('description'),
-            astrologicalSign=customer_data.get('astrologicalSign'),
+            surname=customer_data.get('surname')
         )
 
-        # Add the new customer to the customers table
         if not database.query(Customer).filter(
                 Customer.id == customer.id).first():
             database.add(customer)
+        else:
+            database.update(customer).where(
+                Customer.id == customer.id).values(
+                email=customer.email,
+                name=customer.name,
+                surname=customer.surname
+            )
 
-    # Commit the session to save all changes
-    database.commit()
-    return response.json()
+        database.commit()
+    return {"message": "All customers have been fetched"}
 
 
 def fetchingCustomerDetail(acccess_token, database):
@@ -79,7 +77,7 @@ def fetchingCustomerDetail(acccess_token, database):
         database.commit()
         getClothesImage(customer, headers, database)
         database.commit()
-        os.write(1, f"Customer {customerId.id} has been fetched\n".encode())
+        os.write("backlog.log", f"Customer {customerId.id} has been fetched\n".encode())
 
     return {"message": "All customers have been fetched"}
 
