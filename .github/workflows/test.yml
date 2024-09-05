@@ -19,6 +19,9 @@ jobs:
         with:
           repository: ""
 
+      - name: Setup environment
+        run: cp .env.example .env
+
       - name: Launch project
         run: docker compose up --build -d
 

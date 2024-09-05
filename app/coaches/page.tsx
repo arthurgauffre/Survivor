@@ -2,6 +2,7 @@ import "../component/table.css";
 import SpawnHeadband from "../component/SpawnHeadband";
 import InputRequest from "./inputRequest";
 import DropdownMenu from "../component/DropdownMenu";
+import CheckBoxAll from "../component/CheckBoxAll";
 import {
   MagnifyingGlassIcon,
   AdjustmentsHorizontalIcon,
@@ -10,66 +11,29 @@ import {
   CloudArrowDownIcon,
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
+import { MenuButton, Menu, MenuItem, MenuItems } from "@headlessui/react";
 
-const people = [
-  {
-    id: 13085,
-    name: "Leslie",
-    surname: "Alexander",
-    email: "leslie.alexander@example.com",
-    birth_date: "1990-01-01",
-    gender: "female",
-  },
-  {
-    id: 10344,
-    name: "Truc",
-    surname: "Moose",
-    email: "leslie.alexander@example.com",
-    birth_date: "1990-01-01",
-    gender: "male",
-  },
-  {
-    id: 50933,
-    name: "Muche",
-    surname: "Moose",
-    email: "leslie.alexander@example.com",
-    birth_date: "1990-01-01",
-    gender: "male",
-  },
-  {
-    id: 24425,
-    name: "Koda",
-    surname: "Bear",
-    email: "leslie.alexander@example.com",
-    birth_date: "1990-01-01",
-    gender: "male",
-  },
-  {
-    id: 12482,
-    name: "Keenai",
-    surname: "Bear",
-    email: "leslie.alexander@example.com",
-    birth_date: "1990-01-01",
-    gender: "male",
-  },
+const ActionsActions = [
+  { name: "Edit", href: "coaches", class: "" },
+  { name: "Delete", href: "#", class: " text-red-500" },
 ];
 
-export default function Home() {
-  let numberOfCoaches = 0;
-  // calculate number of coaches
-  let littletext = "You have total of " + numberOfCoaches + " coaches";
+export default async function Home() {
+  let data = await fetch('http://fastapi:8000/api/employees');
+  let coaches = await data.json();
+  let littletext = "You have total of " + coaches.length + " coaches";
 
   return (
     <SpawnHeadband
       title="Coaches"
-      litletext={littletext}
+      littleText={littletext}
       elemRight={
         <div className="flex">
-          <button className="ml-4 bg-blue-500 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
+          <button className="ml-4 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
             <CloudArrowDownIcon className="h-6 w-6 mr-2"></CloudArrowDownIcon>
             <p>Export</p>
           </button>
-          <button className="ml-4 bg-blue-500 bg-[#2263b3] text-white py-2 px-2 rounded text-sm">
+          <button className="ml-4 bg-[#2263b3] text-white py-2 px-2 rounded text-sm">
             <PlusIcon className="h-6 w-6"></PlusIcon>
           </button>
         </div>
@@ -88,7 +52,7 @@ export default function Home() {
               </button>
             </div>
             <div className="flex">
-              <InputRequest title="Search" placeholderString="Search" />
+              {/* <InputRequest title="Search" placeholderString="Search" /> */}
               <div className="flex items-center border-r-2">
                 <MagnifyingGlassIcon className="h-6 text-gray-400 px-2" />
               </div>
@@ -104,20 +68,20 @@ export default function Home() {
               <thead>
                 <tr>
                   <th className="p-2">
-                    <input id="AllBox" type="checkbox" />
+                    <CheckBoxAll />
                   </th>
                   <th>Coach</th>
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Number of customers</th>
-                  <th>Actions</th>
+                  <th align="right" className="pr-4">Actions</th>
                 </tr>
               </thead>
               <tbody>
-                {people.map((person) => (
+                {coaches.map((person) => (
                   <tr key={person.id}>
                     <td className="p-2">
-                      <input id="RowBox" type="checkbox" />
+                      <input className="RowBox" type="checkbox" />
                     </td>
                     <td>
                       <span className="cell-header">Coach:</span>
@@ -142,9 +106,28 @@ export default function Home() {
                       <span className="cell-header">Number of customers:</span>
                       {person.birth_date}
                     </td>
-                    <td>
+                    <td align="right" className="pr-6">
                       <span className="cell-header">Actions:</span>
-                      <EllipsisHorizontalIcon className="h-6 text-gray-400 px-2"></EllipsisHorizontalIcon>
+                      <Menu>
+                        <MenuButton className="relative flex max-w-xs items-center">
+                          <EllipsisHorizontalIcon className="h-6 text-gray-400 px-2"></EllipsisHorizontalIcon>
+                        </MenuButton>
+                        <MenuItems
+                          transition
+                          className="absolute right-8 z-10 mt-2 px-2 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                        >
+                          {ActionsActions.map((item) => (
+                            <MenuItem key={item.name}>
+                              <a
+                                href={item.href + "/" + person.id}
+                                className={"block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" + item.class}
+                              >
+                                {item.name}
+                              </a>
+                            </MenuItem>
+                          ))}
+                        </MenuItems>
+                      </Menu>
                     </td>
                   </tr>
                 ))}
