@@ -10,6 +10,12 @@ import {
   CloudArrowDownIcon,
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
+import { MenuButton, Menu, MenuItem, MenuItems } from "@headlessui/react";
+
+const ActionsActions = [
+  { name: "Edit", href: "coaches", class: "" },
+  { name: "Delete", href: "#", class: " text-red-500" },
+];
 
 export default async function Home() {
   let data = await fetch('http://fastapi:8000/api/employees');
@@ -66,7 +72,7 @@ export default async function Home() {
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Number of customers</th>
-                  <th>Actions</th>
+                  <th align="right" className="pr-4">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -98,9 +104,28 @@ export default async function Home() {
                       <span className="cell-header">Number of customers:</span>
                       {person.birth_date}
                     </td>
-                    <td>
+                    <td align="right" className="pr-6">
                       <span className="cell-header">Actions:</span>
-                      <EllipsisHorizontalIcon className="h-6 text-gray-400 px-2"></EllipsisHorizontalIcon>
+                      <Menu>
+                        <MenuButton className="relative flex max-w-xs items-center">
+                          <EllipsisHorizontalIcon className="h-6 text-gray-400 px-2"></EllipsisHorizontalIcon>
+                        </MenuButton>
+                        <MenuItems
+                          transition
+                          className="absolute right-8 z-10 mt-2 px-2 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                        >
+                          {ActionsActions.map((item) => (
+                            <MenuItem key={item.name}>
+                              <a
+                                href={item.href + "/" + person.id}
+                                className={"block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" + item.class}
+                              >
+                                {item.name}
+                              </a>
+                            </MenuItem>
+                          ))}
+                        </MenuItems>
+                      </Menu>
                     </td>
                   </tr>
                 ))}
