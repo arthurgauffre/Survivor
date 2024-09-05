@@ -11,76 +11,18 @@ import {
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
 import CheckBoxAll from "../component/CheckBoxAll";
+import { MenuButton, Menu, MenuItem, MenuItems } from "@headlessui/react";
 
-const people = [
-  {
-    id: 1932437,
-    email: "TaMEre@gmail.com",
-    name: "Koda",
-    surname: "Bear",
-    birth_date: "1885-1-18",
-    gender: "male",
-    description: "string",
-    astrological_sign: "string",
-    phone_number: "07 85 93 85 93",
-    address: "string",
-  },
-  {
-    id: 1435872,
-    email: "TaCousine@gmail.com",
-    name: "Keenai",
-    surname: "Bear",
-    birth_date: "1545-5-10",
-    gender: "male",
-    description: "string",
-    astrological_sign: "string",
-    phone_number: "06 27 94 47 58",
-    address: "string",
-  },
-  {
-    id: 1235084,
-    email: "TaTante@gmail.com",
-    name: "string",
-    surname: "string",
-    birth_date: "string",
-    gender: "string",
-    description: "string",
-    astrological_sign: "string",
-    phone_number: "string",
-    address: "string",
-  },
-  {
-    id: 3649835,
-    email: "TaSoeur@gmail.com",
-    name: "string",
-    surname: "string",
-    birth_date: "string",
-    gender: "string",
-    description: "string",
-    astrological_sign: "string",
-    phone_number: "string",
-    address: "string",
-  },
-  {
-    id: 2487643,
-    email: "TonPere@gmail.com",
-    name: "string",
-    surname: "string",
-    birth_date: "string",
-    gender: "string",
-    description: "string",
-    astrological_sign: "string",
-    phone_number: "string",
-    address: "string",
-  },
+const ActionsActions = [
+  { name: "Edit", href: "customers", class: "" },
+  { name: "Delete", href: "#", class: " text-red-500" },
 ];
 
 export default async function Home() {
-  let numberOfCustomers = 0;
-  // calculate number of Customers
-  let littleText = "You have total of " + numberOfCustomers + " Customers";
-  let data = await fetch('http://fastapi:8000/api/customers');
+  let data = await fetch("http://fastapi:8000/api/customers");
   let posts = await data.json();
+  let littleText = "You have total of " + posts.length + " Customers";
+
   return (
     <SpawnHeadband
       title="Customers"
@@ -132,9 +74,7 @@ export default async function Home() {
                   <th>Email</th>
                   <th>Phone</th>
                   <th>Payement Method</th>
-                  <th align="right">
-                    Actions
-                  </th>
+                  <th align="right" className="pr-4">Actions</th>
                 </tr>
               </thead>
               <tbody>
@@ -164,11 +104,32 @@ export default async function Home() {
                     </td>
                     <td>
                       <span className="cell-header">Payement Method:</span>
-                      Ta mère
                     </td>
-                    <td>
+                    <td align="right" >
                       <span className="cell-header">Actions:</span>
-                      <EllipsisHorizontalIcon className="h-6 text-gray-400 px-2"></EllipsisHorizontalIcon>
+                      <Menu>
+                        <MenuButton className="relative flex max-w-xs items-center">
+                          <EllipsisHorizontalIcon className="h-6 text-gray-400 px-2"></EllipsisHorizontalIcon>
+                        </MenuButton>
+                        <MenuItems
+                          transition
+                          className="absolute right-8 z-10 mt-2 px-2 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
+                        >
+                          {ActionsActions.map((item) => (
+                            <MenuItem key={item.name}>
+                              <a
+                                href={item.href + "/" + person.id}
+                                className={
+                                  "block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100" +
+                                  item.class
+                                }
+                              >
+                                {item.name}
+                              </a>
+                            </MenuItem>
+                          ))}
+                        </MenuItems>
+                      </Menu>
                     </td>
                   </tr>
                 ))}
