@@ -9,42 +9,56 @@ export default function PaymentMethod({
     case "PayPal":
       return (
         <div className="flex items-center ">
-          <img
+          <Image
             alt="Paypal"
             src="https://cdn.simpleicons.org/paypal/white"
-            className="h-4 w-4 bg-[#003087]"
+            width={16}
+            height={16}
+            style={{
+              backgroundColor: "#003087",
+            }}
           />
         </div>
       );
     case "Bank Transfer":
       return (
         <div className="flex items-center">
-          <img
-            alt="Bank Transfer"
+          <Image
+            alt="Visa"
             src="https://cdn.simpleicons.org/visa/white"
-            className="h-4 w-4 bg-[#1A1F71]"
+            width={16}
+            height={16}
+            style={{
+              backgroundColor: "#1A1F71",
+            }}
           />
         </div>
       );
     case "Credit Card":
       return (
-        <div className="flex items-center bg-black">
+        <div className="flex items-center">
           <Image
             alt="Credit Card"
             src="https://cdn.simpleicons.org/mastercard/white"
             width={16}
             height={16}
-            //   className="h-4 w-4 bg-[#EB001B]"
+            style={{
+              backgroundColor: "#FF5F00",
+            }}
           />
         </div>
       );
     default:
       return (
         <div className="flex items-center ">
-          <img
-            alt="Paypal"
+          <Image
+            alt="Visa"
             src="https://cdn.simpleicons.org/visa/white"
-            className="h-4 w-4 bg-[#1A1F71]"
+            width={16}
+            height={16}
+            style={{
+              backgroundColor: "#1A1F71",
+            }}
           />
         </div>
       );
