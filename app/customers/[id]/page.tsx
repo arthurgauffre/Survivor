@@ -1,12 +1,13 @@
 "use client";
 
 import "./../../component/table.css";
-import { useState } from "react";
+import PaymentMethod from "../../component/PaymentMethod";
 import React from "react";
 import {
   EnvelopeIcon,
   BookmarkIcon,
   StarIcon,
+  ArrowLeftIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon as BlackStarIcon } from "@heroicons/react/24/solid";
 import SpawnHeadband from "../../component/SpawnHeadband";
@@ -138,7 +139,7 @@ function MeetingTable({
   }[];
 }) {
   return (
-    <table className="w-full border text-left border-collapse">
+    <table>
       <tbody>
         <tr>
           <th>Date</th>
@@ -148,12 +149,13 @@ function MeetingTable({
         </tr>
         {meetings.map((meeting) => (
           <tr key={meeting.id}>
-            <td className="text-[#1267c5]">
+            <td>
               <span className="cell-header">Date:</span>
-              {new Date(meeting.date).toDateString()}
+              <div className="text-[#1267c5]">
+                {new Date(meeting.date).toDateString()}
+              </div>
             </td>
             <td>
-              {" "}
               <span className="cell-header">Rating:</span>
               <div className="flex">
                 {Rating(meeting.rating).map((star) => star)}
@@ -182,7 +184,7 @@ function PaymentHistoryTable({
     amount: number;
     comment: string;
   }[];
-}) {
+}): JSX.Element {
   return (
     <table>
       <thead>
@@ -196,13 +198,15 @@ function PaymentHistoryTable({
       <tbody>
         {paymentsHistory.map((payment) => (
           <tr key={payment.id}>
-            <td className="text-[#1267c5]">
-              <span className="cell-header">Date:</span>{" "}
-              {new Date(payment.date).toDateString()}
+            <td>
+              <span className="cell-header">Date:</span>
+              <div className="text-[#1267c5]">
+                {new Date(payment.date).toDateString()}
+              </div>
             </td>
             <td>
-              <span className="cell-header">Payment Method:</span>{" "}
-              {payment.payment_method}
+              <span className="cell-header">Payment Method:</span>
+              <PaymentMethod payment={payment.payment_method} />
             </td>
             <td>
               <span className="cell-header">Amount:</span> {payment.amount}
@@ -217,9 +221,21 @@ function PaymentHistoryTable({
   );
 }
 
-export default function Page({ params }: { params: { id: string } }) {
+export default function Page({ params }: { params: { id: string } }) : JSX.Element {
   return (
-    <SpawnHeadband title={params.id}>
+    <SpawnHeadband
+      title={params.id}
+      elemRight={
+        <div className="flex">
+          <a href="/customers">
+            <button className="ml-4 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
+              <ArrowLeftIcon className="h-6 w-6 mr-2" />
+              <p>Back</p>
+            </button>
+          </a>
+        </div>
+      }
+    >
       <div className="flex flex-wrap gap-2">
         <div className="flex-col border bg-white">
           <div className="border-b items-center text-center justify-center p-2">

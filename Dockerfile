@@ -11,8 +11,9 @@ RUN pip install -r /app/requirements.txt
 
 COPY ./api/ ./
 COPY ./.env /app/.env
+COPY ./run_migration.sh /app/run_migration.sh
 
-CMD ["python3", "-m", "uvicorn", "index:app", "--reload", "--host", "0.0.0.0" ]
+CMD ["/app/run_migration.sh"]
 
 
 FROM node:alpine as nextjs
