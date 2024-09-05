@@ -8,7 +8,8 @@ services:
     ports:
       - "3000:3000"
     depends_on:
-      - fastapi
+      fastapi:
+        condition: service_healthy
     volumes:
       - ./app:/app/app
     networks:
@@ -30,6 +31,11 @@ services:
     networks:
       - frontend-backend
       - backend-database
+    healthcheck:
+      test: ["CMD-SHELL", "wget -nv -t1 --spider 'http://localhost:8000'"]
+      timeout: 5s
+      interval: 5s
+      retries: 10
 
   postgres:
     image: postgres:13
