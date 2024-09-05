@@ -21,3 +21,5 @@ def getAllClothesImgs(db: Session):
             link=image_url
         ))
     return listOfAllClothes
+
+
