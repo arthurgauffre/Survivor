@@ -47,13 +47,13 @@ def fetchingAllCustomer(acccess_token, database):
         if not database.query(Customer).filter(
                 Customer.id == customer.id).first():
             database.add(customer)
-        else:
-            database.update(customer).where(
-                Customer.id == customer.id).values(
-                email=customer.email,
-                name=customer.name,
-                surname=customer.surname
-            )
+        # else:
+        #     database.update(customer).where(
+        #         Customer.id == customer.id).values(
+        #         email=customer.email,
+        #         name=customer.name,
+        #         surname=customer.surname
+        #     )
 
     database.commit()
     return {"message": "All customers have been fetched"}
@@ -77,7 +77,7 @@ def fetchingCustomerDetail(acccess_token, database):
         database.commit()
         # getClothesImage(customer, headers, database)
         # database.commit()
-        os.write("backlog.log", f"Customer {customerId.id} has been fetched\n".encode())
+        # os.write("backlog.log", f"Customer {customerId.id} has been fetched\n".encode())
 
     return {"message": "All customers have been fetched"}
 
