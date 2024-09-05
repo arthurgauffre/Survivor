@@ -1,5 +1,6 @@
 import "./globals.css";
 import { Inter } from "next/font/google";
+import { ContextProvider } from 'auth-lib'
 
 
 import NavBar from "./component/navbar";
@@ -21,7 +22,7 @@ export default function RootLayout({
       <body className="{inter.className} text-[#334760] sticky top-0">
         <div className="min-h-screen bg-[#f5f6fa]">
           <NavBar/>
-          {children}
+          <ContextProvider>{children}</ContextProvider>
         </div>
       </body>
     </html>
