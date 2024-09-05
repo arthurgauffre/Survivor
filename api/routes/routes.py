@@ -15,7 +15,7 @@ from crud.customers.customerGet import getAllRealCustomers
 from crud.employees.employeesGet import (getAllRealEmployees,
                                          getAnEmployeePersonalInfos,
                                          getCurrentEmployeeImg)
-from schemas.userSchemas import BasicUserSchema
+from schemas.customerSchemas import CustomerBasicSchema
 from crud.encounters.encountersGet import getEncounterForCustomer
 from schemas.encounterSchemas import EncounterByCustomerSchema
 from schemas.clothesSchemas import ClothesAllSchema
@@ -44,6 +44,8 @@ class SeedState:
             getEncounterById(access_token, db)
             fetchingAllEvents(access_token, db)
             self._is_seeded = True
+            with open("seeded.txt", "w") as f:
+                f.write("Database seeded")
             return {"message": "Database seeded successfully"}
         else:
             self._is_seeded = True
@@ -84,19 +86,19 @@ def getEmployeesEncounter(customer_id: int, db: Session = Depends(
     return getEncounterForCustomer(db, customer_id)
 
 
-@router.get("/api/employees/", response_model=list[BasicUserSchema],
+@router.get("/api/employees/", response_model=list[EmployeePersonalInfoSchema],
             tags=["employees"],
             )
 def getEmployees(db: Session = Depends(get_db)) -> list[
-        BasicUserSchema]:
+        EmployeePersonalInfoSchema]:
     return getAllRealEmployees(db)
 
 
-@router.get("/api/customers/", response_model=list[BasicUserSchema],
+@router.get("/api/customers/", response_model=list[CustomerBasicSchema],
             tags=["customers"],
             )
 def getCustomers(db: Session = Depends(get_db)) -> list[
-        BasicUserSchema]:
+        CustomerBasicSchema]:
     return getAllRealCustomers(db)
 
 

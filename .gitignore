@@ -42,3 +42,4 @@ api/images/*/*.jpg
 .env
 
 api/alembic/versions/*
+api/seeded.txt

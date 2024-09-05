@@ -17,6 +17,9 @@ def getAllRealEmployees(db: Session):
                 "name": employee.name,
                 "surname": employee.surname,
                 "email": employee.email,
+                "birthdate": employee.birthdate,
+                "gender": employee.gender,
+                "work": employee.work
             }
         )
     return listOfAllEmployees
