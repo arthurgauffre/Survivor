@@ -15,14 +15,14 @@ export default function SpawnHeadband({
 }) {
   return (
     <>
-      <header className="pt-4">
+      <header className="sm:pt-4 pt-2">
         <div className="mx-auto px-4 sm:px-6 lg:px-8 flex justify-between">
           <div>
             <h1 className="text-3xl font-bold tracking-tight text-gray-900">
               {title}
             </h1>
             {littleText && (
-              <div className="py-4">
+              <div className="sm:py-4 pt-2">
                 <p className="text-sm text-gray-500">{littleText}</p>
               </div>
             )}

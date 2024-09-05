@@ -16,35 +16,22 @@ type CompatibilityData = {
     }
 };
 
-// List of astrological signs
-const astrologicalSigns = [
-    "aries",
-    "taurus",
-    "gemini",
-    "cancer",
-    "leo",
-    "virgo",
-    "libra",
-    "scorpio",
-    "sagittarius",
-    "capricorn",
-    "aquarius",
-    "pisces",
-];
-
 export default function AstroDropDownMenu ( { data } : { data: [string, string][]}) {
+    // create a list of data name
+    const name: string[] = data.map((customer) => customer[0]);
     const [compatibility, setCompatibility] = useState<number | null>(null);
-    const [selectedValue1, setSelectedValue1] = useState<string>('toto');
-    const [selectedValue2, setSelectedValue2] = useState<string>('toto');
+    const [selectedValue1, setSelectedValue1] = useState<string>('');
+    const [selectedValue2, setSelectedValue2] = useState<string>('');
+    const contabilityCalcul = useEffect(() => {
+        if (selectedValue1 && selectedValue2) {
+            const dataCompability: CompatibilityData = compatibilityData;
+            const percentage = dataCompability.compatibility[(selectedValue1 && data[data.findIndex((customer) => customer[0] === selectedValue1)])[1]]?.[(selectedValue2 && data[data.findIndex((customer) => customer[0] === selectedValue2)])[1]] || null;
+            setCompatibility(percentage);
+        }
+    }, [selectedValue1, selectedValue2]);
 
     if (selectedValue1 && selectedValue2) {
-        useEffect(() => {
-            if (selectedValue1 && selectedValue2) {
-                const data: CompatibilityData = compatibilityData;
-                const percentage = data.compatibility[selectedValue1]?.[selectedValue2] || null;
-                setCompatibility(percentage);
-            }
-        }, [selectedValue1, selectedValue2]);
+        contabilityCalcul;
     }
     const updateSelectedValue1 = (selectedValue: string): void => {
         setSelectedValue1(selectedValue)
@@ -61,13 +48,13 @@ export default function AstroDropDownMenu ( { data } : { data: [string, string][
 
                 <div className='flex justify-evenly flex-wrap'>
                     <div>
-                        <label className="block mb-1 text-sm">First Sign:</label>
-                        <NewDropdownMenu options={astrologicalSigns} updateSelectedValue={updateSelectedValue1} />
+                        <label className="block mb-1 text-sm">First Sign: {(selectedValue1 && data[data.findIndex((customer) => customer[0] === selectedValue1)])[1]}</label>
+                        <NewDropdownMenu options={name} updateSelectedValue={updateSelectedValue1} />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-sm">Second Sign:</label>
-                        <NewDropdownMenu options={astrologicalSigns} updateSelectedValue={updateSelectedValue2} />
+                        <label className="block mb-1 text-sm">Second Sign: {(selectedValue2 && data[data.findIndex((customer) => customer[0] === selectedValue2)])[1]}</label>
+                        <NewDropdownMenu options={name} updateSelectedValue={updateSelectedValue2} />
                     </div>
                 </div>
 

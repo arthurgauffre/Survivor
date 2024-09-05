@@ -5,11 +5,8 @@ export default async function Home() {
     let data = await fetch('http://fastapi:8000/api/customers');
     let posts = await data.json();
 
-    const customerList: [string, string][] = posts.map((customer: any) => [customer.name, customer.astrologicalSign]);
-    console.log(customerList);
+    const customerList: [string, string][] = posts.map((customer: any) => [customer.name + " " + customer.surname, customer.astrologicalSign]);
     return (
-        <SpawnHeadband title="Compatibility">
-            <AstroDropDownMenu data={customerList} />
-        </SpawnHeadband>
+        <AstroDropDownMenu data={customerList} />
     );
 }

@@ -18,7 +18,7 @@ export default function imgDisplay({
         className="max-w-72 max-h-72 object-cover px-10 max-sm:hidden"
       />
 
-      <div className="flex max-h-80 relative items-center justify-center max-sm:max-w-80">
+      <div className="flex sm:max-h-80 max-h-60 relative items-center justify-center max-sm:max-w-80">
         <button
           onClick={() => setI(i == 0 ? listLen - 1 : i - 1)}
           className="py-1 px-1 rounded text-sm flex text-white items-center absolute origin-center top-auto left-0 bg-gray-500 opacity-30 hover:opacity-100"
@@ -28,7 +28,7 @@ export default function imgDisplay({
 
         <img
           src={images[i].imageUrl}
-          className="max-w-fill max-h-72 lg:max-w-sm"
+          className="max-w-fill sm:max-h-72 max-h-28 lg:max-w-sm"
         />
 
         <button
