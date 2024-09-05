@@ -12,22 +12,20 @@ import {
 } from "@heroicons/react/20/solid";
 
 export default async function Home() {
-  let numberOfCoaches = 0;
-  // calculate number of coaches
-  let littletext = "You have total of " + numberOfCoaches + " coaches";
   let data = await fetch('http://fastapi:8000/api/employees');
   let coaches = await data.json();
+  let littletext = "You have total of " + coaches.length + " coaches";
   return (
     <SpawnHeadband
       title="Coaches"
       littleText={littletext}
       elemRight={
         <div className="flex">
-          <button className="ml-4 bg-blue-500 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
+          <button className="ml-4 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
             <CloudArrowDownIcon className="h-6 w-6 mr-2"></CloudArrowDownIcon>
             <p>Export</p>
           </button>
-          <button className="ml-4 bg-blue-500 bg-[#2263b3] text-white py-2 px-2 rounded text-sm">
+          <button className="ml-4 bg-[#2263b3] text-white py-2 px-2 rounded text-sm">
             <PlusIcon className="h-6 w-6"></PlusIcon>
           </button>
         </div>
@@ -46,7 +44,7 @@ export default async function Home() {
               </button>
             </div>
             <div className="flex">
-              <InputRequest title="Search" placeholderString="Search" />
+              {/* <InputRequest title="Search" placeholderString="Search" /> */}
               <div className="flex items-center border-r-2">
                 <MagnifyingGlassIcon className="h-6 text-gray-400 px-2" />
               </div>
