@@ -2,6 +2,7 @@ import "../component/table.css";
 import SpawnHeadband from "../component/SpawnHeadband";
 import InputRequest from "./inputRequest";
 import DropdownMenu from "../component/DropdownMenu";
+import CheckBoxAll from "../component/CheckBoxAll";
 import {
   MagnifyingGlassIcon,
   AdjustmentsHorizontalIcon,
@@ -21,6 +22,7 @@ export default async function Home() {
   let data = await fetch('http://fastapi:8000/api/employees');
   let coaches = await data.json();
   let littletext = "You have total of " + coaches.length + " coaches";
+
   return (
     <SpawnHeadband
       title="Coaches"
@@ -66,7 +68,7 @@ export default async function Home() {
               <thead>
                 <tr>
                   <th className="p-2">
-                    <input id="AllBox" type="checkbox" />
+                    <CheckBoxAll />
                   </th>
                   <th>Coach</th>
                   <th>Email</th>
@@ -79,7 +81,7 @@ export default async function Home() {
                 {coaches.map((person) => (
                   <tr key={person.id}>
                     <td className="p-2">
-                      <input id="RowBox" type="checkbox" />
+                      <input className="RowBox" type="checkbox" />
                     </td>
                     <td>
                       <span className="cell-header">Coach:</span>

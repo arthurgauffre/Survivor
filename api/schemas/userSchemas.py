@@ -6,3 +6,7 @@ class BasicUserSchema(BaseModel):
     email: str
     name: str
     surname: str
+    birthdate: str
+    gender: str
+    description: str
+    astrologicalSign: str
