@@ -75,8 +75,8 @@ def fetchingCustomerDetail(acccess_token, database):
         database.commit()
         getCustomerPaymentHistory(customer, headers, database)
         database.commit()
-        getClothesImage(customer, headers, database)
-        database.commit()
+        # getClothesImage(customer, headers, database)
+        # database.commit()
 
     return {"message": "All customers have been fetched"}
 
