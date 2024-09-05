@@ -56,10 +56,6 @@ export default async function Home() {
               <div className="flex items-center border-r-2">
                 <MagnifyingGlassIcon className="h-6 text-gray-400 px-2" />
               </div>
-              <div className="flex items-center ml-2">
-                <AdjustmentsHorizontalIcon className="h-6 text-gray-400 px-2" />
-                <Cog8ToothIcon className="h-6 text-gray-400 px-2" />
-              </div>
             </div>
           </li>
 
