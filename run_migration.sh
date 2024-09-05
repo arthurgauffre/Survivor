@@ -1,4 +1,5 @@
 #!/usr/bin/env sh
+rm -rf api/alembic/version/*
 alembic revision --autogenerate -m "migration of the db"
 alembic upgrade head
 

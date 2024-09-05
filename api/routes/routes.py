@@ -1,19 +1,25 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
+from crud.clothes.clothesGet import getAllClothesImgs
 from fetch.fetchingEvents import fetchingAllEvents
 from fetch.fetchingEncounter import getAllEncounters, getEncounterById
 from fetch.fetchingTips import fetchingAllTips
 from fetch.fetchingCustomer import fetchingAllCustomer, fetchingCustomerDetail
 from loginTokenRetriever import loginToken
-from fetch.fetchingEmployee import getAllEmployees, getEmployeeById
+from fetch.fetchingEmployee import (getAllEmployees, getEmployeeById,
+                                    getEmployeeImg)
 from database.tableRelationships import Employee
 from schemas.employeeSchemas import EmployeePersonalInfoSchema
 from crud.customers.customerGet import getAllRealCustomers
 from crud.employees.employeesGet import (getAllRealEmployees,
-                                         getAnEmployeePersonalInfos)
+                                         getAnEmployeePersonalInfos,
+                                         getCurrentEmployeeImg)
 from schemas.userSchemas import BasicUserSchema
 from crud.encounters.encountersGet import getEncounterForCustomer
 from schemas.encounterSchemas import EncounterByCustomerSchema
+from schemas.clothesSchemas import ClothesAllSchema
+
 from database.database import get_db
 
 
@@ -30,7 +36,7 @@ class SeedState:
         if not db.query(Employee).first():
             getAllEmployees(access_token, db)
             getEmployeeById(access_token, db)
-            # getEmployeeImg(access_token, db)
+            getEmployeeImg(access_token, db)
             fetchingAllCustomer(access_token, db)
             fetchingCustomerDetail(access_token, db)
             fetchingAllTips(access_token, db)
@@ -52,6 +58,14 @@ class SeedState:
 
 def get_seed_state():
     return SeedState()
+
+
+router.mount("/static/employees", StaticFiles(
+    directory="/app/api/images/employees/"), name="employees")
+
+
+router.mount("/static/clothes", StaticFiles(
+    directory="/app/api/images/clothes"), name="clothes")
 
 
 @router.on_event("startup")
@@ -93,3 +107,17 @@ def getCustomers(db: Session = Depends(get_db)) -> list[
 def getAnEmployeeInfos(employee_id: int, db: Session = Depends(
         get_db)) -> EmployeePersonalInfoSchema:
     return getAnEmployeePersonalInfos(db, employee_id)
+
+
+@router.get("/api/employees/{employee_id}/image",
+            tags=["employees"],
+            )
+def getTheCurrentEmployeeImg(employee_id: int, db: Session = Depends(
+        get_db)):
+    return getCurrentEmployeeImg(db, employee_id)
+
+
+@router.get("/api/clothes",
+            tags=["clothes"], response_model=list[ClothesAllSchema])
+def getClothes(db: Session = Depends(get_db)) -> list[ClothesAllSchema]:
+    return getAllClothesImgs(db)

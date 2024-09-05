@@ -14,6 +14,10 @@ def getAllRealCustomers(db: Session):
                 "name": customer.name,
                 "surname": customer.surname,
                 "email": customer.email,
+                "birthdate": customer.birthdate,
+                "gender": customer.gender,
+                "description": customer.description,
+                "astrologicalSign": customer.astrologicalSign,
             }
         )
     return listOfAllCustomers
