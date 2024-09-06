@@ -13,10 +13,12 @@ export default function imgDisplay({
 
   return (
     <div className="sm:grid sm:grid-cols-3 relative aspect-h-1 justify-center items-center aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none max-h-80">
-      <img
-        src={images[i == 0 ? listLen - 1 : i - 1].imageUrl}
-        className="max-w-72 max-h-72 object-cover px-10 max-sm:hidden justify-center items-center"
-      />
+      <div className="grow justify-center items-center text-center flex">
+        <img
+          src={images[i == 0 ? listLen - 1 : i - 1].imageUrl}
+          className="max-w-52 max-h-52 object-cover max-sm:hidden"
+        />
+      </div>
 
       <div className="flex sm:max-h-80 max-h-60 relative items-center justify-center max-sm:max-w-80">
         <button
@@ -28,7 +30,7 @@ export default function imgDisplay({
 
         <img
           src={images[i].imageUrl}
-          className="max-w-fill sm:max-h-72 max-h-28 lg:max-w-sm"
+          className="max-w-fill sm:max-h-52 max-h-32 lg:max-w-sm"
         />
 
         <button
@@ -39,10 +41,12 @@ export default function imgDisplay({
         </button>
       </div>
 
-      <img
-        src={images[(i + 1) % listLen].imageUrl}
-        className="max-w-72 max-h-72 object-cover px-10 max-sm:hidden justify-center"
-      />
+      <div className="grow justify-center items-center text-center flex">
+        <img
+          src={images[(i + 1) % listLen].imageUrl}
+          className="max-w-52 max-h-52 object-cover max-sm:hidden"
+        />
+      </div>
     </div>
   );
 }
