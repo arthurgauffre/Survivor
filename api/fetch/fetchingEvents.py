@@ -43,18 +43,22 @@ def fetchingAllEvents(acccess_token, database):
         if response.status_code == 401:
             access_token = loginToken()
             fetchingAllEvents(access_token, database)
-        event_data = response.json()
-        event = Events(
-            id=event_data.get('id'),
-            name=event_data.get('name'),
-            date=event_data.get('date'),
-            duration=event_data.get('duration'),
-            max_participants=event_data.get('max_participants'),
-            location_x=event_data.get('location_x'),
-            location_y=event_data.get('location_y'),
-            type=event_data.get('type'),
-            employee_id=event_data.get('employee_id'),
-            location_name=event_data.get('location_name')
+        try:
+            event_data = response.json()
+        except:
+            pass
+        if event_data is not None:
+            event = Events(
+                id=event_data.get('id'),
+                name=event_data.get('name'),
+                date=event_data.get('date'),
+                duration=event_data.get('duration'),
+                max_participants=event_data.get('max_participants'),
+                location_x=event_data.get('location_x'),
+                location_y=event_data.get('location_y'),
+                type=event_data.get('type'),
+                employee_id=event_data.get('employee_id'),
+                location_name=event_data.get('location_name')
         )
 
         # Add the new customer to the customers table

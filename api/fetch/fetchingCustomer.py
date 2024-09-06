@@ -87,6 +87,7 @@ def getCustomerDetail(url, headers, customerId, database):
     if response.status_code == 401:
         acccess_token = loginToken()
         getCustomerDetail(url, headers, customerId, database)
+    customer_data = {}
     try:
         customer_data = response.json()
     except BaseException:
