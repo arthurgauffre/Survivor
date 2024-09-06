@@ -12,7 +12,6 @@ export default async function Home() {
     description: string;
     astrologicalSign: string;
   }[] = await data.json();
-  let littletext = "You have total of " + coaches.length + " coaches";
 
   return (
     <CoachesTable coaches={coaches} />
