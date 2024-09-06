@@ -17,7 +17,7 @@ def getAllRealEmployees(db: Session):
                 "name": employee.name,
                 "surname": employee.surname,
                 "email": employee.email,
-                "birthdate": employee.birthdate,
+                "birth_date": employee.birth_date,
                 "gender": employee.gender,
                 "work": employee.work
             }
@@ -33,7 +33,7 @@ def getAnEmployeePersonalInfos(db: Session, employee_id: int):
         email=actualEmployee.email,
         name=actualEmployee.name,
         surname=actualEmployee.surname,
-        birthdate=actualEmployee.birthdate,
+        birth_date=actualEmployee.birth_date,
         gender=actualEmployee.gender,
         work=actualEmployee.work
     )

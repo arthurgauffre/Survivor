@@ -9,6 +9,6 @@ class EmployeeBaseSchema(BaseModel):
 
 
 class EmployeePersonalInfoSchema(EmployeeBaseSchema):
-    birthdate: str
+    birth_date: str
     gender: str
     work: str

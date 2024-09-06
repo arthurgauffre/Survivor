@@ -57,7 +57,7 @@ class Employee(Base):
     password = Column(String, index=True)
     name = Column(String, index=True)
     surname = Column(String, index=True)
-    birthdate = Column(String, index=True)
+    birth_date = Column(String, index=True)
     gender = Column(String, index=True)
     work = Column(String, index=True)
 
@@ -70,10 +70,12 @@ class Customer(Base):
     password = Column(String, index=True)
     name = Column(String, index=True)
     surname = Column(String, index=True)
-    birthdate = Column(String, index=True)
+    birth_date = Column(String, index=True)
     gender = Column(String, index=True)
     description = Column(String, index=True)
     astrologicalSign = Column(String, index=True)
+    phone_number = Column(String, index=True)
+    address = Column(String, index=True)
     payementHistory = relationship("PayementHistory",
                                    back_populates="customer")
     clothes = relationship("Clothes", back_populates="customer")

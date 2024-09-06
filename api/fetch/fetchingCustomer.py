@@ -69,14 +69,14 @@ def fetchingCustomerDetail(acccess_token, database):
 
     for customerId in database.query(Customer).all():
         url = f'https://soul-connection.fr/api/customers/{customerId.id}'
-        customer = getCustomerDetail(url, headers, customerId, database)
+        getCustomerDetail(url, headers, customerId, database)
         database.commit()
-        getCustomerImage(acccess_token, customer, headers)
+        getCustomerImage(acccess_token, customerId, headers, database)
         database.commit()
-        getCustomerPaymentHistory(customer, headers, database)
+        getCustomerPaymentHistory(customerId, headers, database)
         database.commit()
-        # getClothesImage(customer, headers, database)
-        # database.commit()
+        getClothesImage(customerId, database, headers)
+        database.commit()
 
     return {"message": "All customers have been fetched"}
 
@@ -93,34 +93,38 @@ def getCustomerDetail(url, headers, customerId, database):
     customer.password = customer_data.get('password')
     customer.name = customer_data.get('name')
     customer.surname = customer_data.get('surname')
-    customer.birthdate = customer_data.get('birth_date')
+    customer.birth_date = customer_data.get('birth_date')
     customer.gender = customer_data.get('gender')
     customer.description = customer_data.get('description')
     customer.astrologicalSign = customer_data.get('astrological_sign')
     return customer
 
 
-def getCustomerImage(acccess_token, customer, headers):
+def getCustomerImage(acccess_token, customerId, headers, database):
+    customer = database.query(Customer).filter(
+        Customer.id == customerId.id).first()
     image_url = f'https://soul-connection.fr/api/customers/{
             customer.id}/image'
     image_response = requests.get(image_url, headers=headers)
 
     if image_response.status_code == 401:
         acccess_token = loginToken()
-        getCustomerImage(acccess_token)
+        getCustomerImage(acccess_token, customerId, headers)
     image_path = f'images/customers/{customer.id}.jpg'
     with open(image_path, 'wb') as image_file:
         image_file.write(image_response.content)
 
 
-def getCustomerPaymentHistory(customer, headers, database):
+def getCustomerPaymentHistory(customerId, headers, database):
+    customer = database.query(Customer).filter(
+        Customer.id == customerId.id).first()
     payement_history_url = f'https://soul-connection.fr/api/customers/{
             customer.id}/payments_history'
     payement_history_response = requests.get(
         payement_history_url, headers=headers)
     if payement_history_response.status_code == 401:
         acccess_token = loginToken()
-        getCustomerPaymentHistory(customer, headers, database)
+        getCustomerPaymentHistory(customerId, headers, database)
     payement_history_datas = payement_history_response.json()
     if database.query(PayementHistory).filter(
             PayementHistory.customer_id == customer.id).first():
@@ -140,8 +144,10 @@ def getCustomerPaymentHistory(customer, headers, database):
             database.add(payement_history)
 
 
-def getClothesImage(customer, database, headers):
+def getClothesImage(customerId, database, headers):
     # try:
+    customer = database.query(Customer).filter(
+        Customer.id == customerId.id).first()
     clothes_url = f'https://soul-connection.fr/api/customers/{
         customer.id}/clothes'
     clothes_response = requests.get(clothes_url, headers=headers)
