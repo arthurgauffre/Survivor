@@ -22,11 +22,15 @@ def fetchingAllTips(acccess_token, database):
         'Authorization': 'Bearer ' + acccess_token["access_token"],
     }
 
-    response = requests.get(url, json=None, headers=headers)
+    try:
+        response = requests.get(url, headers=headers)
+    except BaseException:
+        acccess_token = loginToken()
+        fetchingAllTips(acccess_token, database)
 
     if response.status_code == 401:
         acccess_token = loginToken()
-        fetchingAllTips(acccess_token)
+        fetchingAllTips(acccess_token, database)
 
     # Parse JSON response and create Customer instances
     tips_data = response.json()

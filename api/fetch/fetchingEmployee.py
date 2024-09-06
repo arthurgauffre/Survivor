@@ -22,7 +22,11 @@ def getAllEmployees(access_token, db):
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
-    response = requests.get(url, headers=headers)
+    try:
+        response = requests.get(url, headers=headers)
+    except BaseException:
+        access_token = loginToken()
+        getAllEmployees(access_token, db)
 
     if response.status_code == 401:
         access_token = loginToken()
@@ -60,7 +64,11 @@ def getEmployeeById(access_token, db):
 
     for employeeId in db.query(Employee).all():
         url = f'https://soul-connection.fr/api/employees/{employeeId.id}'
-        response = requests.get(url, headers=headers)
+        try:
+            response = requests.get(url, headers=headers)
+        except BaseException:
+            access_token = loginToken()
+            getEmployeeById(access_token, db)
         if response.status_code == 401:
             access_token = loginToken()
             getEmployeeById(access_token, db)
@@ -93,7 +101,11 @@ def getEmployeeImg(access_token, db):
 
     for employeeId in db.query(Employee).all():
         url = f'https://soul-connection.fr/api/employees/{employeeId.id}/image'
-        response = requests.get(url, headers=headers)
+        try:
+            response = requests.get(url, headers=headers)
+        except BaseException:
+            access_token = loginToken()
+            getEmployeeImg(access_token, db)
         if response.status_code == 401:
             access_token = loginToken()
             getEmployeeImg(access_token, db)

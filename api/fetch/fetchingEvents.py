@@ -23,7 +23,11 @@ def fetchingAllEvents(acccess_token, database):
         'Authorization': 'Bearer ' + acccess_token["access_token"],
     }
 
-    response = requests.get(url, headers=headers)
+    try:
+        response = requests.get(url, headers=headers)
+    except BaseException:
+        acccess_token = loginToken()
+        fetchingAllEvents(acccess_token, database)
 
     if response.status_code == 401:
         acccess_token = loginToken()
@@ -39,13 +43,17 @@ def fetchingAllEvents(acccess_token, database):
     for event_data in events_data:
         # Create a new Customer object
         event_url = f'https://soul-connection.fr/api/events/{event_data.get("id")}'
-        response = requests.get(event_url, headers=headers)
+        try:
+            response = requests.get(event_url, headers=headers)
+        except BaseException:
+            access_token = loginToken()
+            fetchingAllEvents(access_token, database)
         if response.status_code == 401:
             access_token = loginToken()
             fetchingAllEvents(access_token, database)
         try:
             event_data = response.json()
-        except:
+        except BaseException:
             pass
         if event_data is not None:
             event = Events(

@@ -21,7 +21,11 @@ def getAllEncounters(access_token, db):
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
-    response = requests.get(url, headers=headers)
+    try:
+        response = requests.get(url, headers=headers)
+    except BaseException:
+        access_token = loginToken()
+        getAllEncounters(access_token, db)
 
     if response.status_code == 401:
         access_token = loginToken()

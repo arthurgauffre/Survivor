@@ -29,7 +29,11 @@ def fetchingAllCustomer(acccess_token, database):
         'Authorization': 'Bearer ' + acccess_token["access_token"],
     }
 
-    response = requests.get(url, json=None, headers=headers)
+    try:
+        response = requests.get(url, json=None, headers=headers)
+    except BaseException:
+        acccess_token = loginToken()
+        fetchingAllCustomer(acccess_token, database)
 
     if response.status_code == 401:
         acccess_token = loginToken()
@@ -83,9 +87,13 @@ def fetchingCustomerDetail(acccess_token, database):
 
 
 def getCustomerDetail(url, headers, customerId, database):
-    response = requests.get(url, headers=headers)
+    try:
+        response = requests.get(url, headers=headers)
+    except BaseException:
+        getCustomerDetail(url, headers, customerId, database)
+
     if response.status_code == 401:
-        acccess_token = loginToken()
+        # acccess_token = loginToken()
         getCustomerDetail(url, headers, customerId, database)
     customer_data = {}
     try:
@@ -114,7 +122,10 @@ def getCustomerImage(acccess_token, customerId, headers, database):
         Customer.id == customerId.id).first()
     image_url = f'https://soul-connection.fr/api/customers/{
             customer.id}/image'
-    image_response = requests.get(image_url, headers=headers)
+    try:
+        image_response = requests.get(image_url, headers=headers)
+    except BaseException:
+        getCustomerImage(acccess_token, customerId, headers, database)
 
     if image_response.status_code == 401:
         acccess_token = loginToken()
@@ -129,10 +140,14 @@ def getCustomerPaymentHistory(customerId, headers, database):
         Customer.id == customerId.id).first()
     payement_history_url = f'https://soul-connection.fr/api/customers/{
             customer.id}/payments_history'
-    payement_history_response = requests.get(
-        payement_history_url, headers=headers)
+    payement_history_response = ""
+    try:
+        payement_history_response = requests.get(
+            payement_history_url, headers=headers)
+    except BaseException:
+        pass
     if payement_history_response.status_code == 401:
-        acccess_token = loginToken()
+        # acccess_token = loginToken()
         getCustomerPaymentHistory(customerId, headers, database)
     payement_history_datas = {}
     try:
@@ -173,7 +188,11 @@ def getClothesImage(customerId, database, headers):
         Customer.id == customerId.id).first()
     clothes_url = f'https://soul-connection.fr/api/customers/{
         customer.id}/clothes'
-    clothes_response = requests.get(clothes_url, headers=headers)
+    try:
+        clothes_response = requests.get(clothes_url, headers=headers)
+    except BaseException:
+        getClothesImage(customerId, database, headers)
+
     clothes_datas = {}
     if clothes_response.status_code == 401:
         acccess_token = loginToken()
@@ -191,10 +210,14 @@ def getClothesImage(customerId, database, headers):
     for clothes_data in clothes_datas:
         clothe_image = f'https://soul-connection.fr/api/clothes/{
             clothes_data.get("id")}/image'
-        clothe_image_response = requests.get(clothe_image, headers=headers)
+        try:
+            clothe_image_response = requests.get(clothe_image, headers=headers)
+        except BaseException:
+            getClothesImage(customerId, database, headers)
+
         if clothe_image_response.status_code == 401:
-            acccess_token = loginToken()
-            getClothesImage(customer, database, headers)
+            # acccess_token = loginToken()
+            getClothesImage(customerId, database, headers)
         clothe_image_path = f'images/clothes/{clothes_data.get("id")}.jpg'
         with open(clothe_image_path, 'wb') as image_file:
             image_file.write(clothe_image_response.content)
