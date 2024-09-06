@@ -49,12 +49,12 @@ def fetchingAllCustomer(acccess_token, database):
                 Customer.id == customer.id).first():
             database.add(customer)
         else:
-            database.update(Customer).where(
-                Customer.id == customer.id).values(
-                email=customer.email,
-                name=customer.name,
-                surname=customer.surname
-            )
+            currentCustomer = database.query(Customer).filter(
+                Customer.id == customer.id)
+            currentCustomer.id = customer.id
+            currentCustomer.email = customer.email
+            currentCustomer.name = customer.name
+            currentCustomer.surname = customer.surname
 
     database.commit()
     return {"message": "All customers have been fetched"}
@@ -72,12 +72,12 @@ def fetchingCustomerDetail(acccess_token, database):
         url = f'https://soul-connection.fr/api/customers/{customerId.id}'
         getCustomerDetail(url, headers, customerId, database)
         database.commit()
-        getCustomerImage(acccess_token, customerId, headers, database)
-        database.commit()
+        # getCustomerImage(acccess_token, customerId, headers, database)
+        # database.commit()
         getCustomerPaymentHistory(customerId, headers, database)
         database.commit()
-        getClothesImage(customerId, database, headers)
-        database.commit()
+        # getClothesImage(customerId, database, headers)
+        # database.commit()
 
     return {"message": "All customers have been fetched"}
 
@@ -158,13 +158,13 @@ def getCustomerPaymentHistory(customerId, headers, database):
                 PayementHistory.id == payement_history.id).first():
             database.add(payement_history)
         else:
-            database.update(PayementHistory).where(
-                PayementHistory.id == payement_history.id).values(
-                date=payement_history.date,
-                amount=payement_history.amount,
-                comment=payement_history.comment,
-                payment_method=payement_history.payment_method
-            )
+            currentPayementHistory = database.query(PayementHistory).filter(
+                PayementHistory.id == payement_history.id)
+            currentPayementHistory.id = payement_history.id
+            currentPayementHistory.date = payement_history.date
+            currentPayementHistory.amount = payement_history.amount
+            currentPayementHistory.comment = payement_history.comment
+            currentPayementHistory.payment_method = payement_history.payment_method
 
 
 def getClothesImage(customerId, database, headers):
@@ -174,10 +174,16 @@ def getClothesImage(customerId, database, headers):
     clothes_url = f'https://soul-connection.fr/api/customers/{
         customer.id}/clothes'
     clothes_response = requests.get(clothes_url, headers=headers)
+    clothes_datas = {}
     if clothes_response.status_code == 401:
         acccess_token = loginToken()
         getClothesImage(customer, database, headers)
-    clothes_datas = clothes_response.json()
+    try:
+        clothes_datas = clothes_response.json()
+    except BaseException:
+        # acccess_token = loginToken()
+        # getClothesImage(customer, database, headers)
+        pass
     if database.query(Clothes).filter(
             Clothes.customer_id == customer.id).first():
         database.query(Clothes).filter(
@@ -202,11 +208,11 @@ def getClothesImage(customerId, database, headers):
                 Clothes.id == clothes_data.get('id')).first():
             database.add(clothe)
         else:
-            database.update(Clothes).where(
-                Clothes.id == clothe.id).values(
-                customer_id=clothe.customer_id,
-                type=clothe.type
-            )
+            currentClothe = database.query(Clothes).filter(
+                Clothes.id == clothe.id)
+            currentClothe.customer_id = clothe.customer_id
+            currentClothe.id = clothe.id
+            currentClothe.type = clothe.type
     # except ConnectionError as e:
     #     print("An error from the soul-connection API has occurred:", e)
 

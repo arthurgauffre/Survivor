@@ -39,11 +39,11 @@ def getAllEmployees(access_token, db):
                 Employee.id == employee.id).first():
             db.add(employee)
         else:
-            db.update(Employee).where(Employee.id == employee.id).values(
-                email=employee.email,
-                name=employee.name,
-                surname=employee.surname,
-            )
+            currentEmployee = db.query(Employee).filter(
+                Employee.id == employee.id).first()
+            currentEmployee.email = employee.email
+            currentEmployee.name = employee.name
+            currentEmployee.surname = employee.surname
         db.commit()
 
     return response.json()

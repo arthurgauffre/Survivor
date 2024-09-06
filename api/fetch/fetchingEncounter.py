@@ -57,6 +57,7 @@ def getEncounterById(access_token, db):
         if response.status_code == 401:
             access_token = loginToken()
             getEncounterById(access_token, db)
+        encounter_data = {}
         try:
             encounter_data = response.json()
         except BaseException:

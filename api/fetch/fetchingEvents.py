@@ -66,18 +66,17 @@ def fetchingAllEvents(acccess_token, database):
                 Events.id == event.id).first():
             database.add(event)
         else:
-            database.update(Events).where(Events.id == event.id).values(
-                name=event.name,
-                date=event.date,
-                duration=event.duration,
-                max_participants=event.max_participants,
-                location_x=event.location_x,
-                location_y=event.location_y,
-                type=event.type,
-                employee_id=event.employee_id,
-                location_name=event.location_name
-            )
+            currentEvent = database.query(Events).filter(
+                Events.id == event.id).first()
+            currentEvent.name = event.name
+            currentEvent.date = event.date
+            currentEvent.duration = event.duration
+            currentEvent.max_participants = event.max_participants
+            currentEvent.location_x = event.location_x
+            currentEvent.location_y = event.location_y
+            currentEvent.type = event.type
+            currentEvent.employee_id = event.employee_id
+            currentEvent.location_name = event.location_name
 
-    # Commit the session to save all changes
     database.commit()
     return {"message": "Database seeded with events"}

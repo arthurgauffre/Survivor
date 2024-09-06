@@ -44,11 +44,9 @@ def fetchingAllTips(acccess_token, database):
                 Tips.id == tip.id).first():
             database.add(tip)
         else:
-            database.update(Tips).where(Tips.id == tip.id).values(
-                title=tip.title,
-                tip=tip.tip
-            )
-
-    # Commit the session to save all changes
+            currentTip = database.query(Tips).filter(
+                Tips.id == tip.id).first()
+            currentTip.title = tip.title
+            currentTip.tip = tip.tip
     database.commit()
     return response.json()

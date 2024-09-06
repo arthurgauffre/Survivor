@@ -33,6 +33,8 @@ from database.database import get_db
 router = APIRouter()
 
 access_token = loginToken()
+while access_token == {}:
+    access_token = loginToken()
 
 
 class SeedState:
