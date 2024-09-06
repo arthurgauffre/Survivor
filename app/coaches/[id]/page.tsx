@@ -9,6 +9,54 @@ import {
 import { StarIcon as BlackStarIcon } from "@heroicons/react/24/solid";
 import SpawnHeadband from "../../component/SpawnHeadband";
 import CoachesChartEventsStatistics from "@/app/component/coachesChartEventsStatistics";
+import CoachesRatingsChart from "@/app/component/coachesRatingsChart";
+
+const meetings = [
+    {
+        id: 1,
+        customer_id: 17,
+        date: "2023-12-21",
+        rating: 2,
+        comment: "A very good moment!",
+        source: "school",
+    },
+    {
+        id: 2,
+        customer_id: 17,
+        date: "2023-12-21",
+        rating: 2,
+        comment: "A very good moment!",
+        source: "school",
+    },
+    {
+        id: 3,
+        customer_id: 17,
+        date: "2023-12-21",
+        rating: 2,
+        comment: "A very good moment!",
+        source: "school",
+    },
+    {
+        id: 4,
+        customer_id: 17,
+        date: "2023-12-21",
+        rating: 2,
+        comment: "A very good moment!",
+        source: "school",
+    },
+    {
+        id: 5,
+        customer_id: 17,
+        date: "2023-12-21",
+        rating: 2,
+        comment: "A very good moment!",
+        source: "school",
+    },
+];
+
+const Links = {
+    customers_id: [17]
+};
 
 function Rating(numberStar: number) {
     const rating = [];
@@ -48,9 +96,9 @@ export default async function Page({ params }: { params: { id: string } }): Prom
                 </div>
             }
         >
-            <div className="flex flex-wrap gap-2">
-                <div className="flex-col border bg-white rounded-md">
-                    <div className="flex flex-col items-center justify-center text-center border-b p-2">
+            <div className="sm:flex sm:flex-row gap-2">
+                <div className="sm:flex-col border bg-white rounded-md">
+                    <div className="sm:flex flex-col items-center justify-center text-center border-b p-2">
                         <img
                             alt="Image of user"
                             src={imgUrl}
@@ -63,7 +111,7 @@ export default async function Page({ params }: { params: { id: string } }): Prom
                         <br />
                         <p className="text-gray-500">Email:</p>
                         <p>{postsEmployees.email}</p>
-                        <br/>
+                        <br />
                         <p className="text-gray-500">Birthdate:</p>
                         <p>{postsEmployees.birthdate}</p>
                         <br />
@@ -74,9 +122,16 @@ export default async function Page({ params }: { params: { id: string } }): Prom
                         <p>{postsEmployees.work}</p>
                     </div>
                 </div>
-                <div className="flex flex-wrap grow border bg-white p-2 rounded-md">
-                    <div className="w-2/3">
-                        <CoachesChartEventsStatistics data={postsEvents}/>
+                <div className="sm:flex sm:flex-wrap sm:w-full gap-2">
+                    <div className="sm:w-full bg-white p-2 rounded-md">
+                        <div className="md:w-1/2">
+                            <CoachesChartEventsStatistics data={postsEvents} />
+                        </div>
+                    </div>
+                    <div className="sm:w-full bg-white p-2 rounded-md max-sm:my-1">
+                        <div className="md:w-1/3">
+                            <CoachesRatingsChart data={postsEvents} />
+                        </div>
                     </div>
                 </div>
             </div>
