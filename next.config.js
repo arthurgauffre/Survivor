@@ -39,6 +39,11 @@ module.exports = {
         hostname: 'cdn.simpleicons.org',
         port: '',
       },
+      {
+        protocol: 'https',
+        hostname: 'cdn-icons-png.flaticon.com',
+        port: '',
+      }
     ],
   },
 }
