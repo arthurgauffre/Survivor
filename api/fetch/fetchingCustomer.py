@@ -134,6 +134,7 @@ def getCustomerPaymentHistory(customerId, headers, database):
     if payement_history_response.status_code == 401:
         acccess_token = loginToken()
         getCustomerPaymentHistory(customerId, headers, database)
+    payement_history_datas = {}
     try:
         payement_history_datas = payement_history_response.json()
     except BaseException:

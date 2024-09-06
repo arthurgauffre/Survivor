@@ -12,9 +12,9 @@ from fetch.fetchingEncounter import getAllEncounters, getEncounterById
 from fetch.fetchingTips import fetchingAllTips
 from fetch.fetchingCustomer import fetchingAllCustomer, fetchingCustomerDetail
 from loginTokenRetriever import loginToken
-from fetch.fetchingEmployee import (getAllEmployees, getEmployeeById,
+from fetch.fetchingEmployee import (fillingEmployeeCustomerTable,
+                                    getAllEmployees, getEmployeeById,
                                     getEmployeeImg)
-from database.tableRelationships import Employee
 from schemas.employeeSchemas import EmployeePersonalInfoSchema
 from crud.customers.customerGet import getAllRealCustomers
 from crud.employees.employeesGet import (getAllRealEmployees,
@@ -39,22 +39,23 @@ class SeedState:
         self._is_seeded = False
 
     def seed_database(self, db: Session):
-        if not db.query(Employee).first():
-            getAllEmployees(access_token, db)
-            getEmployeeById(access_token, db)
-            getEmployeeImg(access_token, db)
-            fetchingAllCustomer(access_token, db)
-            fetchingCustomerDetail(access_token, db)
-            fetchingAllTips(access_token, db)
-            getAllEncounters(access_token, db)
-            getEncounterById(access_token, db)
-            fetchingAllEvents(access_token, db)
-            self._is_seeded = True
-            with open("seeded.txt", "w") as f:
-                f.write("Database seeded")
-            return {"message": "Database seeded successfully"}
-        else:
-            self._is_seeded = True
+        # if not db.query(Employee).first():
+        fetchingAllCustomer(access_token, db)
+        fetchingCustomerDetail(access_token, db)
+        getAllEmployees(access_token, db)
+        getEmployeeById(access_token, db)
+        getEmployeeImg(access_token, db)
+        fillingEmployeeCustomerTable(db)
+        fetchingAllTips(access_token, db)
+        getAllEncounters(access_token, db)
+        getEncounterById(access_token, db)
+        fetchingAllEvents(access_token, db)
+        self._is_seeded = True
+        with open("seeded.txt", "w") as f:
+            f.write("Database seeded")
+        return {"message": "Database seeded successfully"}
+        # else:
+        #     self._is_seeded = True
 
     def check_seeded(self):
         if self._is_seeded is False:

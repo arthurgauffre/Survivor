@@ -1,10 +1,11 @@
-from json import JSONDecodeError
+from random import choice
 import requests
 from loginTokenRetriever import loginToken
+from sqlalchemy.orm import Session
 import os
 from dotenv import load_dotenv
 
-from database.tableRelationships import Employee
+from database.tableRelationships import Customer, Employee, EmployeeCustomer
 
 load_dotenv()
 
@@ -102,3 +103,21 @@ def getEmployeeImg(access_token, db):
         with open(img_path, 'wb') as file:
             file.write(response.content)
     return {"message": "Images downloaded"}
+
+
+def fillingEmployeeCustomerTable(db: Session):
+    allEmployees = db.query(Employee).all()
+    allCustomers = db.query(Customer).all()
+
+    listOfAllCustomersId = []
+
+    for customerId in allCustomers:
+        listOfAllCustomersId.append(customerId.id)
+
+    for employee in allEmployees:
+        relation = EmployeeCustomer(
+            employee_id=employee.id,
+            customer_id=choice(listOfAllCustomersId)
+        )
+        db.add(relation)
+    db.commit()
