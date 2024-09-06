@@ -69,28 +69,26 @@ services:
       retries: 5
 
   pgadmin:
-    image: elestio/pgadmin:latest
+    image: dpage/pgadmin4
     container_name: pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-      PGADMIN_CONFIG_SERVER_MODE: "False"
-      PGADMIN_LISTEN_PORT: 8080
-      PGADMIN_CONFIG_ENHANCED_CSFR: "False"
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_ENHANCED_CSFR: 'False'
     ports:
-      - "8080:8080"
+      - "8080:80"
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - database-monitoring
     volumes:
-      - pgadmin_data:/pgadmin4
-    attach: false
+      - ./config_local.py:/pgadmin4/config_local.py # Important
+    # attach: false
 
 volumes:
   postgres_data:
-  pgadmin_data:
 
 networks:
   frontend-backend:
