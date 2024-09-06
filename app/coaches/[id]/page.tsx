@@ -54,6 +54,8 @@ const meetings = [
     },
 ];
 
+
+
 const Links = {
     customers_id: [17]
 };
@@ -81,7 +83,16 @@ export default async function Page({ params }: { params: { id: string } }): Prom
     let dataEvents = await fetch('http://fastapi:8000/api/events/' + params.id);
     let postsEvents = await dataEvents.json();
 
-    console.log(postsEvents);
+    let ratingMeetings: number[] = [0, 0, 0, 0, 0];
+    for (const customerId of Links.customers_id) {
+        let dataRatings = await fetch('http://fastapi:8000/api/encounters/customer/' + customerId);
+        let postsRatings = await dataRatings.json();
+        for (const postRating of postsRatings) {
+            ratingMeetings[postRating.rating - 1] += 1;
+        }
+    }
+    console.log(ratingMeetings);
+
     return (
         <SpawnHeadband
             title='Coach Profile'
@@ -120,17 +131,24 @@ export default async function Page({ params }: { params: { id: string } }): Prom
                         <br />
                         <p className="text-gray-500">Work:</p>
                         <p>{postsEmployees.work}</p>
+                        <br />
+                        <p className="text-gray-500">Number of clients:</p>
+                        <p>{Links.customers_id.length}</p>
                     </div>
                 </div>
                 <div className="sm:flex sm:flex-wrap sm:w-full gap-2">
                     <div className="sm:w-full bg-white p-2 rounded-md">
-                        <div className="md:w-1/2">
+                        <div className="md:w-1/2 max-h-80">
                             <CoachesChartEventsStatistics data={postsEvents} />
                         </div>
                     </div>
                     <div className="sm:w-full bg-white p-2 rounded-md max-sm:my-1">
-                        <div className="md:w-1/3">
-                            <CoachesRatingsChart data={postsEvents} />
+                        <div className="md:w-1/3 max-h-80">
+                            <CoachesRatingsChart data={ratingMeetings} />
+                        </div>
+                    </div>
+                    <div className="sm:w-full bg-white p-2 rounded-md">
+                        <div className="md:w-1/2 max-h-80">
                         </div>
                     </div>
                 </div>
