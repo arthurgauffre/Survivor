@@ -1,5 +1,6 @@
 "use client"; // Ensure this is at the top
 
+import AstralSign from '../component/AstralSign';
 import React, { useState, useEffect } from 'react';
 import SpawnHeadband from "../component/SpawnHeadband";
 import NewDropdownMenu from "../component/NewDropdownMenu"; // Adjust path if necessary
@@ -41,6 +42,9 @@ export default function AstroDropDownMenu ( { data } : { data: [string, string][
         setSelectedValue2(selectedValue)
     }
 
+    let sign1 = selectedValue1 && data[data.findIndex((customer) => customer[0] === selectedValue1)][1];
+    let sign2 = selectedValue2 && data[data.findIndex((customer) => customer[0] === selectedValue2)][1];
+
     return (
         <SpawnHeadband title="Compatibility">
             <div className="flex flex-col space-y-4 bg-white shadow-md rounded-md p-4">
@@ -48,12 +52,12 @@ export default function AstroDropDownMenu ( { data } : { data: [string, string][
 
                 <div className='flex justify-evenly flex-wrap'>
                     <div>
-                        <label className="block mb-1 text-sm">First Sign: {(selectedValue1 && data[data.findIndex((customer) => customer[0] === selectedValue1)])[1]}</label>
+                        <label className="block mb-1 text-sm">First Sign: {AstralSign({astralSign: sign1})}</label>
                         <NewDropdownMenu options={name} updateSelectedValue={updateSelectedValue1} />
                     </div>
 
                     <div>
-                        <label className="block mb-1 text-sm">Second Sign: {(selectedValue2 && data[data.findIndex((customer) => customer[0] === selectedValue2)])[1]}</label>
+                        <label className="block mb-1 text-sm">Second Sign: {AstralSign({astralSign: sign2})}</label>
                         <NewDropdownMenu options={name} updateSelectedValue={updateSelectedValue2} />
                     </div>
                 </div>
