@@ -1,5 +1,7 @@
+import NewDropdownMenu from "../component/NewDropdownMenu";
 import SpawnHeadband from "../component/SpawnHeadband";
 import ImgDisplay from "./imgDisplay";
+import SearchBar from "./searchBar";
 
 const images = [
   {
@@ -23,21 +25,35 @@ const images = [
   },
   {
     id: 5,
-    imageUrl:
-      "https://http.cat/images/202.jpg",
+    imageUrl: "https://http.cat/images/202.jpg",
   },
 ];
 
-export default function Home() {
+export default async function Home() {
+  let customers = [];
+  let iages = []
+  try {
+    let data = await fetch('http://fastapi:8000/api/customers');
+    customers = await data.json();
+    data = await fetch('http://fastapi:8000/api/images');
+    iages = await data.json();
+  } catch (error) {
+    console.error("Error fetching data:", error);
+  }
+
   return (
     <SpawnHeadband title="Clothes" littleText="Customize your drip">
-      <div className="bg-white">
-        <div className="mx-auto max-w-2xl px-4 sm:py-16 py-4 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 space-y-1">
-          <ImgDisplay images={images}></ImgDisplay>
-          <ImgDisplay images={images}></ImgDisplay>
-          <ImgDisplay images={images}></ImgDisplay>
-          <ImgDisplay images={images}></ImgDisplay>
-          <ImgDisplay images={images}></ImgDisplay>
+      <div className="bg-white rounded-md shadow-md rounded-t-lg">
+        <div>
+          <div className="justify-center border-2">
+            <SearchBar customers={customers}></SearchBar>
+          </div>
+          <div className="mx-auto max-w-2xl px-4 py-4 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 space-y-1">
+            <ImgDisplay images={images}></ImgDisplay>
+            <ImgDisplay images={images}></ImgDisplay>
+            <ImgDisplay images={images}></ImgDisplay>
+            <ImgDisplay images={images}></ImgDisplay>
+          </div>
         </div>
       </div>
     </SpawnHeadband>
