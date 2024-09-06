@@ -9,7 +9,6 @@ services:
       - "3000:3000"
     depends_on:
       - fastapi
-        # condition: service_healthy
     develop:
       watch:
         - action: sync
@@ -41,11 +40,6 @@ services:
     networks:
       - frontend-backend
       - backend-database
-    # healthcheck:
-    #   test: ["CMD-SHELL", "wget -nv -t1 --spider 'http://localhost:8000'"]
-    #   timeout: 20s
-    #   interval: 20s
-    #   retries: 50
 
   postgres:
     image: postgres:13
