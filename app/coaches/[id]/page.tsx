@@ -1,136 +1,85 @@
-import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
-import SpawnHeadband from '../../component/SpawnHeadband'
+import "./../../component/table.css";
+import React from "react";
+import {
+    EnvelopeIcon,
+    BookmarkIcon,
+    StarIcon,
+    ArrowLeftIcon,
+} from "@heroicons/react/24/outline";
+import { StarIcon as BlackStarIcon } from "@heroicons/react/24/solid";
+import SpawnHeadband from "../../component/SpawnHeadband";
+import CoachesChartEventsStatistics from "@/app/component/coachesChartEventsStatistics";
 
+function Rating(numberStar: number) {
+    const rating = [];
 
-export default function ClientProfilPage() {
-  return (
-    <SpawnHeadband title="Your Profile">
-    <form>
-      <div className="space-y-12">
-        <div className="border-b border-gray-900/10 pb-12">
+    for (let i = 0; i < numberStar; i++) {
+        rating.push(<BlackStarIcon key={i} className="h-4 w-4" />);
+    }
+    for (let i = numberStar; i < 5; i++) {
+        rating.push(<StarIcon key={i} className="h-4 w-4" />);
+    }
+    return rating;
+}
 
-          <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-            <div className="sm:col-span-3">
-              <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
-                Name
-              </label>
-              <div className="mt-2">
-                <input
-                  id="first-name"
-                  name="first-name"
-                  type="text"
-                  autoComplete="given-name"
-                  className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                />
-              </div>
-            </div>
+export default async function Page({ params }: { params: { id: string } }): Promise<JSX.Element> {
+    let dataEmployees = await fetch('http://fastapi:8000/api/employees/' + params.id);
+    let postsEmployees = await dataEmployees.json();
 
-            <div className="col-span-full">
-              <label htmlFor="photo" className="block text-sm font-medium leading-6 text-gray-900">
-                Photo
-              </label>
-              <div className="mt-2 flex items-center gap-x-3">
-                <UserCircleIcon aria-hidden="true" className="h-12 w-12 text-gray-300" />
-                <button
-                  type="button"
-                  className="rounded-md bg-white px-2.5 py-1.5 text-sm font-semibold text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 hover:bg-gray-50"
-                >
-                  Change
-                </button>
-              </div>
-            </div>
+    let dataImg = await fetch('http://fastapi:8000/api/employees/' + params.id + '/image');
+    let Img = await dataImg.json();
+    const imgUrl: string = Img.image_url;
 
-            {/* <div className="col-span-full">
-              <label htmlFor="cover-photo" className="block text-sm font-medium leading-6 text-gray-900">
-                Cover photo
-              </label>
-              <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-900/25 px-6 py-10">
-                <div className="text-center">
-                  <PhotoIcon aria-hidden="true" className="mx-auto h-12 w-12 text-gray-300" />
-                  <div className="mt-4 flex text-sm leading-6 text-gray-600">
-                    <label
-                      htmlFor="file-upload"
-                      className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500"
-                    >
-                      <span>Upload a file</span>
-                      <input id="file-upload" name="file-upload" type="file" className="sr-only" />
-                    </label>
-                    <p className="pl-1">or drag and drop</p>
-                  </div>
-                  <p className="text-xs leading-5 text-gray-600">PNG, JPG, GIF up to 10MB</p>
+    let dataEvents = await fetch('http://fastapi:8000/api/events/' + params.id);
+    let postsEvents = await dataEvents.json();
+
+    console.log(postsEvents);
+    return (
+        <SpawnHeadband
+            title='Coach Profile'
+            elemRight={
+                <div className="flex">
+                    <a href="/coaches">
+                        <button className="ml-4 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
+                            <ArrowLeftIcon className="h-6 w-6 mr-2" />
+                            <p>Back</p>
+                        </button>
+                    </a>
                 </div>
-              </div>
-            </div> */}
-          </div>
-        </div>
-
-        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-          <div className="sm:col-span-3">
-            <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
-              Phone number
-            </label>
-            <div className="mt-2">
-              <input
-                id="first-name"
-                name="first-name"
-                type="text"
-                autoComplete="given-name"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
+            }
+        >
+            <div className="flex flex-wrap gap-2">
+                <div className="flex-col border bg-white rounded-md">
+                    <div className="flex flex-col items-center justify-center text-center border-b p-2">
+                        <img
+                            alt="Image of user"
+                            src={imgUrl}
+                            className="w-14 rounded-full"
+                        />
+                        <p className="mt-2">{postsEmployees.name} {postsEmployees.surname}</p> {/* Added margin-top to separate text from the image */}
+                    </div>
+                    <div className="border-b p-2">
+                        <p>short detail</p>
+                        <br />
+                        <p className="text-gray-500">Email:</p>
+                        <p>{postsEmployees.email}</p>
+                        <br/>
+                        <p className="text-gray-500">Birthdate:</p>
+                        <p>{postsEmployees.birthdate}</p>
+                        <br />
+                        <p className="text-gray-500">Gender:</p>
+                        <p>{postsEmployees.gender}</p>
+                        <br />
+                        <p className="text-gray-500">Work:</p>
+                        <p>{postsEmployees.work}</p>
+                    </div>
+                </div>
+                <div className="flex flex-wrap grow border bg-white p-2 rounded-md">
+                    <div className="w-2/3">
+                        <CoachesChartEventsStatistics data={postsEvents}/>
+                    </div>
+                </div>
             </div>
-          </div>
-        </div>
-
-        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-          <div className="sm:col-span-3">
-            <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
-              Address
-            </label>
-            <div className="mt-2">
-              <input
-                id="first-name"
-                name="first-name"
-                type="text"
-                autoComplete="given-name"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-        </div>
-
-        <div className="col-span-full">
-          <label htmlFor="about" className="block text-sm font-medium leading-6 text-gray-900">
-            Description
-          </label>
-          <div className="mt-2">
-            <textarea
-              id="about"
-              name="about"
-              rows={3}
-              className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              defaultValue={''}
-            />
-          </div>
-        </div>
-
-        <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
-          <div className="sm:col-span-3">
-            <label htmlFor="first-name" className="block text-sm font-medium leading-6 text-gray-900">
-              Payment history
-            </label>
-            <div className="mt-2">
-              <input
-                id="first-name"
-                name="first-name"
-                type="text"
-                autoComplete="given-name"
-                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              />
-            </div>
-          </div>
-        </div>
-      </div>
-    </form>
-    </SpawnHeadband>
-  )
+        </SpawnHeadband>
+    );
 }
