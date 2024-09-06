@@ -1,3 +1,4 @@
+from json import JSONDecodeError
 import requests
 from loginTokenRetriever import loginToken
 import os
@@ -36,6 +37,12 @@ def getAllEmployees(access_token, db):
         if not db.query(Employee).filter(
                 Employee.id == employee.id).first():
             db.add(employee)
+        else:
+            db.update(Employee).where(Employee.id == employee.id).values(
+                email=employee.email,
+                name=employee.name,
+                surname=employee.surname,
+            )
         db.commit()
 
     return response.json()
@@ -56,13 +63,18 @@ def getEmployeeById(access_token, db):
         if response.status_code == 401:
             access_token = loginToken()
             getEmployeeById(access_token, db)
-        employee_data = response.json()
+        try:
+            employee_data = response.json()
+        except BaseException:
+            # access_token = loginToken()
+            # getEmployeeById(access_token, db)
+            pass
         actualEmployee = db.query(Employee).filter(
             Employee.id == employeeId.id).first()
         actualEmployee.email = employee_data.get("email")
         actualEmployee.name = employee_data.get("name")
         actualEmployee.surname = employee_data.get("surname")
-        actualEmployee.birth_date = employee_data.get("birth_date")
+        actualEmployee.birthdate = employee_data.get("birth_date")
         actualEmployee.gender = employee_data.get("gender")
         actualEmployee.work = employee_data.get("work")
     db.commit()
