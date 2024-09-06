@@ -1,9 +1,10 @@
 import os
+import random
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from schemas.employeeSchemas import EmployeePersonalInfoSchema
-from database.tableRelationships import Employee
+from database.tableRelationships import Customer, Employee
 
 
 def getAllRealEmployees(db: Session):
@@ -17,7 +18,7 @@ def getAllRealEmployees(db: Session):
                 "name": employee.name,
                 "surname": employee.surname,
                 "email": employee.email,
-                "birth_date": employee.birth_date,
+                "birthdate": employee.birthdate,
                 "gender": employee.gender,
                 "work": employee.work
             }
@@ -33,7 +34,7 @@ def getAnEmployeePersonalInfos(db: Session, employee_id: int):
         email=actualEmployee.email,
         name=actualEmployee.name,
         surname=actualEmployee.surname,
-        birth_date=actualEmployee.birth_date,
+        birthdate=actualEmployee.birthdate,
         gender=actualEmployee.gender,
         work=actualEmployee.work
     )
@@ -48,3 +49,18 @@ def getCurrentEmployeeImg(db: Session, employee_id: int):
 
     image_url = f"http://localhost:8000/static/employees/{employee_id}.jpg"
     return {"image_url": image_url}
+
+
+def getListOfCustomerForEmployee(db: Session, employee_id: int):
+    actualEmployee = db.query(Employee).filter(
+        Employee.id == employee_id).first()
+    allCustomers = db.query(Customer).all()
+    listOfCustomers = []
+    listOfAllCustomersId = []
+
+    for customerId in allCustomers:
+        listOfAllCustomersId.append(customerId.id)
+
+    for i in range(random.randint(3, 15)):
+        listOfCustomers.append(random.choice(listOfAllCustomersId))
+    return listOfCustomers

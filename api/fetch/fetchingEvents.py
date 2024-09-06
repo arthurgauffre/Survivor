@@ -77,4 +77,3 @@ def fetchingAllEvents(acccess_token, database):
     # Commit the session to save all changes
     database.commit()
     return {"message": "Database seeded with events"}
-

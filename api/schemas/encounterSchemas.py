@@ -6,5 +6,5 @@ class EncounterByCustomerSchema(BaseModel):
     customer_id: int
     date: str
     rating: int
-    comment: str
-    source: str
+    comment: str | None
+    source: str | None

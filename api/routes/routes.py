@@ -4,7 +4,8 @@ from sqlalchemy.orm import Session
 from crud.events.eventsGet import getAllEventsPerEmployee
 from schemas.eventsSchemas import EmployeeEventsSchema
 from crud.clothes.clothesGet import (getAllBottomFromAUser,
-                                     getAllClothesImgs, getAllHatFromAUser, getAllShoesFromAUser,
+                                     getAllClothesImgs, getAllHatFromAUser,
+                                     getAllShoesFromAUser,
                                      getAllTopFromAUser)
 from fetch.fetchingEvents import fetchingAllEvents
 from fetch.fetchingEncounter import getAllEncounters, getEncounterById
@@ -18,7 +19,8 @@ from schemas.employeeSchemas import EmployeePersonalInfoSchema
 from crud.customers.customerGet import getAllRealCustomers
 from crud.employees.employeesGet import (getAllRealEmployees,
                                          getAnEmployeePersonalInfos,
-                                         getCurrentEmployeeImg)
+                                         getCurrentEmployeeImg,
+                                         getListOfCustomerForEmployee)
 from schemas.customerSchemas import CustomerBasicSchema
 from crud.encounters.encountersGet import getEncounterForCustomer
 from schemas.encounterSchemas import EncounterByCustomerSchema
@@ -158,3 +160,9 @@ def getGivenCustomerShoes(customer_id: int, db: Session = Depends(get_db)):
             response_model=list[EmployeeEventsSchema])
 def getEmployeeEvents(employee_id: int, db: Session = Depends(get_db)):
     return getAllEventsPerEmployee(db, employee_id)
+
+
+@router.get("/api/{employee_id}/customers",
+            tags=["employees"])
+def getCustomersOfAnEmployee(employee_id: int, db: Session = Depends(get_db)):
+    return getListOfCustomerForEmployee(db, employee_id)
