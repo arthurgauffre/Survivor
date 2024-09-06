@@ -93,7 +93,7 @@ def getCustomerDetail(url, headers, customerId, database):
     customer.password = customer_data.get('password')
     customer.name = customer_data.get('name')
     customer.surname = customer_data.get('surname')
-    customer.birthdate = customer_data.get('birth_date')
+    customer.birth_date = customer_data.get('birth_date')
     customer.gender = customer_data.get('gender')
     customer.description = customer_data.get('description')
     customer.astrologicalSign = customer_data.get('astrological_sign')

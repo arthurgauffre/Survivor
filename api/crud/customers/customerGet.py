@@ -14,7 +14,7 @@ def getAllRealCustomers(db: Session):
                 "name": customer.name,
                 "surname": customer.surname,
                 "email": customer.email,
-                "birthdate": customer.birthdate,
+                "birth_date": customer.birth_date,
                 "gender": customer.gender,
                 "description": customer.description,
                 "astrologicalSign": customer.astrologicalSign,

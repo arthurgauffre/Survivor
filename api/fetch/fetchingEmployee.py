@@ -62,7 +62,7 @@ def getEmployeeById(access_token, db):
         actualEmployee.email = employee_data.get("email")
         actualEmployee.name = employee_data.get("name")
         actualEmployee.surname = employee_data.get("surname")
-        actualEmployee.birthdate = employee_data.get("birth_date")
+        actualEmployee.birth_date = employee_data.get("birth_date")
         actualEmployee.gender = employee_data.get("gender")
         actualEmployee.work = employee_data.get("work")
     db.commit()
