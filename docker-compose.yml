@@ -85,7 +85,7 @@ services:
       - database-monitoring
     volumes:
       - ./config_local.py:/pgadmin4/config_local.py # Important
-    # attach: false
+    attach: false
 
 volumes:
   postgres_data:
