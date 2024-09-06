@@ -1,3 +1,4 @@
+from json import JSONDecodeError
 import requests
 import os
 from dotenv import load_dotenv
@@ -22,14 +23,18 @@ def fetchingAllEvents(acccess_token, database):
         'Authorization': 'Bearer ' + acccess_token["access_token"],
     }
 
-    response = requests.get(url, json=None, headers=headers)
+    response = requests.get(url, headers=headers)
 
     if response.status_code == 401:
         acccess_token = loginToken()
-        fetchingAllEvents(acccess_token)
+        fetchingAllEvents(acccess_token, database)
 
-    # Parse JSON response and create Customer instances
-    events_data = response.json()
+    try:
+        events_data = response.json()
+    except BaseException:
+        # acccess_token = loginToken()
+        # fetchingAllEvents(acccess_token, database)
+        pass
 
     for event_data in events_data:
         # Create a new Customer object
@@ -54,10 +59,22 @@ def fetchingAllEvents(acccess_token, database):
 
         # Add the new customer to the customers table
         if not database.query(Events).filter(
-                event.id == event.id).first():
+                Events.id == event.id).first():
             database.add(event)
+        else:
+            database.update(Events).where(Events.id == event.id).values(
+                name=event.name,
+                date=event.date,
+                duration=event.duration,
+                max_participants=event.max_participants,
+                location_x=event.location_x,
+                location_y=event.location_y,
+                type=event.type,
+                employee_id=event.employee_id,
+                location_name=event.location_name
+            )
 
     # Commit the session to save all changes
     database.commit()
-    return response.json()
+    return {"message": "Database seeded with events"}
 

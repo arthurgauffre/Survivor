@@ -1,3 +1,4 @@
+from json import JSONDecodeError
 import requests
 from loginTokenRetriever import loginToken
 import os
@@ -53,10 +54,13 @@ def getEncounterById(access_token, db):
         if response.status_code == 401:
             access_token = loginToken()
             getEncounterById(access_token, db)
-        encounter_data = response.json()
+        try:
+            encounter_data = response.json()
+        except BaseException:
+            pass
         actualEncounter = db.query(Encounter).filter(
             Encounter.id == encounterId.id).first()
-        actualEncounter.comment = encounter_data["comment"]
-        actualEncounter.source = encounter_data["source"]
-    db.commit()
+        actualEncounter.comment = encounter_data.get("comment")
+        actualEncounter.source = encounter_data.get("source")
+        db.commit()
     return {"message": "Database seeded with encounters"}

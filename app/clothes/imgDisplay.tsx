@@ -20,10 +20,10 @@ export default function imgDisplay({
 
       <div className="flex sm:max-h-80 max-h-60 relative items-center justify-center max-sm:max-w-80">
         <button
-          onClick={() => setI(i == 0 ? listLen - 1 : i - 1)}
-          className="py-1 px-1 rounded text-sm flex text-white items-center absolute origin-center top-auto left-0 bg-gray-500 opacity-30 hover:opacity-100"
+          onClick={() => setI((i + 1) % listLen)}
+          className="py-1 px-1 rounded text-sm flex text-white items-center absolute origin-center top-auto right-0 bg-gray-500 opacity-30 hover:opacity-100"
         >
-          <ChevronLeftIcon className="h-6 w-6"></ChevronLeftIcon>
+          <ChevronRightIcon className="h-6 w-6"></ChevronRightIcon>
         </button>
 
         <img
@@ -32,10 +32,10 @@ export default function imgDisplay({
         />
 
         <button
-          onClick={() => setI((i + 1) % listLen)}
-          className="py-1 px-1 rounded text-sm flex text-white items-center absolute origin-center top-auto right-0 bg-gray-500 opacity-30 hover:opacity-100"
+          onClick={() => setI(i == 0 ? listLen - 1 : i - 1)}
+          className="py-1 px-1 rounded text-sm flex text-white items-center absolute origin-center top-auto left-0 bg-gray-500 opacity-30 hover:opacity-100"
         >
-          <ChevronRightIcon className="h-6 w-6"></ChevronRightIcon>
+          <ChevronLeftIcon className="h-6 w-6"></ChevronLeftIcon>
         </button>
       </div>
 

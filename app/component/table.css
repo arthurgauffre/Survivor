@@ -6,6 +6,7 @@ table {
 }
 tr {
   border-bottom: 1px solid #ccc;
+  text-align: left;
 }
 th,
 td {

@@ -6,7 +6,9 @@ class CustomerBasicSchema(BaseModel):
     email: str
     name: str
     surname: str
-    birth_date: str
+    birthdate: str
     gender: str
     description: str
     astrologicalSign: str
+    phone_number: str
+    address: str

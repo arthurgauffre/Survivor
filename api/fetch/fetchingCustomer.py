@@ -1,3 +1,4 @@
+from json import JSONDecodeError
 import requests
 import os
 from dotenv import load_dotenv
@@ -47,13 +48,13 @@ def fetchingAllCustomer(acccess_token, database):
         if not database.query(Customer).filter(
                 Customer.id == customer.id).first():
             database.add(customer)
-        # else:
-        #     database.update(customer).where(
-        #         Customer.id == customer.id).values(
-        #         email=customer.email,
-        #         name=customer.name,
-        #         surname=customer.surname
-        #     )
+        else:
+            database.update(Customer).where(
+                Customer.id == customer.id).values(
+                email=customer.email,
+                name=customer.name,
+                surname=customer.surname
+            )
 
     database.commit()
     return {"message": "All customers have been fetched"}
@@ -71,12 +72,12 @@ def fetchingCustomerDetail(acccess_token, database):
         url = f'https://soul-connection.fr/api/customers/{customerId.id}'
         getCustomerDetail(url, headers, customerId, database)
         database.commit()
-        getCustomerImage(acccess_token, customerId, headers, database)
-        database.commit()
+        # getCustomerImage(acccess_token, customerId, headers, database)
+        # database.commit()
         getCustomerPaymentHistory(customerId, headers, database)
         database.commit()
-        getClothesImage(customerId, database, headers)
-        database.commit()
+        # getClothesImage(customerId, database, headers)
+        # database.commit()
 
     return {"message": "All customers have been fetched"}
 
@@ -86,17 +87,24 @@ def getCustomerDetail(url, headers, customerId, database):
     if response.status_code == 401:
         acccess_token = loginToken()
         getCustomerDetail(url, headers, customerId, database)
-    customer_data = response.json()
+    try:
+        customer_data = response.json()
+    except BaseException:
+        # acccess_token = loginToken()
+        # getCustomerDetail(url, headers, customerId, database)
+        pass
     customer = database.query(Customer).filter(
         Customer.id == customerId.id).first()
     customer.email = customer_data.get('email')
     customer.password = customer_data.get('password')
     customer.name = customer_data.get('name')
     customer.surname = customer_data.get('surname')
-    customer.birth_date = customer_data.get('birth_date')
+    customer.birthdate = customer_data.get('birth_date')
     customer.gender = customer_data.get('gender')
     customer.description = customer_data.get('description')
     customer.astrologicalSign = customer_data.get('astrological_sign')
+    customer.phone_number = customer_data.get('phone_number')
+    customer.address = customer_data.get('address')
     return customer
 
 
@@ -125,7 +133,12 @@ def getCustomerPaymentHistory(customerId, headers, database):
     if payement_history_response.status_code == 401:
         acccess_token = loginToken()
         getCustomerPaymentHistory(customerId, headers, database)
-    payement_history_datas = payement_history_response.json()
+    try:
+        payement_history_datas = payement_history_response.json()
+    except BaseException:
+        # acccess_token = loginToken()
+        # getCustomerPaymentHistory(customerId, headers, database)
+        pass
     if database.query(PayementHistory).filter(
             PayementHistory.customer_id == customer.id).first():
         database.query(PayementHistory).filter(
@@ -142,6 +155,14 @@ def getCustomerPaymentHistory(customerId, headers, database):
         if not database.query(PayementHistory).filter(
                 PayementHistory.id == payement_history.id).first():
             database.add(payement_history)
+        else:
+            database.update(PayementHistory).where(
+                PayementHistory.id == payement_history.id).values(
+                date=payement_history.date,
+                amount=payement_history.amount,
+                comment=payement_history.comment,
+                payment_method=payement_history.payment_method
+            )
 
 
 def getClothesImage(customerId, database, headers):
@@ -178,6 +199,12 @@ def getClothesImage(customerId, database, headers):
         if not database.query(Clothes).filter(
                 Clothes.id == clothes_data.get('id')).first():
             database.add(clothe)
+        else:
+            database.update(Clothes).where(
+                Clothes.id == clothe.id).values(
+                customer_id=clothe.customer_id,
+                type=clothe.type
+            )
     # except ConnectionError as e:
     #     print("An error from the soul-connection API has occurred:", e)
 
