@@ -1,8 +1,8 @@
 "use client";
+
 import { useRouter } from "next/navigation";
 import "../component/table.css";
 import SpawnHeadband from "../component/SpawnHeadband";
-import InputRequest from "./inputRequest";
 import DropdownMenu from "../component/DropdownMenu";
 import CheckBoxAll from "../component/CheckBoxAll";
 import {
@@ -20,8 +20,9 @@ const ActionsActions = [
 
 export default function CoachesTable({
   coaches,
+  CoachImages,
 }: {
-  coaches: {
+  readonly coaches: {
     id: number;
     email: string;
     name: string;
@@ -31,7 +32,11 @@ export default function CoachesTable({
     description: string;
     astrologicalSign: string;
   }[];
-}) : JSX.Element {
+  readonly CoachImages: {
+    id: number;
+    image_url: string
+  }[];
+}): JSX.Element {
   let littletext = "You have total of " + coaches.length + " coaches";
   const router = useRouter();
 
@@ -52,7 +57,7 @@ export default function CoachesTable({
       }
     >
       <div style={{ color: "Black" }}>
-        <ul role="list" className="divide-y-2 divide-gray-100">
+        <ul className="divide-y-2 divide-gray-100">
           <li className="flex gap-x-6 py-5 justify-between border-1 bg-white rounded-t-md px-4">
             <div className="flex">
               <DropdownMenu
@@ -101,7 +106,7 @@ export default function CoachesTable({
                       <div className="flex items-center">
                         <img
                           alt=""
-                          src="https://media.tenor.com/6uPPCdKYocAAAAAe/panik-kalm.png"
+                          src={CoachImages[person.id - 1].image_url}
                           className="h-12 w-12 flex-none rounded-full bg-gray-50 mr-4 my-1"
                         />
                         {person.name} {person.surname}
@@ -113,7 +118,7 @@ export default function CoachesTable({
                     </td>
                     <td>
                       <span className="cell-header">Phone:</span>
-                      +333-333-3333
+                      {person.gender}
                     </td>
                     <td>
                       <span className="cell-header">Number of customers:</span>

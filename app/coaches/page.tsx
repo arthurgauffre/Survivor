@@ -13,10 +13,22 @@ export default async function Home() {
       description: string;
       astrologicalSign: string;
     }[] = await data.json();
-    return <CoachesTable coaches={coaches} />;
-  } catch (e) {
-    return <CoachesTable coaches={[]} />;
-    console.log(e);
-  }
+    let IMGS: {
+      id: number;
+      image_url: string;
+    }[] = [];
 
+    for (let coach of coaches) {
+      let dataImg = await fetch(
+        "http://fastapi:8000/api/employees/" + coach.id + "/image"
+      );
+      let Img = await dataImg.json();
+      IMGS.push(Img);
+    }
+
+    return <CoachesTable coaches={coaches} CoachImages={IMGS}/>;
+  } catch (e) {
+    console.log(e);
+    return <CoachesTable coaches={[]} CoachImages={[]}/>;
+  }
 }
