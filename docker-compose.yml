@@ -14,8 +14,9 @@ services:
         - action: sync
           path: ./app
           target: /app/app
-          ignore:
-            - node_modules/
+        - action: sync+restart
+          path: ./package.json
+          target: /app/package.json
     networks:
       - frontend-backend
 
@@ -35,8 +36,6 @@ services:
         - action: sync
           path: ./api
           target: /app/api
-          ignore:
-            - node_modules/
     networks:
       - frontend-backend
       - backend-database
