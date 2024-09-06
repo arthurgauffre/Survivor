@@ -109,15 +109,15 @@ def fillingEmployeeCustomerTable(db: Session):
     allEmployees = db.query(Employee).all()
     allCustomers = db.query(Customer).all()
 
-    listOfAllCustomersId = []
+    listOfAllEmployeesId = []
 
-    for customerId in allCustomers:
-        listOfAllCustomersId.append(customerId.id)
+    for employeeId in allEmployees:
+        listOfAllEmployeesId.append(employeeId.id)
 
-    for employee in allEmployees:
+    for customer in allCustomers:
         relation = EmployeeCustomer(
-            employee_id=employee.id,
-            customer_id=choice(listOfAllCustomersId)
+            employee_id=choice(listOfAllEmployeesId),
+            customer_id=customer.id
         )
         db.add(relation)
     db.commit()

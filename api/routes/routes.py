@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
+from database.tableRelationships import Employee
 from crud.events.eventsGet import getAllEventsPerEmployee
 from schemas.eventsSchemas import EmployeeEventsSchema
 from crud.clothes.clothesGet import (getAllBottomFromAUser,
@@ -39,21 +40,21 @@ class SeedState:
         self._is_seeded = False
 
     def seed_database(self, db: Session):
-        # if not db.query(Employee).first():
-        fetchingAllCustomer(access_token, db)
-        fetchingCustomerDetail(access_token, db)
-        getAllEmployees(access_token, db)
-        getEmployeeById(access_token, db)
-        getEmployeeImg(access_token, db)
-        fillingEmployeeCustomerTable(db)
-        fetchingAllTips(access_token, db)
-        getAllEncounters(access_token, db)
-        getEncounterById(access_token, db)
-        fetchingAllEvents(access_token, db)
-        self._is_seeded = True
-        with open("seeded.txt", "w") as f:
-            f.write("Database seeded")
-        return {"message": "Database seeded successfully"}
+        if not db.query(Employee).first():
+            fetchingAllCustomer(access_token, db)
+            fetchingCustomerDetail(access_token, db)
+            getAllEmployees(access_token, db)
+            getEmployeeById(access_token, db)
+            getEmployeeImg(access_token, db)
+            fillingEmployeeCustomerTable(db)
+            fetchingAllTips(access_token, db)
+            getAllEncounters(access_token, db)
+            getEncounterById(access_token, db)
+            fetchingAllEvents(access_token, db)
+            self._is_seeded = True
+            with open("seeded.txt", "w") as f:
+                f.write("Database seeded")
+            return {"message": "Database seeded successfully"}
         # else:
         #     self._is_seeded = True
 
