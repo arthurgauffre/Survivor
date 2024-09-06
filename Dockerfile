@@ -13,8 +13,6 @@ COPY ./api/ ./
 COPY ./.env /app/.env
 COPY ./run_migration.sh /app/run_migration.sh
 
-USER root
-
 CMD ["/app/run_migration.sh"]
 
 

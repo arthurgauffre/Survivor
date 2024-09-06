@@ -10,8 +10,13 @@ services:
     depends_on:
       - fastapi
         # condition: service_healthy
-    volumes:
-      - ./app:/app/app
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app/app
+          ignore:
+            - node_modules/
     networks:
       - frontend-backend
 
@@ -26,8 +31,13 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    volumes:
-      - ./api:/app/api
+    develop:
+      watch:
+        - action: sync
+          path: ./api
+          target: /app/api
+          ignore:
+            - node_modules/
     networks:
       - frontend-backend
       - backend-database
