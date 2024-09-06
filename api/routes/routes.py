@@ -12,6 +12,8 @@ from fetch.fetchingEvents import fetchingAllEvents
 from fetch.fetchingEncounter import getAllEncounters, getEncounterById
 from fetch.fetchingTips import fetchingAllTips
 from fetch.fetchingCustomer import fetchingAllCustomer, fetchingCustomerDetail
+from fetch.fetchingEvents import fetchingAllEvents
+
 from loginTokenRetriever import loginToken
 from fetch.fetchingEmployee import (fillingEmployeeCustomerTable,
                                     getAllEmployees, getEmployeeById,
@@ -170,3 +172,12 @@ def getEmployeeEvents(employee_id: int, db: Session = Depends(get_db)):
             tags=["employees"])
 def getCustomersOfAnEmployee(employee_id: int, db: Session = Depends(get_db)):
     return getListOfCustomerForEmployee(db, employee_id)
+@router.get("/getAPITipsInfos/")
+def getTips(db: Session = Depends(get_db)):
+    fetchingAllTips(access_token, db)
+    return {"message": "Database seeded with tips"}
+
+@router.get("/getAPIEventsInfos/")
+def getEvents(db: Session = Depends(get_db)):
+    fetchingAllEvents(access_token, db)
+    return {"message": "Database seeded with events"}
