@@ -4,7 +4,7 @@ from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
 from schemas.employeeSchemas import EmployeePersonalInfoSchema
-from database.tableRelationships import Customer, Employee
+from database.tableRelationships import Customer, Employee, EmployeeCustomer
 
 
 def getAllRealEmployees(db: Session):
@@ -29,6 +29,8 @@ def getAllRealEmployees(db: Session):
 def getAnEmployeePersonalInfos(db: Session, employee_id: int):
     actualEmployee = db.query(Employee).filter(
         Employee.id == employee_id).first()
+    relationEmployeeCustomers = db.query(EmployeeCustomer).filter(
+        EmployeeCustomer.employee_id == employee_id).all()
     employeeInfos = EmployeePersonalInfoSchema(
         id=actualEmployee.id,
         email=actualEmployee.email,
@@ -36,7 +38,8 @@ def getAnEmployeePersonalInfos(db: Session, employee_id: int):
         surname=actualEmployee.surname,
         birthdate=actualEmployee.birthdate,
         gender=actualEmployee.gender,
-        work=actualEmployee.work
+        work=actualEmployee.work,
+        customer_list=[relation.customer_id for relation in relationEmployeeCustomers if relation.employee_id == employee_id]
     )
     return employeeInfos
 

@@ -185,7 +185,7 @@ def getCustomerPaymentHistory(customerId, headers, database):
 def getClothesImage(customerId, database, headers):
     # try:
     clothes_data = {}
-    clothe_image_response = "" 
+    clothe_image_response = ""
     customer = database.query(Customer).filter(
         Customer.id == customerId.id).first()
     clothes_url = f'https://soul-connection.fr/api/customers/{
@@ -201,7 +201,7 @@ def getClothesImage(customerId, database, headers):
         getClothesImage(customer, database, headers)
     try:
         clothes_datas = clothes_response.json()
-    except:
+    except BaseException:
         pass
     if database.query(Clothes).filter(
             Clothes.customer_id == customer.id).first():
@@ -214,7 +214,6 @@ def getClothesImage(customerId, database, headers):
             clothe_image_response = requests.get(clothe_image, headers=headers)
         except BaseException:
             getClothesImage(customerId, database, headers)
-
         if clothe_image_response.status_code == 401:
             # acccess_token = loginToken()
             getClothesImage(customerId, database, headers)

@@ -12,3 +12,4 @@ class EmployeePersonalInfoSchema(EmployeeBaseSchema):
     birthdate: str
     gender: str
     work: str
+    customer_list: list[int]
