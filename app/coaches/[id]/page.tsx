@@ -82,7 +82,7 @@ export default async function Page({
             />
             <p className="mt-2">
               {postsEmployees.name} {postsEmployees.surname}
-            </p>{" "}
+            </p>
             {/* Added margin-top to separate text from the image */}
           </div>
           <div className="border-b p-2">

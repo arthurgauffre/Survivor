@@ -109,14 +109,16 @@ export default async function Page({ params }: { params: { id: string } }) {
     >
       <div className="flex flex-wrap gap-2">
         <div className="flex-col border bg-white">
-          <div className="border-b items-center text-center justify-center p-2">
+          <div className="sm:flex flex-col items-center justify-center text-center border-b p-2">
             <img
               alt="Image of user"
-              src="https://randomuser.me/api/portraits"
-              className="h-8 w-8 rounded-full"
+              src="https://thispersondoesnotexist.com/"
+              className="w-14 rounded-full"
             />
-            <p>profile name</p>
+            <p className="mt-2">profile name</p>
+            {/* Added margin-top to separate text from the image */}
           </div>
+
           <div className="border-b flex flex-auto justify-center p-2 gap-2">
             <EnvelopeIcon aria-hidden="true" className="h-6 w-6" />
             <BookmarkIcon aria-hidden="true" className="h-6 w-6" />
@@ -139,10 +141,15 @@ export default async function Page({ params }: { params: { id: string } }) {
           <div className="border-b p-2">
             <p>short detail</p>
             <p>User ID:</p>
-            <p>Email</p>
-            <p>Address</p>
+            <p>{params.id}</p>
+            <p>Email:</p>
+            <p>test@example.com</p>
+            <p>Address:</p>
+            <p>16 tue theodore blanc</p>
             <p>Last Activity:</p>
+            <p>8 min</p>
             <p>Coach</p>
+            <p>Paul Du Pont</p>
           </div>
         </div>
         <div className="flex-none border bg-white p-2 grow">
