@@ -139,6 +139,6 @@ export default function AstralSign({
         </div>
       );
     default:
-      return <div>Sign not found</div>;
+      return <div></div>;
   }
 }
