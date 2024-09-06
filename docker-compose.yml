@@ -9,8 +9,14 @@ services:
       - "3000:3000"
     depends_on:
       - fastapi
-    volumes:
-      - ./app:/app/app
+    develop:
+      watch:
+        - action: sync
+          path: ./app
+          target: /app/app
+        - action: sync+restart
+          path: ./package.json
+          target: /app/package.json
     networks:
       - frontend-backend
 
@@ -25,8 +31,11 @@ services:
     depends_on:
       postgres:
         condition: service_healthy
-    volumes:
-      - ./api:/app/api
+    develop:
+      watch:
+        - action: sync
+          path: ./api
+          target: /app/api
     networks:
       - frontend-backend
       - backend-database
@@ -53,24 +62,23 @@ services:
       retries: 5
 
   pgadmin:
-    image: elestio/pgadmin:latest
+    image: dpage/pgadmin4
     container_name: pgadmin
     environment:
       PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL}
       PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD}
-      PGADMIN_CONFIG_SERVER_MODE: "False"
-      PGADMIN_LISTEN_PORT: 8080
-      PGADMIN_CONFIG_ENHANCED_CSFR: "False"
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+      PGADMIN_CONFIG_ENHANCED_CSFR: 'False'
     ports:
-      - "8080:8080"
+      - "8080:80"
     depends_on:
       postgres:
         condition: service_healthy
     networks:
       - database-monitoring
     volumes:
-      - ./servers.json:/pgadmin4/servers.json
-      - ./config_local.py:/pgadmin4/config_local.py
+      - ./config_local.py:/pgadmin4/config_local.py # Important
+    attach: false
 
 volumes:
   postgres_data:

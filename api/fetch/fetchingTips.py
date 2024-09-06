@@ -22,11 +22,15 @@ def fetchingAllTips(acccess_token, database):
         'Authorization': 'Bearer ' + acccess_token["access_token"],
     }
 
-    response = requests.get(url, json=None, headers=headers)
+    try:
+        response = requests.get(url, headers=headers)
+    except BaseException:
+        acccess_token = loginToken()
+        fetchingAllTips(acccess_token, database)
 
     if response.status_code == 401:
         acccess_token = loginToken()
-        fetchingAllTips(acccess_token)
+        fetchingAllTips(acccess_token, database)
 
     # Parse JSON response and create Customer instances
     tips_data = response.json()
@@ -41,9 +45,12 @@ def fetchingAllTips(acccess_token, database):
 
         # Add the new customer to the customers table
         if not database.query(Tips).filter(
-                tip.id == tip.id).first():
+                Tips.id == tip.id).first():
             database.add(tip)
-
-    # Commit the session to save all changes
+        else:
+            currentTip = database.query(Tips).filter(
+                Tips.id == tip.id).first()
+            currentTip.title = tip.title
+            currentTip.tip = tip.tip
     database.commit()
     return response.json()

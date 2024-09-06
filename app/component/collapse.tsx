@@ -19,8 +19,8 @@ export default function Collapsible({
 
   return (
     <div onClick={toggle}>
-      <div className="flex">
-        <button>{title}</button>
+      <div className="flex m-2 p-2">
+        <button className="font-semibold">{title}</button>
         <div className="flex-grow"></div>
         <div className="flex items-center">
           {open ? (
@@ -30,7 +30,9 @@ export default function Collapsible({
           )}
         </div>
       </div>
-      {open && <div>{children}</div>}
+      <div className="border-y flex border-gray-300">
+        {open && <div className="m-2 p-2">{children}</div>}
+      </div>
     </div>
   );
 }

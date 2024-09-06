@@ -1,59 +1,13 @@
-"use client";
-
 import "./../../component/table.css";
-import PaymentMethod from "../../component/PaymentMethod";
+import MeetingTable from "./MeetingTable";
+import PaymentHistoryTable from "./PaymentHistoryTable";
 import React from "react";
 import {
   EnvelopeIcon,
   BookmarkIcon,
-  StarIcon,
   ArrowLeftIcon,
 } from "@heroicons/react/24/outline";
-import { StarIcon as BlackStarIcon } from "@heroicons/react/24/solid";
 import SpawnHeadband from "../../component/SpawnHeadband";
-
-const meetings = [
-  {
-    id: 1,
-    customer_id: 17,
-    date: "2023-12-21",
-    rating: 2,
-    comment: "A very good moment!",
-    source: "school",
-  },
-  {
-    id: 2,
-    customer_id: 17,
-    date: "2023-12-21",
-    rating: 2,
-    comment: "A very good moment!",
-    source: "school",
-  },
-  {
-    id: 3,
-    customer_id: 17,
-    date: "2023-12-21",
-    rating: 2,
-    comment: "A very good moment!",
-    source: "school",
-  },
-  {
-    id: 4,
-    customer_id: 17,
-    date: "2023-12-21",
-    rating: 2,
-    comment: "A very good moment!",
-    source: "school",
-  },
-  {
-    id: 5,
-    customer_id: 17,
-    date: "2023-12-21",
-    rating: 2,
-    comment: "A very good moment!",
-    source: "school",
-  },
-];
 
 const payments = [
   {
@@ -114,114 +68,31 @@ const payments = [
   },
 ];
 
-function Rating(numberStar: number) {
-  const rating = [];
-
-  for (let i = 0; i < numberStar; i++) {
-    rating.push(<BlackStarIcon key={i} className="h-4 w-4" />);
-  }
-  for (let i = numberStar; i < 5; i++) {
-    rating.push(<StarIcon key={i} className="h-4 w-4" />);
-  }
-  return rating;
-}
-
-function MeetingTable({
-  meetings,
-}: {
-  meetings: {
+export default async function Page({ params }: { params: { id: string } }) {
+  // let customersData = await fetch(
+  //   "http://localhost:3000/api/customers/" + params.id
+  // );
+  // let customers = await customersData.json();
+  let meetings: {
     id: number;
     customer_id: number;
     date: string;
     rating: number;
     comment: string;
     source: string;
-  }[];
-}) {
-  return (
-    <table>
-      <tbody>
-        <tr>
-          <th>Date</th>
-          <th>Rating</th>
-          <th>Report</th>
-          <th>Source</th>
-        </tr>
-        {meetings.map((meeting) => (
-          <tr key={meeting.id}>
-            <td>
-              <span className="cell-header">Date:</span>
-              <div className="text-[#1267c5]">
-                {new Date(meeting.date).toDateString()}
-              </div>
-            </td>
-            <td>
-              <span className="cell-header">Rating:</span>
-              <div className="flex">
-                {Rating(meeting.rating).map((star) => star)}
-              </div>
-            </td>
-            <td>
-              <span className="cell-header">Report:</span> {meeting.comment}
-            </td>
-            <td>
-              <span className="cell-header">Source:</span> {meeting.source}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
-function PaymentHistoryTable({
-  paymentsHistory,
-}: {
-  paymentsHistory: {
-    id: number;
-    date: string;
-    payment_method: string;
-    amount: number;
-    comment: string;
-  }[];
-}): JSX.Element {
-  return (
-    <table>
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>Payment Method</th>
-          <th>Amount</th>
-          <th>Commit</th>
-        </tr>
-      </thead>
-      <tbody>
-        {paymentsHistory.map((payment) => (
-          <tr key={payment.id}>
-            <td>
-              <span className="cell-header">Date:</span>
-              <div className="text-[#1267c5]">
-                {new Date(payment.date).toDateString()}
-              </div>
-            </td>
-            <td>
-              <span className="cell-header">Payment Method:</span>
-              <PaymentMethod payment={payment.payment_method} />
-            </td>
-            <td>
-              <span className="cell-header">Amount:</span> {payment.amount}
-            </td>
-            <td>
-              <span className="cell-header">Commit:</span> {payment.comment}
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  );
-}
-
-export default function Page({ params }: { params: { id: string } }) : JSX.Element {
+  }[] = [];
+  try {
+    let meetingsData = await fetch(
+      "http://fastapi:8000/api/encounters/customer/" + params.id
+    );
+    meetings = await meetingsData.json();
+  } catch (e) {
+    meetings = [];
+  }
+  // let eventsData = await fetch(
+  //   "http://localhost:3000/api/encounters/customer/" + params.id
+  // );
+  // let events = await eventsData.json();
   return (
     <SpawnHeadband
       title={params.id}
@@ -238,14 +109,16 @@ export default function Page({ params }: { params: { id: string } }) : JSX.Eleme
     >
       <div className="flex flex-wrap gap-2">
         <div className="flex-col border bg-white">
-          <div className="border-b items-center text-center justify-center p-2">
+          <div className="sm:flex flex-col items-center justify-center text-center border-b p-2">
             <img
               alt="Image of user"
-              src="https://randomuser.me/api/portraits"
-              className="h-8 w-8 rounded-full"
+              src="https://thispersondoesnotexist.com/"
+              className="w-14 rounded-full"
             />
-            <p>profile name</p>
+            <p className="mt-2">profile name</p>
+            {/* Added margin-top to separate text from the image */}
           </div>
+
           <div className="border-b flex flex-auto justify-center p-2 gap-2">
             <EnvelopeIcon aria-hidden="true" className="h-6 w-6" />
             <BookmarkIcon aria-hidden="true" className="h-6 w-6" />
@@ -268,10 +141,15 @@ export default function Page({ params }: { params: { id: string } }) : JSX.Eleme
           <div className="border-b p-2">
             <p>short detail</p>
             <p>User ID:</p>
-            <p>Email</p>
-            <p>Address</p>
+            <p>{params.id}</p>
+            <p>Email:</p>
+            <p>test@example.com</p>
+            <p>Address:</p>
+            <p>16 tue theodore blanc</p>
             <p>Last Activity:</p>
+            <p>8 min</p>
             <p>Coach</p>
+            <p>Paul Du Pont</p>
           </div>
         </div>
         <div className="flex-none border bg-white p-2 grow">

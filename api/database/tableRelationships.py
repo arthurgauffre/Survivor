@@ -60,6 +60,7 @@ class Employee(Base):
     birthdate = Column(String, index=True)
     gender = Column(String, index=True)
     work = Column(String, index=True)
+    # customer_id = Column(Integer, ForeignKey("customers.id"))
 
 
 # Customer table
@@ -74,9 +75,12 @@ class Customer(Base):
     gender = Column(String, index=True)
     description = Column(String, index=True)
     astrologicalSign = Column(String, index=True)
+    phone_number = Column(String, index=True)
+    address = Column(String, index=True)
     payementHistory = relationship("PayementHistory",
                                    back_populates="customer")
     clothes = relationship("Clothes", back_populates="customer")
+    # employees = relationship("Employee", back_populates="customer")
 
 
 # Encounters table
@@ -105,3 +109,11 @@ class Clothes(Base):
     type = Column(String, index=True)
     customer_id = Column(Integer, ForeignKey("customers.id"))
     customer = relationship("Customer", back_populates="clothes")
+
+
+# Employee / Customer relationship table
+class EmployeeCustomer(Base):
+    __tablename__ = "employeeCustomer"
+    id = Column(Integer, primary_key=True, index=True)
+    employee_id = Column(Integer, ForeignKey("employees.id"))
+    customer_id = Column(Integer, ForeignKey("customers.id"))

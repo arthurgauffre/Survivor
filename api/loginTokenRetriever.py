@@ -24,6 +24,9 @@ def loginToken():
         "password": AUTH_PASSWORD,
     }
 
-    response = requests.post(url, json=data, headers=headers)
+    try:
+        response = requests.post(url, json=data, headers=headers)
+    except BaseException:
+        return {}
 
     return response.json()

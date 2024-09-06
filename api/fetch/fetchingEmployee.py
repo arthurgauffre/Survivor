@@ -1,9 +1,11 @@
+from random import choice
 import requests
 from loginTokenRetriever import loginToken
+from sqlalchemy.orm import Session
 import os
 from dotenv import load_dotenv
 
-from database.tableRelationships import Employee
+from database.tableRelationships import Customer, Employee, EmployeeCustomer
 
 load_dotenv()
 
@@ -20,7 +22,11 @@ def getAllEmployees(access_token, db):
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
-    response = requests.get(url, headers=headers)
+    try:
+        response = requests.get(url, headers=headers)
+    except BaseException:
+        access_token = loginToken()
+        getAllEmployees(access_token, db)
 
     if response.status_code == 401:
         access_token = loginToken()
@@ -36,6 +42,12 @@ def getAllEmployees(access_token, db):
         if not db.query(Employee).filter(
                 Employee.id == employee.id).first():
             db.add(employee)
+        else:
+            currentEmployee = db.query(Employee).filter(
+                Employee.id == employee.id).first()
+            currentEmployee.email = employee.email
+            currentEmployee.name = employee.name
+            currentEmployee.surname = employee.surname
         db.commit()
 
     return response.json()
@@ -52,11 +64,20 @@ def getEmployeeById(access_token, db):
 
     for employeeId in db.query(Employee).all():
         url = f'https://soul-connection.fr/api/employees/{employeeId.id}'
-        response = requests.get(url, headers=headers)
+        try:
+            response = requests.get(url, headers=headers)
+        except BaseException:
+            access_token = loginToken()
+            getEmployeeById(access_token, db)
         if response.status_code == 401:
             access_token = loginToken()
             getEmployeeById(access_token, db)
-        employee_data = response.json()
+        try:
+            employee_data = response.json()
+        except BaseException:
+            # access_token = loginToken()
+            # getEmployeeById(access_token, db)
+            pass
         actualEmployee = db.query(Employee).filter(
             Employee.id == employeeId.id).first()
         actualEmployee.email = employee_data.get("email")
@@ -80,7 +101,11 @@ def getEmployeeImg(access_token, db):
 
     for employeeId in db.query(Employee).all():
         url = f'https://soul-connection.fr/api/employees/{employeeId.id}/image'
-        response = requests.get(url, headers=headers)
+        try:
+            response = requests.get(url, headers=headers)
+        except BaseException:
+            access_token = loginToken()
+            getEmployeeImg(access_token, db)
         if response.status_code == 401:
             access_token = loginToken()
             getEmployeeImg(access_token, db)
@@ -90,3 +115,21 @@ def getEmployeeImg(access_token, db):
         with open(img_path, 'wb') as file:
             file.write(response.content)
     return {"message": "Images downloaded"}
+
+
+def fillingEmployeeCustomerTable(db: Session):
+    allEmployees = db.query(Employee).all()
+    allCustomers = db.query(Customer).all()
+
+    listOfAllEmployeesId = []
+
+    for employeeId in allEmployees:
+        listOfAllEmployeesId.append(employeeId.id)
+
+    for customer in allCustomers:
+        relation = EmployeeCustomer(
+            employee_id=choice(listOfAllEmployeesId),
+            customer_id=customer.id
+        )
+        db.add(relation)
+    db.commit()

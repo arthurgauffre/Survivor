@@ -1,3 +1,4 @@
+from json import JSONDecodeError
 import requests
 from loginTokenRetriever import loginToken
 import os
@@ -20,7 +21,11 @@ def getAllEncounters(access_token, db):
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
-    response = requests.get(url, headers=headers)
+    try:
+        response = requests.get(url, headers=headers)
+    except BaseException:
+        access_token = loginToken()
+        getAllEncounters(access_token, db)
 
     if response.status_code == 401:
         access_token = loginToken()
@@ -49,14 +54,21 @@ def getEncounterById(access_token, db):
 
     for encounterId in db.query(Encounter).all():
         url = f'https://soul-connection.fr/api/encounters/{encounterId.id}'
-        response = requests.get(url, headers=headers)
+        try:
+            response = requests.get(url, headers=headers)
+        except BaseException:
+            pass
         if response.status_code == 401:
             access_token = loginToken()
             getEncounterById(access_token, db)
-        encounter_data = response.json()
+        encounter_data = {}
+        try:
+            encounter_data = response.json()
+        except BaseException:
+            pass
         actualEncounter = db.query(Encounter).filter(
             Encounter.id == encounterId.id).first()
-        actualEncounter.comment = encounter_data["comment"]
-        actualEncounter.source = encounter_data["source"]
-    db.commit()
+        actualEncounter.comment = encounter_data.get("comment")
+        actualEncounter.source = encounter_data.get("source")
+        db.commit()
     return {"message": "Database seeded with encounters"}
