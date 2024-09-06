@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
+from database.tableRelationships import Employee
 from crud.events.eventsGet import getAllEventsPerEmployee
 from schemas.eventsSchemas import EmployeeEventsSchema
 from crud.clothes.clothesGet import (getAllBottomFromAUser,
@@ -12,9 +13,9 @@ from fetch.fetchingEncounter import getAllEncounters, getEncounterById
 from fetch.fetchingTips import fetchingAllTips
 from fetch.fetchingCustomer import fetchingAllCustomer, fetchingCustomerDetail
 from loginTokenRetriever import loginToken
-from fetch.fetchingEmployee import (getAllEmployees, getEmployeeById,
+from fetch.fetchingEmployee import (fillingEmployeeCustomerTable,
+                                    getAllEmployees, getEmployeeById,
                                     getEmployeeImg)
-from database.tableRelationships import Employee
 from schemas.employeeSchemas import EmployeePersonalInfoSchema
 from crud.customers.customerGet import getAllRealCustomers
 from crud.employees.employeesGet import (getAllRealEmployees,
@@ -32,6 +33,8 @@ from database.database import get_db
 router = APIRouter()
 
 access_token = loginToken()
+while access_token == {}:
+    access_token = loginToken()
 
 
 class SeedState:
@@ -40,11 +43,12 @@ class SeedState:
 
     def seed_database(self, db: Session):
         if not db.query(Employee).first():
+            fetchingAllCustomer(access_token, db)
+            fetchingCustomerDetail(access_token, db)
             getAllEmployees(access_token, db)
             getEmployeeById(access_token, db)
             getEmployeeImg(access_token, db)
-            fetchingAllCustomer(access_token, db)
-            fetchingCustomerDetail(access_token, db)
+            fillingEmployeeCustomerTable(db)
             fetchingAllTips(access_token, db)
             getAllEncounters(access_token, db)
             getEncounterById(access_token, db)
@@ -53,8 +57,8 @@ class SeedState:
             with open("seeded.txt", "w") as f:
                 f.write("Database seeded")
             return {"message": "Database seeded successfully"}
-        else:
-            self._is_seeded = True
+        # else:
+        #     self._is_seeded = True
 
     def check_seeded(self):
         if self._is_seeded is False:

@@ -50,10 +50,14 @@ def getEncounterById(access_token, db):
 
     for encounterId in db.query(Encounter).all():
         url = f'https://soul-connection.fr/api/encounters/{encounterId.id}'
-        response = requests.get(url, headers=headers)
+        try:
+            response = requests.get(url, headers=headers)
+        except BaseException:
+            pass
         if response.status_code == 401:
             access_token = loginToken()
             getEncounterById(access_token, db)
+        encounter_data = {}
         try:
             encounter_data = response.json()
         except BaseException:
