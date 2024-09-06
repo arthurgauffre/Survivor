@@ -76,12 +76,12 @@ def fetchingCustomerDetail(acccess_token, database):
         url = f'https://soul-connection.fr/api/customers/{customerId.id}'
         getCustomerDetail(url, headers, customerId, database)
         database.commit()
-        # getCustomerImage(acccess_token, customerId, headers, database)
-        # database.commit()
+        getCustomerImage(acccess_token, customerId, headers, database)
+        database.commit()
         getCustomerPaymentHistory(customerId, headers, database)
         database.commit()
-        # getClothesImage(customerId, database, headers)
-        # database.commit()
+        getClothesImage(customerId, database, headers)
+        database.commit()
 
     return {"message": "All customers have been fetched"}
 
@@ -184,6 +184,8 @@ def getCustomerPaymentHistory(customerId, headers, database):
 
 def getClothesImage(customerId, database, headers):
     # try:
+    clothes_data = {}
+    clothe_image_response = "" 
     customer = database.query(Customer).filter(
         Customer.id == customerId.id).first()
     clothes_url = f'https://soul-connection.fr/api/customers/{
@@ -199,9 +201,7 @@ def getClothesImage(customerId, database, headers):
         getClothesImage(customer, database, headers)
     try:
         clothes_datas = clothes_response.json()
-    except BaseException:
-        # acccess_token = loginToken()
-        # getClothesImage(customer, database, headers)
+    except:
         pass
     if database.query(Clothes).filter(
             Clothes.customer_id == customer.id).first():
