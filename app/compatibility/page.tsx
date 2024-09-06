@@ -1,4 +1,3 @@
-import SpawnHeadband from "../component/SpawnHeadband";
 import AstroDropDownMenu from './AstroCompatibility';
 
 export default async function Home() {
