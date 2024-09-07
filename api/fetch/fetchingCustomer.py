@@ -214,6 +214,9 @@ def getClothesImage(customerId, database, headers):
             clothe_image_response = requests.get(clothe_image, headers=headers)
         except BaseException:
             getClothesImage(customerId, database, headers)
+        if not (isinstance(clothe_image_response, requests.models.Response)):
+            # TODO
+            pass
         if clothe_image_response.status_code == 401:
             # acccess_token = loginToken()
             getClothesImage(customerId, database, headers)
