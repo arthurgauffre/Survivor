@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
+from schemas.accessToken import AccessToken
 from crud.tips.tipsGet import getAllTips
 from schemas.tipsSchemas import AllTipsSchema
 from database.tableRelationships import Employee
@@ -38,14 +39,14 @@ from database.database import get_db
 
 router = APIRouter()
 
-access_token = loginToken()
+access_token: AccessToken = loginToken()
 while access_token == {}:
-    access_token = loginToken()
+    access_token: AccessToken = loginToken()
 
 
 class SeedState:
     def __init__(self):
-        self._is_seeded = False
+        self._is_seeded: bool = False
 
     def seed_database(self, db: Session):
         if not db.query(Employee).first():
@@ -121,19 +122,23 @@ def getCustomers(db: Session = Depends(get_db)) -> list[
 @router.get("/api/customers/{customer_id}", response_model=CustomerBasicSchema,
             tags=["customers"],
             )
-def getCustomer(customer_id: int, db: Session = Depends(get_db)) -> CustomerBasicSchema:
+def getCustomer(
+        customer_id: int,
+        db: Session = Depends(get_db)) -> CustomerBasicSchema:
     return getACustomer(db, customer_id)
+
 
 @router.get("/api/customers/{customer_id}/image", tags=["customers"])
 def getCustomerImg(customer_id: int, db: Session = Depends(get_db)):
     return getCurrentCustomerImg(db, customer_id)
 
 
-@router.get("/api/customers/{customer_id}/payement_history", response_model=list[PaymentHistorySchema],
-            tags=["customers"],
-            )
-def getCustomerPayment(customer_id: int, db: Session = Depends(get_db)) -> list[PaymentHistorySchema]:
+@router.get("/api/customers/{customer_id}/payement_history",
+            response_model=list[PaymentHistorySchema], tags=["customers"], )
+def getCustomerPayment(customer_id: int, db: Session = Depends(
+        get_db)) -> list[PaymentHistorySchema]:
     return getCustomerPaymentHistory(db, customer_id)
+
 
 @router.get("/api/employees/{employee_id}",
             response_model=EmployeePersonalInfoSchema,

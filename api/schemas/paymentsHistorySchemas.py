@@ -1,5 +1,6 @@
 from pydantic import BaseModel
 
+
 class PaymentHistorySchema(BaseModel):
     id: int
     date: str

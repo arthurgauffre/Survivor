@@ -12,7 +12,11 @@ def getAllEventsPerEmployee(db: Session, employee_id: int):
     for event in events:
         datesOfAllEvents.append(str(event.date))
 
-    sorted_dates = sorted(datesOfAllEvents, key=lambda date: datetime.strptime(date, "%Y-%m-%d"))
+    sorted_dates = sorted(
+        datesOfAllEvents,
+        key=lambda date: datetime.strptime(
+            date,
+            "%Y-%m-%d"))
 
     for date in sorted_dates:
         actualEvent = db.query(Events).filter(Events.date == date).first()

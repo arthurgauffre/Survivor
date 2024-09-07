@@ -6,6 +6,7 @@ from schemas.customerSchemas import CustomerBasicSchema
 from schemas.paymentsHistorySchemas import PaymentHistorySchema
 from database.tableRelationships import Customer, PayementHistory
 
+
 def getAllRealCustomers(db: Session):
     customers = db.query(Customer).all()
     listOfAllCustomers = []
@@ -55,6 +56,7 @@ def getACustomer(db: Session, customer_id: int):
         address=customer.address
     )
 
+
 def getCurrentCustomerImg(db: Session, customer_id: int):
     image_path = f"/app/api/images/employees/{customer_id}.jpg"
 
@@ -64,20 +66,21 @@ def getCurrentCustomerImg(db: Session, customer_id: int):
     image_url = f"http://fastapi:8000/static/customers/{customer_id}.jpg"
     return {"image_url": image_url}
 
+
 def getCustomerPaymentHistory(db: Session, customer_id: int):
     payementHistory = db.query(PayementHistory).filter(
         PayementHistory.customer_id == customer_id).all()
     AllpayementHistory = []
     for payement in payementHistory:
         AllpayementHistory.append(PaymentHistorySchema
-        (
-            id=payement.id,
-            customer_id=payement.customer_id,
-            date=payement.date,
-            amount=payement.amount,
-            comment=payement.comment,
-            payment_method=payement.payment_method
-        ))
+                                  (
+                                      id=payement.id,
+                                      customer_id=payement.customer_id,
+                                      date=payement.date,
+                                      amount=payement.amount,
+                                      comment=payement.comment,
+                                      payment_method=payement.payment_method
+                                  ))
     if not AllpayementHistory:
         raise HTTPException(status_code=404, detail="Customer not found")
     return AllpayementHistory

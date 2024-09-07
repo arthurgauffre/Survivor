@@ -16,14 +16,15 @@ load_dotenv()
 config = context.config
 
 
-db_user = os.getenv('POSTGRES_USER')
-db_password = os.getenv('POSTGRES_PASSWORD')
-db_name = os.getenv('POSTGRES_DB')
-db_host = os.getenv('DB_HOST')
-db_port = os.getenv('DB_PORT')
+db_user: str = os.getenv('POSTGRES_USER')
+db_password: str = os.getenv('POSTGRES_PASSWORD')
+db_name: str = os.getenv('POSTGRES_DB')
+db_host: str = os.getenv('DB_HOST')
+db_port: str = os.getenv('DB_PORT')
 
-config.set_main_option('sqlalchemy.url', f'postgresql://{db_user}:{
-    db_password}@{db_host}:{db_port}/{db_name}')
+config.set_main_option(
+    'sqlalchemy.url',
+    f'postgresql://{db_user}:{db_password}@{db_host}:{db_port}/{db_name}')
 
 # Interpret the config file for Python logging.
 # This line sets up loggers basically.
