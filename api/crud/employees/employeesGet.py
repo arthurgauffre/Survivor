@@ -20,7 +20,8 @@ def getAllRealEmployees(db: Session):
                 "email": employee.email,
                 "birthdate": employee.birthdate,
                 "gender": employee.gender,
-                "work": employee.work
+                "work": employee.work,
+                "customer_list": []
             }
         )
     return listOfAllEmployees
