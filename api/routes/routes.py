@@ -15,6 +15,8 @@ from crud.clothes.clothesGet import (getAllBottomFromAUser,
 
 from crud.customers.customerGet import getAllRealCustomers
 from crud.customers.customerGet import getACustomer
+from crud.customers.customerGet import getCurrentCustomerImg
+from crud.customers.customerGet import getCustomerPaymentHistory
 from crud.employees.employeesGet import (getAllRealEmployees,
                                          getAnEmployeePersonalInfos,
                                          getCurrentEmployeeImg,
@@ -26,6 +28,8 @@ from schemas.employeeSchemas import EmployeePersonalInfoSchema
 from schemas.customerSchemas import CustomerBasicSchema
 from schemas.encounterSchemas import EncounterByCustomerSchema
 from schemas.clothesSchemas import ClothesAllSchema
+from schemas.paymentsHistorySchemas import PaymentHistorySchema
+
 from database.database import get_db
 
 
@@ -83,12 +87,27 @@ def getCustomer(customer_id: int, db: Session = Depends(get_db)
     return getACustomer(db, customer_id)
 
 
+@router.get("/api/customers/{customer_id}/image", tags=["customers"])
+def getCustomerImg(customer_id: int, db: Session = Depends(get_db)):
+    return getCurrentCustomerImg(db, customer_id)
+
+
 @router.get("/api/employees/", response_model=list[EmployeePersonalInfoSchema],
             tags=["employees"],
             dependencies=[Depends(oauth2_scheme)])
 def getEmployees(db: Session = Depends(get_db)) -> list[
         EmployeePersonalInfoSchema]:
     return getAllRealEmployees(db)
+
+
+@router.get("/api/customers/{customer_id}/payement_history",
+            response_model=list[PaymentHistorySchema],
+            tags=["customers"],
+            )
+def getCustomerPayment(customer_id: int,
+                       db: Session = Depends(get_db)) -> list[
+                           PaymentHistorySchema]:
+    return getCustomerPaymentHistory(db, customer_id)
 
 
 @router.get("/api/employees/{employee_id}",
