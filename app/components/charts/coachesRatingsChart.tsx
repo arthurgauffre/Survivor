@@ -66,7 +66,7 @@ const CoachesRatingsChart: React.FC<coachesRatingChart> = ({ data }) => {
         myChart.destroy();
       }
     }
-  }, []);
+  }, [data]);
 
   return <canvas id="coachesRatingsChart"></canvas>;
 };
