@@ -186,6 +186,7 @@ def getClothesImage(customerId, database, headers):
     # try:
     clothes_data = {}
     clothe_image_response = ""
+    clothes_response = ""
     customer = database.query(Customer).filter(
         Customer.id == customerId.id).first()
     clothes_url = f'https://soul-connection.fr/api/customers/{

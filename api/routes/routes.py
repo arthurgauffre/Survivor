@@ -20,6 +20,7 @@ from fetch.fetchingEmployee import (fillingEmployeeCustomerTable,
                                     getEmployeeImg)
 from schemas.employeeSchemas import EmployeePersonalInfoSchema
 from crud.customers.customerGet import getAllRealCustomers
+from crud.customers.customerGet import getACustomer
 from crud.employees.employeesGet import (getAllRealEmployees,
                                          getAnEmployeePersonalInfos,
                                          getCurrentEmployeeImg,
@@ -112,6 +113,14 @@ def getEmployees(db: Session = Depends(get_db)) -> list[
 def getCustomers(db: Session = Depends(get_db)) -> list[
         CustomerBasicSchema]:
     return getAllRealCustomers(db)
+
+
+@router.get("/api/customers/{customer_id}", response_model=CustomerBasicSchema,
+            tags=["customers"],
+            )
+def getCustomer(customer_id: int, db: Session = Depends(get_db)) -> CustomerBasicSchema:
+    return getACustomer(db, customer_id)
+
 
 
 @router.get("/api/employees/{employee_id}",
