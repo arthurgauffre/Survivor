@@ -21,6 +21,8 @@ from fetch.fetchingEmployee import (fillingEmployeeCustomerTable,
 from schemas.employeeSchemas import EmployeePersonalInfoSchema
 from crud.customers.customerGet import getAllRealCustomers
 from crud.customers.customerGet import getACustomer
+from crud.customers.customerGet import getCurrentCustomerImg
+from crud.customers.customerGet import getCustomerPaymentHistory
 from crud.employees.employeesGet import (getAllRealEmployees,
                                          getAnEmployeePersonalInfos,
                                          getCurrentEmployeeImg,
@@ -29,6 +31,7 @@ from schemas.customerSchemas import CustomerBasicSchema
 from crud.encounters.encountersGet import getEncounterForCustomer
 from schemas.encounterSchemas import EncounterByCustomerSchema
 from schemas.clothesSchemas import ClothesAllSchema
+from schemas.paymentsHistorySchemas import PaymentHistorySchema
 
 from database.database import get_db
 
@@ -121,7 +124,16 @@ def getCustomers(db: Session = Depends(get_db)) -> list[
 def getCustomer(customer_id: int, db: Session = Depends(get_db)) -> CustomerBasicSchema:
     return getACustomer(db, customer_id)
 
+@router.get("/api/customers/{customer_id}/image", tags=["customers"])
+def getCustomerImg(customer_id: int, db: Session = Depends(get_db)):
+    return getCurrentCustomerImg(db, customer_id)
 
+
+@router.get("/api/customers/{customer_id}/payement_history", response_model=list[PaymentHistorySchema],
+            tags=["customers"],
+            )
+def getCustomerPayment(customer_id: int, db: Session = Depends(get_db)) -> list[PaymentHistorySchema]:
+    return getCustomerPaymentHistory(db, customer_id)
 
 @router.get("/api/employees/{employee_id}",
             response_model=EmployeePersonalInfoSchema,

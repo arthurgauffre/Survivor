@@ -31,7 +31,7 @@ def getAllHatFromAUser(db: Session, customer_id: int):
         image_path = f"/app/api/images/clothes/{clothe.id}.jpg"
         image_url = f"http://fastapi:8000/static/clothes/{clothe.id}.jpg"
         if not os.path.exists(image_path):
-            raise HTTPException(status_code=404, detail="Image not found")
+            image_url = None
         if clothe.type == "hat/cap":
             listOfAllClothes.append(ClothesAllSchema(
                 id=clothe.id,
@@ -50,7 +50,7 @@ def getAllTopFromAUser(db: Session, customer_id: int):
         image_path = f"/app/api/images/clothes/{clothe.id}.jpg"
         image_url = f"http://fastapi:8000/static/clothes/{clothe.id}.jpg"
         if not os.path.exists(image_path):
-            raise HTTPException(status_code=404, detail="Image not found")
+            image_url = None
         if clothe.type == "top":
             listOfAllClothes.append(ClothesAllSchema(
                 id=clothe.id,
@@ -69,7 +69,7 @@ def getAllBottomFromAUser(db: Session, customer_id: int):
         image_path = f"/app/api/images/clothes/{clothe.id}.jpg"
         image_url = f"http://fastapi:8000/static/clothes/{clothe.id}.jpg"
         if not os.path.exists(image_path):
-            raise HTTPException(status_code=404, detail="Image not found")
+            image_url = None
         if clothe.type == "bottom":
             listOfAllClothes.append(ClothesAllSchema(
                 id=clothe.id,
@@ -88,7 +88,7 @@ def getAllShoesFromAUser(db: Session, customer_id: int):
         image_path = f"/app/api/images/clothes/{clothe.id}.jpg"
         image_url = f"http://fastapi:8000/static/clothes/{clothe.id}.jpg"
         if not os.path.exists(image_path):
-            raise HTTPException(status_code=404, detail="Image not found")
+            image_url = None
         if clothe.type == "shoes":
             listOfAllClothes.append(ClothesAllSchema(
                 id=clothe.id,
