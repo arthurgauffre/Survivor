@@ -11,15 +11,12 @@ import {
   PopoverGroup,
 } from "@headlessui/react";
 import {
-  ArrowPathIcon,
   Bars3Icon,
   ChatBubbleLeftEllipsisIcon,
-  ChartPieIcon,
-  CursorArrowRaysIcon,
-  FingerPrintIcon,
-  SquaresPlusIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+
+import Navigation from "@/app/component/Navigation";
 
 const user = {
   name: "Tom Cook",
@@ -36,28 +33,9 @@ const userNavigation = [
   { name: "Sign out", href: "#" },
 ];
 
-import { usePathname } from "next/navigation";
-
-function classNames(...classes) {
-  return classes.filter(Boolean).join(" ");
-}
-
-export default function NavBar() {
+export default async function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const pathname = usePathname();
-  const navigation = [
-    { name: "Dashboard", href: "/", current: "/" === pathname },
-    { name: "Coaches", href: "/coaches", current: "/coaches" === pathname },
-    {
-      name: "Customers",
-      href: "/customers",
-      current: "/customers" === pathname,
-    },
-    { name: "Tips", href: "/tips", current: "/tips" === pathname },
-    { name: "Events", href: "/events", current: "/events" === pathname },
-    { name: "Clothes", href: "/clothes", current: "/clothes" === pathname },
-    { name: "Compatibility", href: "/compatibility", current: "/compatibility" === pathname },
-  ];
+
   return (
     <header className="bg-white">
       <nav
@@ -81,19 +59,7 @@ export default function NavBar() {
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           <div className="ml-10 flex items-baseline space-x-4 ">
-            {navigation.map((item) => (
-              <a
-                key={item.name}
-                href={item.href}
-                aria-current={item.current ? "page" : undefined}
-                className={classNames(
-                  item.current && "text-[#1267c5]",
-                  "rounded-md px-3 py-2 text-sm font-bold"
-                )}
-              >
-                {item.name}
-              </a>
-            ))}
+            <Navigation mobileMenuOpen={mobileMenuOpen} />
           </div>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end">
@@ -166,15 +132,7 @@ export default function NavBar() {
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
-                {navigation.map((item) => (
-                  <a
-                    key={item.name}
-                    href={item.href}
-                    className="-mx-3 block rounded-lg px-3 py-2 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50"
-                  >
-                    {item.name}
-                  </a>
-                ))}
+                <Navigation mobileMenuOpen={mobileMenuOpen} />
               </div>
               <div className="py-6">
                 <a

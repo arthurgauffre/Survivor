@@ -1,4 +1,4 @@
-FROM python:alpine as fastapi
+FROM python:alpine3.20 as fastapi
 
 WORKDIR /app/api
 
@@ -16,13 +16,13 @@ COPY ./run_migration.sh /app/run_migration.sh
 CMD ["/app/run_migration.sh"]
 
 
-FROM node:alpine as nextjs
+FROM node:20-alpine as nextjs
 
 WORKDIR /app
 
 COPY ./package*.json ./
 
-RUN npm install
+RUN npm ci && npm cache clean --force
 
 COPY ./next.config.js ./
 COPY ./.eslintrc.json ./
