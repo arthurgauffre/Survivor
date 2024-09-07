@@ -51,7 +51,7 @@ def getCurrentEmployeeImg(db: Session, employee_id: int):
     if not os.path.exists(image_path):
         raise HTTPException(status_code=404, detail="Image not found")
 
-    image_url = f"http://localhost:8000/static/employees/{employee_id}.jpg"
+    image_url = f"http://fastapi:8000/static/employees/{employee_id}.jpg"
     return {"image_url": image_url}
 
 

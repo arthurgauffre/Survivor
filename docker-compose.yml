@@ -17,6 +17,8 @@ services:
         - action: sync+restart
           path: ./package.json
           target: /app/package.json
+    environment:
+      - SESSION_SECRET=${SESSION_SECRET:-secret}
     networks:
       - frontend-backend
 

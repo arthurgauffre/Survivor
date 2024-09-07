@@ -1,8 +1,8 @@
-import "./globals.css";
+import "@/app/globals.css";
 import { Inter } from "next/font/google";
 
-
-import NavBar from "./component/navbar";
+// import NavBar from "./components/navbar";
+// import { verifySession } from "@/app/lib/dal";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -16,14 +16,20 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  // return (
+  //   <html lang="en">
+  //     <body className="{inter.className} text-[#334760] sticky top-0">
+  //       <div className="min-h-screen bg-[#f5f6fa]">
+  //         <NavBar />
+  //         {children}
+  //       </div>
+  //     </body>
+  //   </html>
+  // );
+
   return (
-    <html lang="en">
-      <body className="{inter.className} text-[#334760] sticky top-0">
-        <div className="min-h-screen bg-[#f5f6fa]">
-          <NavBar/>
-          {children}
-        </div>
-      </body>
+    <html lang="en" className="text-[#334760]">
+      <body className="{inter.className} min-h-screen bg-[#f5f6fa]">{children}</body>
     </html>
   );
 }
