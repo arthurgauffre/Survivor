@@ -1,9 +1,9 @@
-import SpawnHeadband from "../component/SpawnHeadband";
-import Collapsible from "../component/collapse";
+import SpawnHeadband from "@/app/components/SpawnHeadband";
+import Collapsible from "@/app/components/collapse";
 
 export default async function Home() {
   let posts: { id: number, title: string, tip: string }[] = [];
-  
+
   try {
     let data = await fetch("http://fastapi:8000/api/tips");
     posts = await data.json();

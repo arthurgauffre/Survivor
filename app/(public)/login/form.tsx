@@ -12,10 +12,11 @@ export function LoginForm() {
       <div className="flex flex-col gap-2">
         <div>
           <label htmlFor="email">Email</label>
+          <br />
           <input
             id="email"
             name="email"
-            placeholder="m@example.com"
+            placeholder="test@example.com"
             type="email"
           />
           {state?.errors?.email && (
@@ -25,9 +26,9 @@ export function LoginForm() {
         <div className="mt-4">
           <div className="flex items-center justify-between">
             <label htmlFor="password">Password</label>
-            <Link className="text-sm underline" href="#">
+            {/* <Link className="text-sm underline" href="#">
               Forgot your password?
-            </Link>
+            </Link> */}
           </div>
           <input id="password" type="password" name="password" />
           {state?.errors?.password && (

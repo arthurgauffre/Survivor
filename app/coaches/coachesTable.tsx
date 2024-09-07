@@ -1,10 +1,10 @@
 "use client";
 
+import "@/app/components/table.css";
 import { useRouter } from "next/navigation";
-import "../component/table.css";
-import SpawnHeadband from "../component/SpawnHeadband";
-import DropdownMenu from "../component/DropdownMenu";
-import CheckBoxAll from "../component/CheckBoxAll";
+import SpawnHeadband from "@/app/components/SpawnHeadband";
+import DropdownMenu from "@/app/components/DropdownMenu";
+import CheckBoxAll from "@/app/components/CheckBoxAll";
 import {
   MagnifyingGlassIcon,
   PlusIcon,

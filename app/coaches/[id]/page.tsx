@@ -1,4 +1,3 @@
-import "./../../component/table.css";
 import React from "react";
 import {
   EnvelopeIcon,
@@ -7,9 +6,10 @@ import {
   ArrowLeftIcon,
 } from "@heroicons/react/24/outline";
 import { StarIcon as BlackStarIcon } from "@heroicons/react/24/solid";
-import SpawnHeadband from "../../component/SpawnHeadband";
-import CoachesChartEventsStatistics from "@/app/component/coachesChartEventsStatistics";
-import CoachesRatingsChart from "@/app/component/coachesRatingsChart";
+import "@/app/components/table.css";
+import SpawnHeadband from "@/app/components/SpawnHeadband";
+import CoachesChartEventsStatistics from "@/app/components/coachesChartEventsStatistics";
+import CoachesRatingsChart from "@/app/components/coachesRatingsChart";
 
 const Links = {
   customers_id: [17],

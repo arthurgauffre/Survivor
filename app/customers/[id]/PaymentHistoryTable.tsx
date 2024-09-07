@@ -1,7 +1,7 @@
 "use client";
 
-import "./../../component/table.css";
-import PaymentMethod from "../../component/PaymentMethod";
+import "@/app/components/table.css";
+import PaymentMethod from "@/app/components/PaymentMethod";
 import React from "react";
 
 export default function PaymentHistoryTable({

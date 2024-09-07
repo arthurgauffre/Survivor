@@ -1,5 +1,5 @@
 import { PhotoIcon, UserCircleIcon } from '@heroicons/react/24/solid'
-import SpawnHeadband from '../component/SpawnHeadband'
+import SpawnHeadband from '@/app/components/SpawnHeadband'
 
 
 export default function ClientProfilPage() {

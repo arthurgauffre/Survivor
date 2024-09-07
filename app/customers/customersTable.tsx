@@ -1,9 +1,6 @@
 "use client";
 import { useRouter } from "next/navigation";
-import "../component/table.css";
-import SpawnHeadband from "../component/SpawnHeadband";
 import InputRequest from "./inputRequest";
-import DropdownMenu from "../component/DropdownMenu";
 import {
   MagnifyingGlassIcon,
   AdjustmentsHorizontalIcon,
@@ -12,8 +9,11 @@ import {
   CloudArrowDownIcon,
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
-import CheckBoxAll from "../component/CheckBoxAll";
 import { MenuButton, Menu, MenuItem, MenuItems } from "@headlessui/react";
+import "@/app/components/table.css";
+import SpawnHeadband from "@/app/components/SpawnHeadband";
+import DropdownMenu from "@/app/components/DropdownMenu";
+import CheckBoxAll from "@/app/components/CheckBoxAll";
 
 const ActionsActions = [
   { name: "Edit", href: "customers", class: "" },

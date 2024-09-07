@@ -16,7 +16,7 @@ import {
   XMarkIcon,
 } from "@heroicons/react/24/outline";
 
-import Navigation from "@/app/component/Navigation";
+import Navigation from "@/app/components/Navigation";
 
 const user = {
   name: "Tom Cook",

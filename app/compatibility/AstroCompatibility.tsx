@@ -1,9 +1,9 @@
 "use client"; // Ensure this is at the top
 
-import AstralSign from "../component/AstralSign";
 import React, { useState, useEffect } from "react";
-import SpawnHeadband from "../component/SpawnHeadband";
-import NewDropdownMenu from "../component/NewDropdownMenu"; // Adjust path if necessary
+import AstralSign from "@/app/components/AstralSign";
+import SpawnHeadband from "@/app/components/SpawnHeadband";
+import NewDropdownMenu from "@/app/components/NewDropdownMenu"; // Adjust path if necessary
 
 // Import compatibility data from a local JSON file
 import compatibilityData from "./compatibility.json"; // Adjust path if necessary

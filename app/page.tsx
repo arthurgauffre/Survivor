@@ -1,7 +1,7 @@
-import SpawnHeadband from "./component/SpawnHeadband";
-import CustomersChart from "./component/CustomersChart";
-import EventsChart from "./component/EventsChart";
-import MeetingsChart from "./component/MeetingsChart";
+import SpawnHeadband from "@/app/components/SpawnHeadband";
+import CustomersChart from "@/app/components/CustomersChart";
+import EventsChart from "@/app/components/EventsChart";
+import MeetingsChart from "@/app/components/MeetingsChart";
 
 let text_style = {
   color: "black",

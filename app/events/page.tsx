@@ -1,4 +1,4 @@
-import SpawnHeadband from "../component/SpawnHeadband";
+import SpawnHeadband from "@/app/components/SpawnHeadband";
 
 export default function Home() {
   return (

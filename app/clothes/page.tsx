@@ -1,5 +1,5 @@
-import NewDropdownMenu from "../component/NewDropdownMenu";
-import SpawnHeadband from "../component/SpawnHeadband";
+import NewDropdownMenu from "@/app/components/NewDropdownMenu";
+import SpawnHeadband from "@/app/components/SpawnHeadband";
 import ImgDisplay from "./imgDisplay";
 import SearchBar from "./searchBar";
 

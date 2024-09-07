@@ -1,4 +1,3 @@
-import "./../../component/table.css";
 import MeetingTable from "./MeetingTable";
 import PaymentHistoryTable from "./PaymentHistoryTable";
 import React from "react";
@@ -7,7 +6,8 @@ import {
   BookmarkIcon,
   ArrowLeftIcon,
 } from "@heroicons/react/24/outline";
-import SpawnHeadband from "../../component/SpawnHeadband";
+import "@/app/components/table.css";
+import SpawnHeadband from "@/app/components/SpawnHeadband";
 
 const payments = [
   {
