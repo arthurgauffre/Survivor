@@ -39,7 +39,7 @@ export default function PaymentHistoryTable({
               <PaymentMethod payment={payment.payment_method} />
             </td>
             <td>
-              <span className="cell-header">Amount:</span> {payment.amount}
+              <span className="cell-header">Amount:</span> {payment.amount}.00 $
             </td>
             <td>
               <span className="cell-header">Commit:</span> {payment.comment}

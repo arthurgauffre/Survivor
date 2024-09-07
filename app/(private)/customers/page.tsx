@@ -2,11 +2,24 @@ import CustomersTable from "@/app/(private)/customers/customersTable";
 
 export default async function Home() {
   try {
-    let data = await fetch("http://fastapi:8000/api/customers");
-    let posts = await data.json();
+    let customersData = await fetch("http://fastapi:8000/api/customers");
+    let customers = await customersData.json();
 
-    return <CustomersTable customers={posts} />;
+    let IMGS: {
+      id: number;
+      image_url: string;
+    }[] = [];
+
+    for (let customer of customers) {
+      let dataImg = await fetch(
+        "http://fastapi:8000/api/customers/" + customer.id + "/image"
+      );
+      let Img = await dataImg.json();
+      IMGS.push(Img);
+    }
+
+    return <CustomersTable customers={customers} customersImage={IMGS}/>;
   } catch (e) {
-    return <CustomersTable customers={[]} />;
+    return <CustomersTable customers={[]} customersImage={[]}/>;
   }
 }

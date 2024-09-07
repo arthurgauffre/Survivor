@@ -55,7 +55,7 @@ const GenderDoughnutChart: React.FC<genderDoughnutChart> = ({ data }) => {
         myChart.destroy();
       }
     }
-  }, []);
+  }, [data]);
 
   return <canvas id="GenderDoughnutChart"></canvas>;
 };
