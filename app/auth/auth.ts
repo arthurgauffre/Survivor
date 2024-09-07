@@ -62,7 +62,7 @@ export async function signUp(
 
   // 4. Create a session for the user
   // const userId = user.id.toString();
-  await createSession('1');
+  await createSession("1", "user");
 }
 
 export async function login(
@@ -105,7 +105,7 @@ export async function login(
 
   // 4. If login successful, create a session for the user and redirect
   // const userId = user.id.toString();
-  await createSession("1");
+  await createSession("1", "user");
 }
 
 export async function logout() {

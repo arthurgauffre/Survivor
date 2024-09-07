@@ -5,7 +5,7 @@ import { decrypt } from '@/app/lib/session'
 import { redirect } from 'next/navigation'
 import { cache } from 'react'
 
-export const verifySession = cache(async () => {
+export const verifySession = cache(async (): Promise<{ isAuth: boolean, userId: string, role: string }> => {
   const cookie = cookies().get('session')?.value
   const session = await decrypt(cookie)
 
@@ -13,5 +13,5 @@ export const verifySession = cache(async () => {
     redirect('/login')
   }
 
-  return { isAuth: true, userId: session?.userId }
+  return { isAuth: true, userId: session?.userId as string, role: session?.role as string }
 })
