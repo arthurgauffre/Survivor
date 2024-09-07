@@ -22,35 +22,132 @@ export default async function Page({
 }: {
     params: { id: string };
 }): Promise<JSX.Element> {
-    let dataEmployees = await fetch(
-        "http://fastapi:8000/api/employees/" + params.id
-    );
-    let postsEmployees = await dataEmployees.json();
 
-    let dataImg = await fetch(
-        "http://fastapi:8000/api/employees/" + params.id + "/image"
-    );
-    let Img = await dataImg.json();
+    let postsEmployees: {
+        id: number;
+        email: string;
+        name: string;
+        surname: string;
+        birthdate: string;
+        gender: string;
+        work: string;
+        customer_list: number[];
+    } = {
+        id: 0,
+        email: "",
+        name: "",
+        surname: "",
+        birthdate: "",
+        gender: "",
+        work: "",
+        customer_list: [],
+    };
+
+    let Img: {
+        image_url: string;
+    } = {
+        image_url: "",
+    };
+
+    let postsEvents: {
+        id: number;
+        title: string;
+        date: string;
+        location: string;
+        description: string;
+    }[] = [];
+
+    let postsCustomerList: number[] = [];
+
+    let postsCustomerRatings: {
+        id: number;
+        customer_id: number;
+        date: string;
+        rating: number;
+        comment: string;
+        source: string;
+    }[] = [];
+
+    let postsCustomer: {
+        id: 0;
+        email: string;
+        name: string;
+        surname: string;
+        birthdate: string;
+        gender: string;
+        description: string;
+        astrologicalSign: string;
+        phone_number: string;
+        address: string;
+    } = {
+        id: 0,
+        email: "",
+        name: "",
+        surname: "",
+        birthdate: "",
+        gender: "",
+        description: "",
+        astrologicalSign: "",
+        phone_number: "",
+        address: "",
+    };
+
+    try {
+        let dataEmployees = await fetch(
+            "http://fastapi:8000/api/employees/" + params.id
+        );
+        postsEmployees = await dataEmployees.json();
+    } catch (e) {
+        console.log(e);
+    }
+
+    try {
+        let dataImg = await fetch(
+            "http://fastapi:8000/api/employees/" + params.id + "/image"
+        );
+        Img = await dataImg.json();
+    } catch (e) {
+        console.log(e);
+    }
     const imgUrl: string = Img.image_url;
 
-    let dataEvents = await fetch("http://fastapi:8000/api/events/" + params.id);
-    let postsEvents = await dataEvents.json();
+    try {
+        let dataEvents = await fetch(
+            "http://fastapi:8000/api/events/" + params.id
+        );
+        postsEvents = await dataEvents.json();
+    }
+    catch (e) {
+        console.log(e);
+    }
 
-    let dataCustomerList = await fetch("http://fastapi:8000/api/" + params.id + "/customers")
-    let postsCustomerList = await dataCustomerList.json()
+    try {
+        let dataCustomerList = await fetch("http://fastapi:8000/api/" + params.id + "/customers")
+        postsCustomerList = await dataCustomerList.json()
+    } catch (e) {
+        console.log(e);
+    }
 
     let ratingMeetings: number[] = [0, 0, 0, 0, 0];
     let GenderStats: number[] = [0, 0, 0]
     for (const customerId of postsCustomerList) {
-        let dataCustomers = await fetch(
-            "http://fastapi:8000/api/encounters/customer/" + customerId
-        );
-        let postsCustomerRatings = await dataCustomers.json();
+        try {
+            let dataCustomers = await fetch(
+                "http://fastapi:8000/api/encounters/customer/" + customerId
+            );
+            postsCustomerRatings = await dataCustomers.json();
+        } catch (e) {
+            console.log(e);
+        }
         for (const rating of postsCustomerRatings) {
             ratingMeetings[rating.rating - 1] += 1;
         }
-        let dataCustomer = await fetch("http://fastapi:8000/api/customers/" + customerId)
-        let postsCustomer = await dataCustomer.json()
+        try {
+            let dataCustomer = await fetch("http://fastapi:8000/api/customers/" + customerId)
+            postsCustomer = await dataCustomer.json()
+        } catch (e) {
+            console.log(e);
+        }
         switch (postsCustomer.gender) {
             case "Male":
                 GenderStats[0] += 1;
