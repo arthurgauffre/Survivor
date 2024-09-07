@@ -1,5 +1,6 @@
 from random import choice
 import requests
+from passwordOperations import getPasswordHash
 from loginTokenRetriever import loginToken
 from sqlalchemy.orm import Session
 import os
@@ -11,6 +12,7 @@ load_dotenv()
 
 
 TOKEN_API = os.getenv("TOKEN_API")
+EMPLOYEE_PASSWORD = os.getenv("FAKE_EMPLOYEE_PASSWORD")
 
 
 def getAllEmployees(access_token, db):
@@ -62,6 +64,7 @@ def getEmployeeById(access_token, db):
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
+
     for employeeId in db.query(Employee).all():
         url = f'https://soul-connection.fr/api/employees/{employeeId.id}'
         try:
@@ -80,6 +83,7 @@ def getEmployeeById(access_token, db):
             pass
         actualEmployee = db.query(Employee).filter(
             Employee.id == employeeId.id).first()
+        actualEmployee.password = getPasswordHash(EMPLOYEE_PASSWORD)
         actualEmployee.email = employee_data.get("email")
         actualEmployee.name = employee_data.get("name")
         actualEmployee.surname = employee_data.get("surname")

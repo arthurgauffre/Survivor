@@ -1,78 +1,35 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
+
+from seedingDB import SeedState
+from auth.autenticateUser import getAccessToken
 from crud.tips.tipsGet import getAllTips
 from schemas.tipsSchemas import AllTipsSchema
-from database.tableRelationships import Employee
 from crud.events.eventsGet import getAllEventsPerEmployee
-from schemas.eventsSchemas import EmployeeEventsSchema
 from crud.clothes.clothesGet import (getAllBottomFromAUser,
                                      getAllClothesImgs, getAllHatFromAUser,
                                      getAllShoesFromAUser,
                                      getAllTopFromAUser)
-from fetch.fetchingEvents import fetchingAllEvents
-from fetch.fetchingEncounter import getAllEncounters, getEncounterById
-from fetch.fetchingTips import fetchingAllTips
-from fetch.fetchingCustomer import fetchingAllCustomer, fetchingCustomerDetail
-from loginTokenRetriever import loginToken
-from fetch.fetchingEmployee import (fillingEmployeeCustomerTable,
-                                    getAllEmployees, getEmployeeById,
-                                    getEmployeeImg)
-from schemas.employeeSchemas import EmployeePersonalInfoSchema
+
 from crud.customers.customerGet import getAllRealCustomers
 from crud.customers.customerGet import getACustomer
 from crud.employees.employeesGet import (getAllRealEmployees,
                                          getAnEmployeePersonalInfos,
                                          getCurrentEmployeeImg,
                                          getListOfCustomerForEmployee)
-from schemas.customerSchemas import CustomerBasicSchema
 from crud.encounters.encountersGet import getEncounterForCustomer
+from schemas.tokenSchemas import Token
+from schemas.eventsSchemas import EmployeeEventsSchema
+from schemas.employeeSchemas import EmployeePersonalInfoSchema
+from schemas.customerSchemas import CustomerBasicSchema
 from schemas.encounterSchemas import EncounterByCustomerSchema
 from schemas.clothesSchemas import ClothesAllSchema
-
 from database.database import get_db
 
 
 router = APIRouter()
-
-access_token = loginToken()
-while access_token == {}:
-    access_token = loginToken()
-
-
-class SeedState:
-    def __init__(self):
-        self._is_seeded = False
-
-    def seed_database(self, db: Session):
-        if not db.query(Employee).first():
-            fetchingAllCustomer(access_token, db)
-            fetchingCustomerDetail(access_token, db)
-            getAllEmployees(access_token, db)
-            getEmployeeById(access_token, db)
-            getEmployeeImg(access_token, db)
-            fillingEmployeeCustomerTable(db)
-            fetchingAllTips(access_token, db)
-            getAllEncounters(access_token, db)
-            getEncounterById(access_token, db)
-            fetchingAllEvents(access_token, db)
-            self._is_seeded = True
-            with open("seeded.txt", "w") as f:
-                f.write("Database seeded")
-            return {"message": "Database seeded successfully"}
-        # else:
-        #     self._is_seeded = True
-
-    def check_seeded(self):
-        if self._is_seeded is False:
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Database is not yet seeded, please try again later."
-            )
-
-
-def get_seed_state():
-    return SeedState()
 
 
 router.mount("/static/employees", StaticFiles(
@@ -83,6 +40,9 @@ router.mount("/static/clothes", StaticFiles(
     directory="/app/api/images/clothes"), name="clothes")
 
 
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+
+
 @router.on_event("startup")
 def startup_event():
     seed_state = SeedState()
@@ -90,26 +50,26 @@ def startup_event():
         seed_state.seed_database(db)
 
 
+@router.post("/login", response_model=Token)
+def loginForAccessToken(
+    db: Session = Depends(get_db),
+    form_data: OAuth2PasswordRequestForm = Depends()
+) -> Token:
+    return getAccessToken(db, form_data)
+
+
 @router.get("/api/encounters/customer/{customer_id}",
             response_model=list[EncounterByCustomerSchema],
             tags=["encounters"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getEmployeesEncounter(customer_id: int, db: Session = Depends(
         get_db)) -> list[EncounterByCustomerSchema]:
     return getEncounterForCustomer(db, customer_id)
 
 
-@router.get("/api/employees/", response_model=list[EmployeePersonalInfoSchema],
-            tags=["employees"],
-            )
-def getEmployees(db: Session = Depends(get_db)) -> list[
-        EmployeePersonalInfoSchema]:
-    return getAllRealEmployees(db)
-
-
 @router.get("/api/customers/", response_model=list[CustomerBasicSchema],
             tags=["customers"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getCustomers(db: Session = Depends(get_db)) -> list[
         CustomerBasicSchema]:
     return getAllRealCustomers(db)
@@ -117,16 +77,24 @@ def getCustomers(db: Session = Depends(get_db)) -> list[
 
 @router.get("/api/customers/{customer_id}", response_model=CustomerBasicSchema,
             tags=["customers"],
-            )
-def getCustomer(customer_id: int, db: Session = Depends(get_db)) -> CustomerBasicSchema:
+            dependencies=[Depends(oauth2_scheme)])
+def getCustomer(customer_id: int, db: Session = Depends(get_db)
+                ) -> CustomerBasicSchema:
     return getACustomer(db, customer_id)
 
+
+@router.get("/api/employees/", response_model=list[EmployeePersonalInfoSchema],
+            tags=["employees"],
+            dependencies=[Depends(oauth2_scheme)])
+def getEmployees(db: Session = Depends(get_db)) -> list[
+        EmployeePersonalInfoSchema]:
+    return getAllRealEmployees(db)
 
 
 @router.get("/api/employees/{employee_id}",
             response_model=EmployeePersonalInfoSchema,
             tags=["employees"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getAnEmployeeInfos(employee_id: int, db: Session = Depends(
         get_db)) -> EmployeePersonalInfoSchema:
     return getAnEmployeePersonalInfos(db, employee_id)
@@ -134,57 +102,65 @@ def getAnEmployeeInfos(employee_id: int, db: Session = Depends(
 
 @router.get("/api/employees/{employee_id}/image",
             tags=["employees"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getTheCurrentEmployeeImg(employee_id: int, db: Session = Depends(
         get_db)):
     return getCurrentEmployeeImg(db, employee_id)
 
 
+@router.get("/api/{employee_id}/customers",
+            tags=["employees"],
+            dependencies=[Depends(oauth2_scheme)])
+def getCustomersOfAnEmployee(employee_id: int, db: Session = Depends(get_db)):
+    return getListOfCustomerForEmployee(db, employee_id)
+
+
 @router.get("/api/clothes",
-            tags=["clothes"], response_model=list[ClothesAllSchema])
+            tags=["clothes"], response_model=list[ClothesAllSchema],
+            dependencies=[Depends(oauth2_scheme)])
 def getClothes(db: Session = Depends(get_db)) -> list[ClothesAllSchema]:
     return getAllClothesImgs(db)
 
 
 @router.get("/api/customers/{customer_id}/clothes/hat",
-            tags=["clothes"])
+            tags=["clothes"],
+            dependencies=[Depends(oauth2_scheme)])
 def getGivenCustomerHat(customer_id: int, db: Session = Depends(get_db)):
     return getAllHatFromAUser(db, customer_id)
 
 
 @router.get("/api/customers/{customer_id}/clothes/top",
-            tags=["clothes"])
+            tags=["clothes"],
+            dependencies=[Depends(oauth2_scheme)])
 def getGivenCustomerTop(customer_id: int, db: Session = Depends(get_db)):
     return getAllTopFromAUser(db, customer_id)
 
 
 @router.get("/api/customers/{customer_id}/clothes/bottom",
-            tags=["clothes"])
+            tags=["clothes"],
+            dependencies=[Depends(oauth2_scheme)])
 def getGivenCustomerBottom(customer_id: int, db: Session = Depends(get_db)):
     return getAllBottomFromAUser(db, customer_id)
 
 
 @router.get("/api/customers/{customer_id}/clothes/shoes",
-            tags=["clothes"])
+            tags=["clothes"],
+            dependencies=[Depends(oauth2_scheme)])
 def getGivenCustomerShoes(customer_id: int, db: Session = Depends(get_db)):
     return getAllShoesFromAUser(db, customer_id)
 
 
 @router.get("/api/events/{employee_id}",
             tags=["events"],
-            response_model=list[EmployeeEventsSchema])
+            response_model=list[EmployeeEventsSchema],
+            dependencies=[Depends(oauth2_scheme)])
 def getEmployeeEvents(employee_id: int, db: Session = Depends(get_db)):
     return getAllEventsPerEmployee(db, employee_id)
 
 
-@router.get("/api/{employee_id}/customers",
-            tags=["employees"])
-def getCustomersOfAnEmployee(employee_id: int, db: Session = Depends(get_db)):
-    return getListOfCustomerForEmployee(db, employee_id)
-
-
 @router.get("/api/tips",
             tags=["tips"],
-            response_model=list[AllTipsSchema])
+            response_model=list[AllTipsSchema],
+            dependencies=[Depends(oauth2_scheme)])
 def getTips(db: Session = Depends(get_db)) -> list[AllTipsSchema]:
     return getAllTips(db)
