@@ -1,10 +1,6 @@
-import LogoutForm from '@/app/(public)/logout/form';
+'use server'
+import { logout } from '@/app/auth/auth';
 
-export default function Page() {
-  return (
-    <div>
-      <h1>Logout</h1>
-      <LogoutForm />
-    </div>
-  );
+export default async function Page() {
+  await logout();
 }

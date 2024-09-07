@@ -6,6 +6,7 @@ import {
   SignUpFormSchema,
 } from '@/app/lib/definitions';
 import { createSession, deleteSession } from '@/app/lib/session';
+import { redirect } from 'next/dist/server/api-utils';
 
 export async function signUp(
   state: FormState,

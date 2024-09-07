@@ -9,8 +9,8 @@ import { StarIcon as BlackStarIcon } from "@heroicons/react/24/solid";
 import "@/app/components/table.css";
 import SpawnHeadband from "@/app/components/SpawnHeadband";
 import CoachesChartEventsStatistics from "@/app/components/coachesChartEventsStatistics";
-import CoachesRatingsChart from "@/app/components/coachesRatingsChart";
-import GenderDoughnutChart from "@/app/components/GenderDoughnutChart";
+import CoachesRatingsChart from "@/app/components/charts/coachesRatingsChart";
+import GenderDoughnutChart from "@/app/components/charts/GenderDoughnutChart";
 import { data } from "autoprefixer";
 import Image from "next/image";
 

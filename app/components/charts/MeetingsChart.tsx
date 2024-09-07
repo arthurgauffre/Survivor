@@ -15,9 +15,11 @@ const MeetingsChart: React.FC = () => {
     // Register the necessary components
     Chart.register(DoughnutController, ArcElement, Tooltip, Legend, Title);
 
-    const ctx = document.getElementById("meetingsChart") as HTMLCanvasElement | null;
+    const ctx = document.getElementById(
+      "meetingsChart"
+    ) as HTMLCanvasElement | null;
     if (ctx) {
-      new Chart(ctx, {
+      const myChart = new Chart(ctx, {
         type: "doughnut",
         data: {
           labels: ["Accepted", "Pending", "Rejected"],
@@ -53,10 +55,13 @@ const MeetingsChart: React.FC = () => {
           },
         },
       });
+      return () => {
+        myChart.destroy();
+      };
     }
   }, []);
 
   return <canvas id="meetingsChart"></canvas>;
 };
 
-export default MeetingsChart; 
+export default MeetingsChart;

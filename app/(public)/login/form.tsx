@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
-import { login } from '@/app/auth/auth';
-import Link from 'next/link';
-import { useFormState, useFormStatus } from 'react-dom';
+import { login } from "@/app/auth/auth";
+import Link from "next/link";
+import { useFormState, useFormStatus } from "react-dom";
 
 export function LoginForm() {
   const [state, action] = useFormState(login, undefined);
@@ -30,7 +30,13 @@ export function LoginForm() {
               Forgot your password?
             </Link> */}
           </div>
-          <input id="password" type="password" name="password" />
+
+          <input
+            id="password"
+            type="password"
+            name="password"
+            placeholder="password"
+          />
           {state?.errors?.password && (
             <p className="text-sm text-red-500">{state.errors.password}</p>
           )}
@@ -49,7 +55,7 @@ export function LoginButton() {
 
   return (
     <button aria-disabled={pending} type="submit" className="mt-4 w-full">
-      {pending ? 'Submitting...' : 'Login'}
+      {pending ? "Submitting..." : "Login"}
     </button>
   );
 }

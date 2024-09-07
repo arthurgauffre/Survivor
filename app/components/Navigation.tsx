@@ -11,7 +11,7 @@ export default function Navigation({
 }) {
   const pathname = usePathname();
   const navigation = [
-    { name: "Dashboard", href: "/", current: "/" === pathname },
+    { name: "Dashboard", href: "/dashboard", current: "/dashboard" === pathname },
     { name: "Coaches", href: "/coaches", current: "/coaches" === pathname },
     {
       name: "Customers",

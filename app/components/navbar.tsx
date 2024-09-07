@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { MouseEventHandler, useState } from "react";
 import {
   Dialog,
   DialogPanel,
@@ -17,6 +17,7 @@ import {
 } from "@heroicons/react/24/outline";
 
 import Navigation from "@/app/components/Navigation";
+import { logout } from "@/app/auth/auth";
 
 const user = {
   name: "Tom Cook",
@@ -27,10 +28,20 @@ const user = {
     "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/320px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png",
 };
 
-const userNavigation = [
-  { name: "Your Profile", href: "profil" },
-  { name: "Settings", href: "#" },
-  { name: "Sign out", href: "logout" },
+const userNavigation: {
+  name: string;
+  href: string;
+  click: MouseEventHandler<HTMLButtonElement> | undefined;
+}[] = [
+  { name: "Your Profile", href: "profil", click: undefined },
+  { name: "Settings", href: "#", click: undefined },
+  {
+    name: "Sign out",
+    href: "#",
+    click: async () => {
+      await logout();
+    },
+  },
 ];
 
 export default function NavBar() {
@@ -100,7 +111,7 @@ export default function NavBar() {
                     href={item.href}
                     className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
                   >
-                    {item.name}
+                    <button onClick={item.click}>{item.name}</button>
                   </a>
                 </MenuItem>
               ))}
