@@ -1,4 +1,4 @@
-import CoachesTable from "@/app/coaches/coachesTable";
+import CoachesTable from "@/app/(private)/coaches/coachesTable";
 
 export default async function Home() {
   try {

@@ -30,10 +30,10 @@ const user = {
 const userNavigation = [
   { name: "Your Profile", href: "profil" },
   { name: "Settings", href: "#" },
-  { name: "Sign out", href: "#" },
+  { name: "Sign out", href: "logout" },
 ];
 
-export default async function NavBar() {
+export default function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (

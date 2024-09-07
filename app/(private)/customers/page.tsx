@@ -1,4 +1,4 @@
-import CustomersTable from "./customersTable";
+import CustomersTable from "@/app/(private)/customers/customersTable";
 
 export default async function Home() {
   try {

@@ -1,29 +1,28 @@
 "use client";
+
 import { useRouter } from "next/navigation";
-import InputRequest from "./inputRequest";
+import "@/app/components/table.css";
+import SpawnHeadband from "@/app/components/SpawnHeadband";
+import DropdownMenu from "@/app/components/DropdownMenu";
+import CheckBoxAll from "@/app/components/CheckBoxAll";
 import {
   MagnifyingGlassIcon,
-  AdjustmentsHorizontalIcon,
-  Cog8ToothIcon,
   PlusIcon,
   CloudArrowDownIcon,
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
 import { MenuButton, Menu, MenuItem, MenuItems } from "@headlessui/react";
-import "@/app/components/table.css";
-import SpawnHeadband from "@/app/components/SpawnHeadband";
-import DropdownMenu from "@/app/components/DropdownMenu";
-import CheckBoxAll from "@/app/components/CheckBoxAll";
 
 const ActionsActions = [
-  { name: "Edit", href: "customers", class: "" },
+  { name: "Edit", href: "coaches", class: "" },
   { name: "Delete", href: "#", class: " text-red-500" },
 ];
 
-export default function CustomersTable({
-  customers,
+export default function CoachesTable({
+  coaches,
+  CoachImages,
 }: {
-  customers: {
+  readonly coaches: {
     id: number;
     email: string;
     name: string;
@@ -33,14 +32,18 @@ export default function CustomersTable({
     description: string;
     astrologicalSign: string;
   }[];
+  readonly CoachImages: {
+    id: number;
+    image_url: string
+  }[];
 }): JSX.Element {
-  let littleText = "You have total of " + customers.length + " Customers";
+  let littletext = "You have total of " + coaches.length + " coaches";
   const router = useRouter();
 
   return (
     <SpawnHeadband
-      title="Customers"
-      littleText={littleText}
+      title="Coaches"
+      littleText={littletext}
       elemRight={
         <div className="flex">
           <button className="ml-4 bg-white text-[#2263b3] py-2 px-2 rounded text-sm flex items-center">
@@ -54,7 +57,7 @@ export default function CustomersTable({
       }
     >
       <div style={{ color: "Black" }}>
-        <ul role="list" className="divide-y-2 divide-gray-100">
+        <ul className="divide-y-2 divide-gray-100">
           <li className="flex gap-x-6 py-5 justify-between border-1 bg-white rounded-t-md px-4">
             <div className="flex">
               <DropdownMenu
@@ -70,10 +73,6 @@ export default function CustomersTable({
               <div className="flex items-center border-r-2">
                 <MagnifyingGlassIcon className="h-6 text-gray-400 px-2" />
               </div>
-              <div className="flex items-center ml-2">
-                <AdjustmentsHorizontalIcon className="h-6 text-gray-400 px-2" />
-                <Cog8ToothIcon className="h-6 text-gray-400 px-2" />
-              </div>
             </div>
           </li>
 
@@ -81,25 +80,25 @@ export default function CustomersTable({
             <table className="bg-white">
               <thead>
                 <tr>
-                  <th>
+                  <th className="p-2">
                     <CheckBoxAll />
                   </th>
                   <th>Coach</th>
                   <th>Email</th>
                   <th>Phone</th>
-                  <th>Payement Method</th>
+                  <th>Number of customers</th>
                   <th align="right" className="pr-4">
                     Actions
                   </th>
                 </tr>
               </thead>
               <tbody>
-                {customers.map((person) => (
+                {coaches.map((person) => (
                   <tr
                     key={person.id}
-                    onClick={() => router.push(`/customers/${person.id}`)}
+                    onClick={() => router.push(`/coaches/${person.id}`)}
                   >
-                    <td>
+                    <td className="p-2">
                       <input className="RowBox" type="checkbox" />
                     </td>
                     <td>
@@ -107,7 +106,7 @@ export default function CustomersTable({
                       <div className="flex items-center">
                         <img
                           alt=""
-                          src="https://media.tenor.com/6uPPCdKYocAAAAAe/panik-kalm.png"
+                          src={CoachImages[person.id - 1].image_url}
                           className="h-12 w-12 flex-none rounded-full bg-gray-50 mr-4 my-1"
                         />
                         {person.name} {person.surname}
@@ -119,12 +118,13 @@ export default function CustomersTable({
                     </td>
                     <td>
                       <span className="cell-header">Phone:</span>
-                      {person.birth_date}
+                      {person.gender}
                     </td>
                     <td>
-                      <span className="cell-header">Payement Method:</span>
+                      <span className="cell-header">Number of customers:</span>
+                      {person.birthdate}
                     </td>
-                    <td align="right">
+                    <td align="right" className="pr-6">
                       <span className="cell-header">Actions:</span>
                       <Menu>
                         <MenuButton className="relative flex max-w-xs items-center">

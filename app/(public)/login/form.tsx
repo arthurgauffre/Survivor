@@ -49,7 +49,7 @@ export function LoginButton() {
 
   return (
     <button aria-disabled={pending} type="submit" className="mt-4 w-full">
-      {pending ? 'Submitting...' : 'Sign up'}
+      {pending ? 'Submitting...' : 'Login'}
     </button>
   );
 }

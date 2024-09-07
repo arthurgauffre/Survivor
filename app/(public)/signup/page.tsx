@@ -1,5 +1,3 @@
-'use server';
-
 import Link from 'next/link';
 import SignUpForm from "@/app/(public)/signup/form"; // Ensure SignUpForm is a client component
 
