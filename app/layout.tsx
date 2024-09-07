@@ -28,8 +28,8 @@ export default function RootLayout({
   // );
 
   return (
-    <html lang="en" className="text-[#334760]">
-      <body className="{inter.className} min-h-screen bg-[#f5f6fa]">{children}</body>
+    <html lang="en">
+      <body className="{inter.className} min-h-screen bg-[#f5f6fa] text-[#334760]">{children}</body>
     </html>
   );
 }

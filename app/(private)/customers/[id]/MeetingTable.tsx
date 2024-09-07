@@ -1,9 +1,7 @@
 "use client";
 
-import React from "react";
-import {
-  StarIcon,
-} from "@heroicons/react/24/outline";
+import React, { CSSProperties } from "react";
+import { StarIcon } from "@heroicons/react/24/outline";
 import { StarIcon as BlackStarIcon } from "@heroicons/react/24/solid";
 import "@/app/components/table.css";
 
@@ -55,7 +53,8 @@ export default function MeetingTable({
               </div>
             </td>
             <td>
-              <span className="cell-header">Report:</span> {meeting.comment}
+              <span className="cell-header">Report:</span>
+              {meeting.comment}
             </td>
             <td>
               <span className="cell-header">Source:</span> {meeting.source}

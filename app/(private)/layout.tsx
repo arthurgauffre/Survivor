@@ -6,11 +6,9 @@ export default function PrivateLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body className="{inter.className} sticky top-0">
-          <NavBar/>
-          {children}
-      </body>
-    </html>
+    <main>
+      <NavBar/>
+      {children}
+    </main>
   );
 }

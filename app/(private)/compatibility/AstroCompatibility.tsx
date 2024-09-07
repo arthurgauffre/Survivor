@@ -17,7 +17,7 @@ type CompatibilityData = {
   };
 };
 
-export default function AstroDropDownMenu({
+export default function AstrologicalDropDownMenu({
   data,
 }: {
   data: [string, string][];
@@ -27,11 +27,11 @@ export default function AstroDropDownMenu({
   const [compatibility, setCompatibility] = useState<number | null>(null);
   const [selectedValue1, setSelectedValue1] = useState<string>("");
   const [selectedValue2, setSelectedValue2] = useState<string>("");
-  const contabilityCalcul = useEffect(() => {
+  const compatibilityCalculation = useEffect(() => {
     if (selectedValue1 && selectedValue2) {
-      const dataCompability: CompatibilityData = compatibilityData;
+      const dataCompatibility: CompatibilityData = compatibilityData;
       const percentage =
-        dataCompability.compatibility[
+        dataCompatibility.compatibility[
           (selectedValue1 &&
             data[
               data.findIndex((customer) => customer[0] === selectedValue1)
@@ -44,10 +44,10 @@ export default function AstroDropDownMenu({
         ] || null;
       setCompatibility(percentage);
     }
-  }, [selectedValue1, selectedValue2]);
+  }, [data, selectedValue1, selectedValue2]);
 
   if (selectedValue1 && selectedValue2) {
-    contabilityCalcul;
+    compatibilityCalculation;
   }
   const updateSelectedValue1 = (selectedValue: string): void => {
     setSelectedValue1(selectedValue);
@@ -99,17 +99,21 @@ export default function AstroDropDownMenu({
 
         {selectedValue1 && selectedValue2 && (
           <div>
-            <h3 className="text-md font-medium">Compatibility Result:</h3>
+            <h3 className="text-md font-medium text-center">Compatibility Result:</h3>
             {compatibility !== null ? (
               compatibility > 50 ? (
-                <p className="text-green-600">
+                <p className="text-green-600 text-center">
                   Compatibility: {compatibility}%
                 </p>
               ) : (
-                <p className="text-red-600">Compatibility: {compatibility}%</p>
+                <p className="text-red-600 text-center">
+                  Compatibility: {compatibility}%
+                </p>
               )
             ) : (
-              <p className="text-gray-600">No compatibility data available.</p>
+              <p className="text-gray-600 text-center">
+                No compatibility data available.
+              </p>
             )}
           </div>
         )}

@@ -19,25 +19,19 @@ const GenderDoughnutChart: React.FC<genderDoughnutChart> = ({ data }) => {
     // Register the necessary components
     Chart.register(DoughnutController, ArcElement, Tooltip, Legend, Title);
 
-    const ctx = document.getElementById("GenderDoughnutChart") as HTMLCanvasElement | null;
+    const ctx = document.getElementById(
+      "GenderDoughnutChart"
+    ) as HTMLCanvasElement | null;
     if (ctx) {
-      new Chart(ctx, {
+      const myChart = new Chart(ctx, {
         type: "doughnut",
         data: {
           labels: ["Male", "Female", "Other"],
           datasets: [
             {
               data: data,
-              borderColor: [
-                "#48dbfb",
-                "#ff9ff3",
-                "#1dd1a1",
-              ],
-              backgroundColor: [
-                "#48dbfb",
-                "#ff9ff3",
-                "#1dd1a1",
-              ],
+              borderColor: ["#48dbfb", "#ff9ff3", "#1dd1a1"],
+              backgroundColor: ["#48dbfb", "#ff9ff3", "#1dd1a1"],
               borderWidth: 2,
             },
           ],
@@ -57,10 +51,13 @@ const GenderDoughnutChart: React.FC<genderDoughnutChart> = ({ data }) => {
           },
         },
       });
+      return () => {
+        myChart.destroy();
+      }
     }
   }, []);
 
   return <canvas id="GenderDoughnutChart"></canvas>;
 };
 
-export default GenderDoughnutChart; 
+export default GenderDoughnutChart;

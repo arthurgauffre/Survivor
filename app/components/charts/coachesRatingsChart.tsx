@@ -10,29 +10,37 @@ import {
   Title,
 } from "chart.js";
 
-const MeetingsChart: React.FC = () => {
+type coachesRatingChart = {
+  data: number[];
+};
+
+const CoachesRatingsChart: React.FC<coachesRatingChart> = ({ data }) => {
   useEffect(() => {
     // Register the necessary components
     Chart.register(DoughnutController, ArcElement, Tooltip, Legend, Title);
 
-    const ctx = document.getElementById("meetingsChart") as HTMLCanvasElement | null;
+    const ctx = document.getElementById("coachesRatingsChart") as HTMLCanvasElement | null;
     if (ctx) {
-      new Chart(ctx, {
+      const myChart = new Chart(ctx, {
         type: "doughnut",
         data: {
-          labels: ["Accepted", "Pending", "Rejected"],
+          labels: ["1*", "2*", "3*", "4*", "5*"],
           datasets: [
             {
-              data: [70, 10, 6],
+              data: data,
               borderColor: [
-                "rgb(75, 192, 192)",
-                "rgb(255, 205, 86)",
-                "rgb(255, 99, 132)",
+                "#f53b57",
+                "#3c40c6",
+                "#0fbcf9",
+                "#00d8d6",
+                "#05c46b",
               ],
               backgroundColor: [
-                "rgb(75, 192, 192)",
-                "rgb(255, 205, 86)",
-                "rgb(255, 99, 132)",
+                "#f53b57",
+                "#3c40c6",
+                "#0fbcf9",
+                "#00d8d6",
+                "#05c46b",
               ],
               borderWidth: 2,
             },
@@ -48,15 +56,19 @@ const MeetingsChart: React.FC = () => {
             },
             title: {
               display: true,
-              text: "Customer Status",
+              text: "Meeting ratings",
             },
           },
         },
+
       });
+      return () => {
+        myChart.destroy();
+      }
     }
   }, []);
 
-  return <canvas id="meetingsChart"></canvas>;
+  return <canvas id="coachesRatingsChart"></canvas>;
 };
 
-export default MeetingsChart; 
+export default CoachesRatingsChart;

@@ -9,8 +9,8 @@ import { StarIcon as BlackStarIcon } from "@heroicons/react/24/solid";
 import "@/app/components/table.css";
 import SpawnHeadband from "@/app/components/SpawnHeadband";
 import CoachesChartEventsStatistics from "@/app/components/coachesChartEventsStatistics";
-import CoachesRatingsChart from "@/app/components/coachesRatingsChart";
-import GenderDoughnutChart from "@/app/components/GenderDoughnutChart";
+import CoachesRatingsChart from "@/app/components/charts/coachesRatingsChart";
+import GenderDoughnutChart from "@/app/components/charts/GenderDoughnutChart";
 import { data } from "autoprefixer";
 import Image from "next/image";
 
@@ -193,21 +193,31 @@ export default async function Page({
                     </div>
                     <div className="border-b p-2">
                         <p>short detail</p>
-                        <br />
-                        <p className="text-gray-500">Email:</p>
-                        <p>{postsEmployees.email}</p>
-                        <br />
-                        <p className="text-gray-500">Birthdate:</p>
-                        <p>{postsEmployees.birthdate}</p>
-                        <br />
-                        <p className="text-gray-500">Gender:</p>
-                        <p>{postsEmployees.gender}</p>
-                        <br />
-                        <p className="text-gray-500">Work:</p>
-                        <p>{postsEmployees.work}</p>
-                        <br />
-                        <p className="text-gray-500">Number of clients:</p>
-                        <p>{postsCustomerList.length}</p>
+
+                        <div className="mt-4">
+                            <p className="text-gray-500">Email:</p>
+                            <p className="whitespace-nowrap">{postsEmployees.email}</p>
+                        </div>
+
+                        <div className="mt-4">
+                            <p className="text-gray-500">Birthdate:</p>
+                            <p>{postsEmployees.birthdate}</p>
+                        </div>
+
+                        <div className="mt-4">
+                            <p className="text-gray-500">Gender:</p>
+                            <p>{postsEmployees.gender}</p>
+                        </div>
+
+                        <div className="mt-4">
+                            <p className="text-gray-500">Work:</p>
+                            <p>{postsEmployees.work}</p>
+                        </div>
+
+                        <div className="mt-4">
+                            <p className="text-gray-500">Number of clients:</p>
+                            <p>{postsCustomerList.length}</p>
+                        </div>
                     </div>
                 </div>
                 <div className="sm:flex sm:flex-wrap sm:w-full gap-2">
