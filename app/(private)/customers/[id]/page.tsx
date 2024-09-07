@@ -6,10 +6,11 @@ import {
   BookmarkIcon,
   ArrowLeftIcon,
 } from "@heroicons/react/24/outline";
+import Image from "next/image";
 import "@/app/components/table.css";
 import SpawnHeadband from "@/app/components/SpawnHeadband";
 
-const payments = [
+const paymentsA = [
   {
     id: 7,
     date: "2024-05-31",
@@ -81,6 +82,14 @@ export default async function Page({ params }: { params: { id: string } }) {
     comment: string;
     source: string;
   }[] = [];
+  let payments: {
+    id: number;
+    date: string;
+    payment_method: string;
+    amount: number;
+    comment: string;
+  }[] = [];
+  let picture: {image_url: string;} = {image_url: ""};
   try {
     let meetingsData = await fetch(
       "http://fastapi:8000/api/encounters/customer/" + params.id
@@ -89,6 +98,27 @@ export default async function Page({ params }: { params: { id: string } }) {
   } catch (e) {
     meetings = [];
   }
+  try {
+    let paymentsData = await fetch(
+      "http://fastapi:8000/api/customers/" +
+        params.id +
+        "/payement_history"
+    );
+    payments = await paymentsData.json();
+  } catch (e) {
+    payments = [];
+  }
+  try {
+    let pictureData = await fetch(
+      "http://fastapi:8000/api/customers/" +
+        params.id +
+        "/image"
+    );
+    picture = await pictureData.json();
+  } catch (e) {
+    picture = {image_url: ""};
+  }
+  console.log(picture);
   // let eventsData = await fetch(
   //   "http://localhost:3000/api/encounters/customer/" + params.id
   // );
@@ -110,10 +140,12 @@ export default async function Page({ params }: { params: { id: string } }) {
       <div className="flex flex-wrap gap-2">
         <div className="flex-col border bg-white">
           <div className="sm:flex flex-col items-center justify-center text-center border-b p-2">
-            <img
+            <Image
               alt="Image of user"
-              src="https://thispersondoesnotexist.com/"
-              className="w-14 rounded-full"
+              src={picture.image_url}
+              width={56}
+              height={56}
+              className="rounded-full"
             />
             <p className="mt-2">profile name</p>
             {/* Added margin-top to separate text from the image */}

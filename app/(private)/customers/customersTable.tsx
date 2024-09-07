@@ -10,6 +10,7 @@ import {
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
 import { MenuButton, Menu, MenuItem, MenuItems } from "@headlessui/react";
+import Image from "next/image";
 import "@/app/components/table.css";
 import SpawnHeadband from "@/app/components/SpawnHeadband";
 import DropdownMenu from "@/app/components/DropdownMenu";
@@ -22,6 +23,7 @@ const ActionsActions = [
 
 export default function CustomersTable({
   customers,
+  customersImage,
 }: {
   customers: {
     id: number;
@@ -32,6 +34,10 @@ export default function CustomersTable({
     gender: string;
     description: string;
     astrologicalSign: string;
+  }[];
+  customersImage: {
+    id: number;
+    image_url: string;
   }[];
 }): JSX.Element {
   let littleText = "You have total of " + customers.length + " Customers";
@@ -105,10 +111,12 @@ export default function CustomersTable({
                     <td>
                       <span className="cell-header">Coach:</span>
                       <div className="flex items-center">
-                        <img
-                          alt=""
-                          src="https://media.tenor.com/6uPPCdKYocAAAAAe/panik-kalm.png"
-                          className="h-12 w-12 flex-none rounded-full bg-gray-50 mr-4 my-1"
+                        <Image
+                          alt="picture of user"
+                          src={customersImage[person.id]?.image_url}
+                          width={48}
+                          height={48}
+                          className="rounded-full mr-4 my-1"
                         />
                         {person.name} {person.surname}
                       </div>
