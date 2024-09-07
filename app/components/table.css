@@ -12,6 +12,8 @@ th,
 td {
   padding: 8px;
   white-space: nowrap;
+  word-wrap: break-word; /* Optional: helps break long words */
+  overflow-wrap: break-word;
 }
 
 .cell-header {
@@ -29,5 +31,7 @@ td {
   td {
     display: flex;
     justify-content: space-between;
+    white-space: normal;
+    max-width: 370px;  /* Optional: set a maximum width for the comment cell */
   }
 }

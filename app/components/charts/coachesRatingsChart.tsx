@@ -21,7 +21,7 @@ const CoachesRatingsChart: React.FC<coachesRatingChart> = ({ data }) => {
 
     const ctx = document.getElementById("coachesRatingsChart") as HTMLCanvasElement | null;
     if (ctx) {
-      new Chart(ctx, {
+      const myChart = new Chart(ctx, {
         type: "doughnut",
         data: {
           labels: ["1*", "2*", "3*", "4*", "5*"],
@@ -60,11 +60,15 @@ const CoachesRatingsChart: React.FC<coachesRatingChart> = ({ data }) => {
             },
           },
         },
+
       });
+      return () => {
+        myChart.destroy();
+      }
     }
   }, []);
 
   return <canvas id="coachesRatingsChart"></canvas>;
 };
 
-export default CoachesRatingsChart; 
+export default CoachesRatingsChart;

@@ -23,7 +23,7 @@ const GenderDoughnutChart: React.FC<genderDoughnutChart> = ({ data }) => {
       "GenderDoughnutChart"
     ) as HTMLCanvasElement | null;
     if (ctx) {
-      new Chart(ctx, {
+      const myChart = new Chart(ctx, {
         type: "doughnut",
         data: {
           labels: ["Male", "Female", "Other"],
@@ -51,6 +51,9 @@ const GenderDoughnutChart: React.FC<genderDoughnutChart> = ({ data }) => {
           },
         },
       });
+      return () => {
+        myChart.destroy();
+      }
     }
   }, []);
 
