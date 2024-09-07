@@ -31,13 +31,34 @@ export default async function ClothesPage() {
   // }
   let customers = await fetch("http://fastapi:8000/api/customers");
   let customersData = await customers.json();
-  let clothes = await fetch("http://fastapi:8000/api/clothes");
-  let clothesData: {
+  let hatData = await fetch("http://fastapi:8000/api/customers/1/clothes/hat");
+  let hat: {
     id: number;
     customer_id: number;
     type: string;
     link: string;
-  }[] = await clothes.json();
+  }[] = await hatData.json();
+  let topData = await fetch("http://fastapi:8000/api/customers/1/clothes/top");
+  let top: {
+    id: number;
+    customer_id: number;
+    type: string;
+    link: string;
+  }[] = await topData.json();
+  let bottomData = await fetch("http://fastapi:8000/api/customers/1/clothes/bottom");
+  let bottom: {
+    id: number;
+    customer_id: number;
+    type: string;
+    link: string;
+  }[] = await bottomData.json();
+  let shoesData = await fetch("http://fastapi:8000/api/customers/1/clothes/shoes");
+  let shoes: {
+    id: number;
+    customer_id: number;
+    type: string;
+    link: string;
+  }[] = await shoesData.json();
 
   return (
     <SpawnHeadband title="Clothes" littleText="Customize your drip">
@@ -47,10 +68,10 @@ export default async function ClothesPage() {
             <SearchBar customers={customersData}></SearchBar>
           </div>
           <div className="mx-auto max-w-2xl px-4 py-4 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 space-y-1">
-            <ImgDisplay images={clothesData}></ImgDisplay>
-            <ImgDisplay images={clothesData}></ImgDisplay>
-            <ImgDisplay images={clothesData}></ImgDisplay>
-            <ImgDisplay images={clothesData}></ImgDisplay>
+            <ImgDisplay images={hat}></ImgDisplay>
+            <ImgDisplay images={top}></ImgDisplay>
+            <ImgDisplay images={bottom}></ImgDisplay>
+            <ImgDisplay images={shoes}></ImgDisplay>
           </div>
         </div>
       </div>

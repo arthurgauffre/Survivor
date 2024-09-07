@@ -48,6 +48,7 @@ export default function NavBar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
+    // <header className="bg-white sticky top-0">
     <header className="bg-white">
       <nav
         aria-label="Global"
