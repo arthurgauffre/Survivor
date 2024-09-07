@@ -43,6 +43,11 @@ module.exports = {
         protocol: 'https',
         hostname: 'cdn-icons-png.flaticon.com',
         port: '',
+      },
+      {
+        protocol: 'http',
+        hostname: 'fastapi',
+        port: '8000',
       }
     ],
   },

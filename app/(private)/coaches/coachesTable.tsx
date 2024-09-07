@@ -5,6 +5,7 @@ import "@/app/components/table.css";
 import SpawnHeadband from "@/app/components/SpawnHeadband";
 import DropdownMenu from "@/app/components/DropdownMenu";
 import CheckBoxAll from "@/app/components/CheckBoxAll";
+import Image from "next/image";
 import {
   MagnifyingGlassIcon,
   PlusIcon,
@@ -104,10 +105,12 @@ export default function CoachesTable({
                     <td>
                       <span className="cell-header">Coach:</span>
                       <div className="flex items-center">
-                        <img
-                          alt=""
+                        <Image
                           src={CoachImages[person.id - 1].image_url}
-                          className="h-12 w-12 flex-none rounded-full bg-gray-50 mr-4 my-1"
+                          alt=""
+                          width={48}
+                          height={48}
+                          className="rounded-full bg-gray-50 mr-4 my-1"
                         />
                         {person.name} {person.surname}
                       </div>

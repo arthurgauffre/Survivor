@@ -12,6 +12,7 @@ import CoachesChartEventsStatistics from "@/app/components/coachesChartEventsSta
 import CoachesRatingsChart from "@/app/components/coachesRatingsChart";
 import GenderDoughnutChart from "@/app/components/GenderDoughnutChart";
 import { data } from "autoprefixer";
+import Image from "next/image";
 
 const Links = {
     customers_id: [17],
@@ -178,10 +179,12 @@ export default async function Page({
             <div className="sm:flex sm:flex-row gap-2">
                 <div className="sm:flex-col border bg-white rounded-md">
                     <div className="sm:flex flex-col items-center justify-center text-center border-b p-2">
-                        <img
+                        <Image
                             alt="Image of user"
                             src={imgUrl}
-                            className="w-14 rounded-full"
+                            width={56}
+                            height={56}
+                            className="rounded-full"
                         />
                         <p className="mt-2">
                             {postsEmployees.name} {postsEmployees.surname}

@@ -5,27 +5,16 @@ import SearchBar from "./searchBar";
 
 const images = [
   {
-    id: 1,
-    imageUrl: "https://http.cat/images/530.jpg",
+    id: 62,
+    customer_id: 1,
+    type: "hat/cap",
+    link: "http://fastapi:8000/static/clothes/62.jpg",
   },
   {
-    id: 2,
-    imageUrl:
-      "https://i.kym-cdn.com/photos/images/newsfeed/002/422/058/391.jpg",
-  },
-  {
-    id: 3,
-    imageUrl:
-      "https://image.spreadshirtmedia.net/image-server/v1/compositions/T235A1PA4253PT17X33Y9D186071565W6476H9353/views/1,width=1200,height=630,appearanceId=1,backgroundColor=F2F2F2/gnome-meme-dank-vous-avez-ete-gnomed-bavoir-bebe.jpg",
-  },
-  {
-    id: 4,
-    imageUrl:
-      "https://media.threatpost.com/wp-content/uploads/sites/103/2021/10/14162918/rickroll-e1634243370645.jpg",
-  },
-  {
-    id: 5,
-    imageUrl: "https://http.cat/images/202.jpg",
+    id: 104,
+    customer_id: 1,
+    type: "hat/cap",
+    link: "http://fastapi:8000/static/clothes/104.jpg",
   },
 ];
 
@@ -42,7 +31,7 @@ const customers = [
     astrologicalSign: "Taurus",
     birth_date: "1990-05-15",
     phone_number: "+1234567890",
-    address: "123 Elm Street, Springfield"
+    address: "123 Elm Street, Springfield",
   },
   {
     id: 2,
@@ -56,7 +45,7 @@ const customers = [
     astrologicalSign: "Scorpio",
     birth_date: "1988-10-25",
     phone_number: "+0987654321",
-    address: "456 Maple Avenue, Rivertown"
+    address: "456 Maple Avenue, Rivertown",
   },
   {
     id: 3,
@@ -70,7 +59,7 @@ const customers = [
     astrologicalSign: "Pisces",
     birth_date: "1995-03-08",
     phone_number: "+1122334455",
-    address: "789 Oak Road, Greenfield"
+    address: "789 Oak Road, Greenfield",
   },
   {
     id: 4,
@@ -84,12 +73,11 @@ const customers = [
     astrologicalSign: "Cancer",
     birth_date: "1992-07-12",
     phone_number: "+3344556677",
-    address: "101 Pine Street, Bluetown"
-  }
+    address: "101 Pine Street, Bluetown",
+  },
 ];
 
-
-export default async function Home() {
+export default async function ClothesPage() {
   // let customers = [];
   // let images = []
   // try {
@@ -100,19 +88,28 @@ export default async function Home() {
   // } catch (error) {
   //   console.error("Error fetching data:", error);
   // }
+  let customers = await fetch("http://fastapi:8000/api/customers");
+  let customersData = await customers.json();
+  let clothes = await fetch("http://fastapi:8000/api/clothes");
+  let clothesData: {
+    id: number;
+    customer_id: number;
+    type: string;
+    link: string;
+  }[] = await clothes.json();
 
   return (
     <SpawnHeadband title="Clothes" littleText="Customize your drip">
       <div className="bg-white rounded-md shadow-md rounded-t-lg">
         <div>
           <div className="justify-center border-2">
-            <SearchBar customers={customers}></SearchBar>
+            <SearchBar customers={customersData}></SearchBar>
           </div>
           <div className="mx-auto max-w-2xl px-4 py-4 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 space-y-1">
-            <ImgDisplay images={images}></ImgDisplay>
-            <ImgDisplay images={images}></ImgDisplay>
-            <ImgDisplay images={images}></ImgDisplay>
-            <ImgDisplay images={images}></ImgDisplay>
+            <ImgDisplay images={clothesData}></ImgDisplay>
+            <ImgDisplay images={clothesData}></ImgDisplay>
+            <ImgDisplay images={clothesData}></ImgDisplay>
+            <ImgDisplay images={clothesData}></ImgDisplay>
           </div>
         </div>
       </div>

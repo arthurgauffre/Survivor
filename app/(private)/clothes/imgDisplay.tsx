@@ -2,22 +2,39 @@
 
 import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import Image from "next/image";
 
-export default function imgDisplay({
-  images,
+export default function ImgDisplay({
+  images = [],
 }: {
-  images: { id: number; imageUrl: string }[];
+  images: {
+    id: number;
+    customer_id: number;
+    type: string;
+    link: string;
+  }[];
 }) {
   let [i, setI] = useState(0);
   let listLen = images.length;
 
+  if (listLen === 0) {
+    return <div>No images available</div>; // Handle empty array case
+  }
+  // Ensure that the index is always valid
+  const prevIndex: number = i === 0 ? listLen - 1 : i - 1;
+  const nextIndex: number = (i + 1) % listLen;
   return (
     <div className="sm:grid sm:grid-cols-3 relative aspect-h-1 justify-center items-center aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none max-h-80">
       <div className="grow justify-center items-center text-center flex">
-        <img
-          src={images[i == 0 ? listLen - 1 : i - 1].imageUrl}
-          className="max-w-52 max-h-52 object-cover max-sm:hidden"
-        />
+        {images[prevIndex] && (
+          <Image
+            alt="previous image"
+            src={images[prevIndex].link}
+            width={200}
+            height={200}
+            className="max-w-52 max-h-52 object-cover max-sm:hidden"
+          />
+        )}
       </div>
 
       <div className="flex sm:max-h-80 max-h-60 relative items-center justify-center max-sm:max-w-80">
@@ -28,10 +45,15 @@ export default function imgDisplay({
           <ChevronRightIcon className="h-6 w-6"></ChevronRightIcon>
         </button>
 
-        <img
-          src={images[i].imageUrl}
-          className="max-w-fill sm:max-h-52 max-h-32 lg:max-w-sm"
-        />
+        {images[prevIndex] && (
+          <Image
+            alt="active image"
+            src={images[prevIndex].link}
+            width={200}
+            height={200}
+            className="max-w-52 max-h-52 object-cover max-sm:hidden"
+          />
+        )}
 
         <button
           onClick={() => setI(i == 0 ? listLen - 1 : i - 1)}
@@ -42,10 +64,15 @@ export default function imgDisplay({
       </div>
 
       <div className="grow justify-center items-center text-center flex">
-        <img
-          src={images[(i + 1) % listLen].imageUrl}
-          className="max-w-52 max-h-52 object-cover max-sm:hidden"
-        />
+        {images[nextIndex] && (
+          <Image
+            alt="next image"
+            src={images[nextIndex].link}
+            width={200}
+            height={200}
+            className="max-w-52 max-h-52 object-cover max-sm:hidden"
+          />
+        )}
       </div>
     </div>
   );
