@@ -15,12 +15,6 @@ services:
           path: ./app
           target: /app/app
         - action: sync
-          path: ./lib
-          target: /app/lib
-        - action: sync
-          path: ./components
-          target: /app/components
-        - action: sync
           path: ./components.json
           target: /app/components.json
         - action: sync

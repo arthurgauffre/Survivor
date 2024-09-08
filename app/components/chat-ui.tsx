@@ -3,6 +3,63 @@
 import { useState } from "react";
 import { Menu, X, Send, Phone, Video } from "lucide-react";
 
+export function LeftMessage({
+  image,
+  text,
+}: {
+  image: string;
+  text: string;
+}): JSX.Element {
+  return (
+    <div className="flex items-end">
+      <img className="h-8 w-8 rounded-full" src={image} alt="Contact Picture" />
+      <div className="ml-2 bg-gray-200 rounded-lg p-3 max-w-xs">
+        <p className="text-sm">{text}</p>
+      </div>
+    </div>
+  );
+}
+
+export function RightMessage({ text }: { text: string }): JSX.Element {
+  return (
+    <div className="flex items-end justify-end">
+      <div className="mr-2 bg-blue-500 text-white rounded-lg p-3 max-w-xs">
+        <p className="text-sm">{text}</p>
+      </div>
+    </div>
+  );
+}
+
+const contacts = [
+  { id: 1, name: "Alice", lastMessage: "Hey, how are you doing?" },
+  { id: 2, name: "Bob", lastMessage: "I'm good, thanks! How about you?" },
+  { id: 3, name: "Charlie", lastMessage: "lol, I'm good too!" },
+  { id: 4, name: "David", lastMessage: "I'm good, thanks! How about you?" },
+  { id: 5, name: "Eve", lastMessage: "lol, I'm good too!" },
+];
+
+export function LeftContact({
+  contacts,
+}: {
+  contacts: { id: number; name: string; lastMessage: string };
+}): JSX.Element {
+  return (
+    <button
+      className="flex items-center w-full p-3 rounded-lg hover:bg-gray-100 transition-colors"
+    >
+      <img
+        className="h-10 w-10 rounded-full"
+        src={`https://i.pravatar.cc/40?img=${contacts.id}`}
+        alt={contacts.name[0]}
+      />
+      <div className="ml-3 text-left">
+        <p className="text-sm font-medium">{contacts.name}</p>
+        <p className="text-xs text-gray-500">{contacts.lastMessage}</p>
+      </div>
+    </button>
+  );
+}
+
 export function ChatUi() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
@@ -20,21 +77,8 @@ export function ChatUi() {
           <h2 className="text-xl font-semibold">Conversations</h2>
         </div>
         <nav className="p-2">
-          {["Alice", "Bob", "Charlie", "David", "Eve"].map((name, index) => (
-            <button
-              key={index}
-              className="flex items-center w-full p-3 rounded-lg hover:bg-gray-100 transition-colors"
-            >
-              <img
-                className="h-10 w-10 rounded-full"
-                src={`https://i.pravatar.cc/40?img=${index + 1}`}
-                alt={name[0]}
-              />
-              <div className="ml-3 text-left">
-                <p className="text-sm font-medium">{name}</p>
-                <p className="text-xs text-gray-500">Last message...</p>
-              </div>
-            </button>
+          {contacts.map((contact) => (
+            <LeftContact contacts={contact} key={contact.id}/>
           ))}
         </nav>
       </div>
@@ -69,22 +113,15 @@ export function ChatUi() {
 
         {/* Chat Messages */}
         <div className="flex-1 overflow-y-auto p-4 space-y-4">
-          <div className="flex items-end">
-            <img
-              className="h-8 w-8 rounded-full"
-              src="https://i.pravatar.cc/40?img=1"
-              alt="Alice"
-            />
-            <div className="ml-2 bg-gray-200 rounded-lg p-3 max-w-xs">
-              <p className="text-sm">Hey, how are you doing?</p>
-            </div>
-          </div>
-          <div className="flex items-end justify-end">
-            <div className="mr-2 bg-blue-500 text-white rounded-lg p-3 max-w-xs">
-              <p className="text-sm">I'm good, thanks! How about you?</p>
-            </div>
-          </div>
-          {/* Add more messages here */}
+          <LeftMessage
+            image="https://i.pravatar.cc/40?img=1"
+            text="Hey, how are you doing?"
+          />
+          <RightMessage text="I'm good, thanks! How about you?" />
+          <LeftMessage
+            image="https://i.pravatar.cc/40?img=1"
+            text="lol, I'm good too!"
+          />
         </div>
 
         {/* Message Input */}
