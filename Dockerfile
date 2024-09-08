@@ -29,7 +29,10 @@ COPY ./.eslintrc.json ./
 COPY ./postcss.config.js ./
 COPY ./tailwind.config.js ./
 COPY ./tsconfig.json ./
+COPY ./components.json ./components.json
 COPY ./public/ ./public/
+COPY ./lib/ ./lib/
+COPY ./components/ ./components/
 COPY ./app/ ./app/
 
 CMD [ "npm", "run", "next-dev"]
