@@ -22,7 +22,7 @@ def fetchingAllEvents(acccess_token, database):
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + acccess_token["access_token"],
     }
-
+    response = {}
     try:
         response = requests.get(url, headers=headers)
     except BaseException:
@@ -36,13 +36,13 @@ def fetchingAllEvents(acccess_token, database):
     try:
         events_data = response.json()
     except BaseException:
-        # acccess_token = loginToken()
-        # fetchingAllEvents(acccess_token, database)
-        pass
+        acccess_token = loginToken()
+        fetchingAllEvents(acccess_token, database)
 
     for event_data in events_data:
         # Create a new Customer object
-        event_url = f'https://soul-connection.fr/api/events/{event_data.get("id")}'
+        event_url = f'https://soul-connection.fr/api/events/{event_data.get(
+            "id")}'
         try:
             response = requests.get(event_url, headers=headers)
         except BaseException:
@@ -66,8 +66,7 @@ def fetchingAllEvents(acccess_token, database):
                 location_y=event_data.get('location_y'),
                 type=event_data.get('type'),
                 employee_id=event_data.get('employee_id'),
-                location_name=event_data.get('location_name')
-        )
+                location_name=event_data.get('location_name'))
 
         # Add the new customer to the customers table
         if not database.query(Events).filter(
@@ -86,5 +85,5 @@ def fetchingAllEvents(acccess_token, database):
             currentEvent.employee_id = event.employee_id
             currentEvent.location_name = event.location_name
 
-    database.commit()
+        database.commit()
     return {"message": "Database seeded with events"}

@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
@@ -46,6 +47,28 @@ router.mount("/static/clothes", StaticFiles(
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
+
+# def seed_database():
+#     seed_state = SeedState()
+#     with next(get_db()) as db:
+#         seed_state.seed_database(db)
+
+
+# async def run_periodically(interval: int, func):
+#     """Runs a function periodically every `interval` seconds."""
+#     while True:
+#         func()
+#         await asyncio.sleep(interval)
+
+
+# @router.on_event("startup")
+# async def startup_event():
+#     interval_in_minutes = 10
+#     interval_in_seconds = interval_in_minutes * 60
+#     # Run the seeding function immediately
+#     seed_database()
+#     # Schedule periodic execution
+#     asyncio.create_task(run_periodically(interval_in_seconds, seed_database))
 
 @router.on_event("startup")
 def startup_event():

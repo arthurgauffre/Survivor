@@ -23,7 +23,7 @@ def getAllEmployees(access_token, db):
         'X-Group-Authorization': TOKEN_API,
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
-
+    response = {}
     try:
         response = requests.get(url, headers=headers)
     except BaseException:
@@ -63,7 +63,6 @@ def getEmployeeById(access_token, db):
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
-
 
     for employeeId in db.query(Employee).all():
         url = f'https://soul-connection.fr/api/employees/{employeeId.id}'

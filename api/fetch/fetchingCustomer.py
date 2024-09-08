@@ -29,6 +29,7 @@ def fetchingAllCustomer(acccess_token, database):
         'Authorization': 'Bearer ' + acccess_token["access_token"],
     }
 
+    response = {}
     try:
         response = requests.get(url, json=None, headers=headers)
     except BaseException:
@@ -56,7 +57,6 @@ def fetchingAllCustomer(acccess_token, database):
         else:
             currentCustomer = database.query(Customer).filter(
                 Customer.id == customer.id)
-            currentCustomer.id = customer.id
             currentCustomer.email = customer.email
             currentCustomer.name = customer.name
             currentCustomer.surname = customer.surname
@@ -88,6 +88,7 @@ def fetchingCustomerDetail(acccess_token, database):
 
 
 def getCustomerDetail(url, headers, customerId, database):
+    response = {}
     try:
         response = requests.get(url, headers=headers)
     except BaseException:
@@ -140,7 +141,7 @@ def getCustomerPaymentHistory(customerId, headers, database):
         Customer.id == customerId.id).first()
     payement_history_url = f'https://soul-connection.fr/api/customers/{
             customer.id}/payments_history'
-    payement_history_response = ""
+    payement_history_response = {}
     try:
         payement_history_response = requests.get(
             payement_history_url, headers=headers)
@@ -175,7 +176,6 @@ def getCustomerPaymentHistory(customerId, headers, database):
         else:
             currentPayementHistory = database.query(PayementHistory).filter(
                 PayementHistory.id == payement_history.id)
-            currentPayementHistory.id = payement_history.id
             currentPayementHistory.date = payement_history.date
             currentPayementHistory.amount = payement_history.amount
             currentPayementHistory.comment = payement_history.comment
@@ -237,87 +237,6 @@ def getClothesImage(customerId, database, headers):
             currentClothe = database.query(Clothes).filter(
                 Clothes.id == clothe.id)
             currentClothe.customer_id = clothe.customer_id
-            currentClothe.id = clothe.id
             currentClothe.type = clothe.type
     # except ConnectionError as e:
     #     print("An error from the soul-connection API has occurred:", e)
-
-
-
-
-
-
-
-# DB_USERNAME = os.getenv("POSTGRES_USER")
-# DB_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-# DB_HOST = os.getenv("DB_HOST")
-# DB_PORT = os.getenv("DB_PORT")
-# DB_NAME = os.getenv("POSTGRES_DB")
-
-# SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USERNAME}:{
-#     DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-
-# engine = create_engine(
-#     SQLALCHEMY_DATABASE_URL
-# )
-# SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-# def download_image(clothe_data, headers):
-#     # Create a new Session for each thread
-#     session = SessionFactory()
-
-#     try:
-#         clothe_image = f'https://soul-connection.fr/api/clothes/{clothe_data.get("id")}/image'
-#         clothe_image_response = requests.get(clothe_image, headers=headers)
-
-#         if clothe_image_response.status_code == 401:
-#             acccess_token = loginToken()
-#             fetchingCustomerDetail(acccess_token)
-#             clothe_image_response = requests.get(clothe_image, headers=headers)
-
-#         clothe_image_path = f'images/clothes/{clothe_data.get("id")}.jpg'
-#         if os.path.exists(clothe_image_path):
-#             os.remove(clothe_image_path)
-#         with open(clothe_image_path, 'wb') as image_file:
-#             image_file.write(clothe_image_response.content)
-
-#         clothe = Clothes(
-#             customer_id=clothe_data.get('customer_id'),
-#             id=clothe_data.get('id'),
-#             type=clothe_data.get('type'),
-#         )
-
-#         if not session.query(Clothes).filter(Clothes.id == clothe_data.get('id')).first():
-#             session.add(clothe)
-#             session.commit()  # Commit the transaction
-
-#     except SQLAlchemyError as e:
-#         print("An error occurred while saving to the database:", e)
-#         session.rollback()
-#     finally:
-#         session.close()
-
-
-# def getClothesImage(customer, headers, database):
-#     try:
-#         clothes_url = f'https://soul-connection.fr/api/customers/{customer.id}/clothes'
-#         clothes_response = requests.get(clothes_url, headers=headers)
-
-#         if clothes_response.status_code == 401:
-#             acccess_token = loginToken()
-#             fetchingCustomerDetail(acccess_token)
-#             clothes_response = requests.get(clothes_url, headers=headers)
-
-#         clothes_datas = clothes_response.json()
-
-#         # Use a ThreadPoolExecutor to handle concurrent tasks
-#         num_cores = os.cpu_count()
-#         os.write(1, f"Number of cores: {num_cores}\n".encode())
-#         with ThreadPoolExecutor(max_workers=num_cores) as executor:
-#             futures = [executor.submit(download_image, clothe_data, headers) for clothe_data in clothes_datas]
-#             for future in futures:
-#                 future.result()
-
-#     except BaseException as e:
-#         print("An error from the soul-connection API has occurred:", e)

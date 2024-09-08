@@ -27,7 +27,7 @@ def authenticateUser(db: Session, email: str, password: str):
 
 def getAccessToken(db: Session, form_data: OAuth2PasswordRequestForm):
     user = authenticateUser(db, form_data.username,
-                             form_data.password)
+                            form_data.password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

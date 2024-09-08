@@ -6,6 +6,7 @@ from schemas.customerSchemas import CustomerBasicSchema
 from schemas.paymentsHistorySchemas import PaymentHistorySchema
 from database.tableRelationships import Customer, PayementHistory
 
+
 def getAllRealCustomers(db: Session):
     customers = db.query(Customer).all()
     listOfAllCustomers = []
@@ -25,18 +26,6 @@ def getAllRealCustomers(db: Session):
                 "address": customer.address
             }
         )
-        # listOfAllCustomers.append(CustomerBasicSchema(
-        #     id=customer.id,
-        #     email=customer.email,
-        #     name=customer.name,
-        #     surname=customer.surname,
-        #     birth_date=customer.birth_date,
-        #     gender=customer.gender,
-        #     description=customer.description,
-        #     astrologicalSign=customer.astrologicalSign,
-        #     phone_number=customer.phone_number,
-        #     address=customer.address
-        # ))
     return listOfAllCustomers
 
 
@@ -55,6 +44,7 @@ def getACustomer(db: Session, customer_id: int):
         address=customer.address
     )
 
+
 def getCurrentCustomerImg(db: Session, customer_id: int):
     image_path = f"/app/api/images/employees/{customer_id}.jpg"
 
@@ -64,13 +54,13 @@ def getCurrentCustomerImg(db: Session, customer_id: int):
     image_url = f"http://fastapi:8000/static/customers/{customer_id}.jpg"
     return {"image_url": image_url}
 
+
 def getCustomerPaymentHistory(db: Session, customer_id: int):
     payementHistory = db.query(PayementHistory).filter(
         PayementHistory.customer_id == customer_id).all()
     AllpayementHistory = []
     for payement in payementHistory:
-        AllpayementHistory.append(PaymentHistorySchema
-        (
+        AllpayementHistory.append(PaymentHistorySchema(
             id=payement.id,
             customer_id=payement.customer_id,
             date=payement.date,
