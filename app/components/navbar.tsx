@@ -70,7 +70,7 @@ export default function NavBar() {
           </button>
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-          <div className="ml-10 flex items-baseline space-x-4 ">
+          <div className="ml-10 flex items-baseline gap-6">
             <Navigation mobileMenuOpen={mobileMenuOpen} />
           </div>
         </PopoverGroup>

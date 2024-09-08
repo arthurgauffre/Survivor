@@ -54,7 +54,7 @@ export default function Navigation({
             aria-current={item.current ? "page" : undefined}
             className={classNames(
               item.current && "text-[#1267c5]",
-              "rounded-md px-3 py-2 text-sm font-bold"
+              "text-sm font-bold"
             )}
           >
             {item.name}

@@ -20,6 +20,15 @@ services:
         - action: sync
           path: ./components
           target: /app/components
+        - action: sync
+          path: ./components.json
+          target: /app/components.json
+        - action: sync
+          path: ./tailwind.config.js
+          target: /app/tailwind.config.js
+        - action: sync
+          path: ./next.config.js
+          target: /app/next.config.js
         - action: sync+restart
           path: ./package.json
           target: /app/package.json
