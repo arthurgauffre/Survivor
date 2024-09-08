@@ -1,7 +1,11 @@
 from random import choice
 import requests
+<<<<<<< HEAD
 from schemas.employeeSchemas import EmployeeBaseSchema, EmployeeInfo
 from schemas.accessToken import AccessToken
+=======
+from passwordOperations import getPasswordHash
+>>>>>>> 6a468d2a8f058b0f4d47149e772fc2f4f534bba1
 from loginTokenRetriever import loginToken
 from sqlalchemy.orm import Session
 import os
@@ -12,7 +16,12 @@ from database.tableRelationships import Customer, Employee, EmployeeCustomer
 load_dotenv()
 
 
+<<<<<<< HEAD
 TOKEN_API: str = os.getenv("TOKEN_API")
+=======
+TOKEN_API = os.getenv("TOKEN_API")
+EMPLOYEE_PASSWORD = os.getenv("FAKE_EMPLOYEE_PASSWORD")
+>>>>>>> 6a468d2a8f058b0f4d47149e772fc2f4f534bba1
 
 
 def getAllEmployees(access_token, db) -> dict:
@@ -66,10 +75,9 @@ def getEmployeeById(access_token, db) -> dict:
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
-    employees: list[EmployeeBaseSchema] = db.query(Employee).all()
 
-    for employee in employees:
-        url:str = f'https://soul-connection.fr/api/employees/{employee.id}'
+    for employeeId in db.query(Employee).all():
+        url = f'https://soul-connection.fr/api/employees/{employeeId.id}'
         try:
             response: requests.models.Response = requests.get(url, headers=headers)
         except BaseException:
@@ -85,7 +93,8 @@ def getEmployeeById(access_token, db) -> dict:
             # getEmployeeById(access_token, db)
             pass
         actualEmployee = db.query(Employee).filter(
-            Employee.id == employee.id).first()
+            Employee.id == employeeId.id).first()
+        actualEmployee.password = getPasswordHash(EMPLOYEE_PASSWORD)
         actualEmployee.email = employee_data.get("email")
         actualEmployee.name = employee_data.get("name")
         actualEmployee.surname = employee_data.get("surname")

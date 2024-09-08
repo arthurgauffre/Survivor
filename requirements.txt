@@ -6,6 +6,8 @@ sqlalchemy
 alembic
 psycopg2-binary
 flake8
-pydantic
 requests
 apscheduler
+passlib==1.7.4
+bcrypt
+pyjwt

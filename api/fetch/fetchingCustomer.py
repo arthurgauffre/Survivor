@@ -1,9 +1,12 @@
-from json import JSONDecodeError
 import requests
 import os
 from dotenv import load_dotenv
 
+<<<<<<< HEAD
 from schemas.employeeSchemas import EmployeeBaseSchema
+=======
+from passwordOperations import getPasswordHash
+>>>>>>> 6a468d2a8f058b0f4d47149e772fc2f4f534bba1
 from loginTokenRetriever import loginToken
 from database.tableRelationships import Customer, PayementHistory, Clothes
 
@@ -11,13 +14,19 @@ from database.tableRelationships import Customer, PayementHistory, Clothes
 # from sqlalchemy.exc import SQLAlchemyError
 # from sqlalchemy import create_engine
 # from sqlalchemy.orm import sessionmaker
-from requests.exceptions import ConnectionError
 
 load_dotenv()
 
+<<<<<<< HEAD
 TOKEN_API: str = os.getenv("TOKEN_API")
 AUTH_EMAIL: str = os.getenv("AUTH_EMAIL")
 AUTH_PASSWORD: str = os.getenv("AUTH_PASSWORD")
+=======
+TOKEN_API = os.getenv("TOKEN_API")
+AUTH_EMAIL = os.getenv("AUTH_EMAIL")
+AUTH_PASSWORD = os.getenv("AUTH_PASSWORD")
+CUSTOMER_PASSWORD = os.getenv("FAKE_CUSTOMER_PASSWORD")
+>>>>>>> 6a468d2a8f058b0f4d47149e772fc2f4f534bba1
 
 
 def fetchingAllCustomer(access_token, database) -> dict:
@@ -46,6 +55,7 @@ def fetchingAllCustomer(access_token, database) -> dict:
     for customer_data in customers_data:
         customer = Customer(
             id=customer_data.get('id'),
+            password=getPasswordHash(CUSTOMER_PASSWORD),
             email=customer_data.get('email'),
             name=customer_data.get('name'),
             surname=customer_data.get('surname')
@@ -78,12 +88,12 @@ def fetchingCustomerDetail(access_token, database) -> dict:
         url: str = f'https://soul-connection.fr/api/customers/{customerId.id}'
         getCustomerDetail(url, headers, customerId, database)
         database.commit()
-        getCustomerImage(access_token, customerId, headers, database)
-        database.commit()
+        # getCustomerImage(acccess_token, customerId, headers, database)
+        # database.commit()
         getCustomerPaymentHistory(customerId, headers, database)
         database.commit()
-        getClothesImage(customerId, database, headers)
-        database.commit()
+        # getClothesImage(customerId, database, headers)
+        # database.commit()
 
     return {"message": "All customers have been fetched"}
 
@@ -107,7 +117,6 @@ def getCustomerDetail(url, headers, customerId, database):
     customer = database.query(Customer).filter(
         Customer.id == customerId.id).first()
     customer.email = customer_data.get('email')
-    customer.password = customer_data.get('password')
     customer.name = customer_data.get('name')
     customer.surname = customer_data.get('surname')
     customer.birthdate = customer_data.get('birth_date')
