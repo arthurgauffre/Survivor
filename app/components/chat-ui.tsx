@@ -31,13 +31,7 @@ export function RightMessage({ text }: { text: string }): JSX.Element {
   );
 }
 
-const contacts = [
-  { id: 1, name: "Alice", lastMessage: "Hey, how are you doing?" },
-  { id: 2, name: "Bob", lastMessage: "I'm good, thanks! How about you?" },
-  { id: 3, name: "Charlie", lastMessage: "lol, I'm good too!" },
-  { id: 4, name: "David", lastMessage: "I'm good, thanks! How about you?" },
-  { id: 5, name: "Eve", lastMessage: "lol, I'm good too!" },
-];
+
 
 export function LeftContact({
   contacts,
@@ -59,10 +53,24 @@ export function LeftContact({
   );
 }
 
+const contacts = [
+  { id: 0, name: "Alice", lastMessage: "Hey, how are you doing?" },
+  { id: 1, name: "Bob", lastMessage: "I'm good, thanks! How about you?" },
+  { id: 2, name: "Charlie", lastMessage: "lol, I'm good too!" },
+  { id: 3, name: "David", lastMessage: "I'm good, thanks! How about you?" },
+  { id: 4, name: "Eve", lastMessage: "lol, I'm good too!" },
+];
+
 export function ChatUi() {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [selectedContact, setSelectedContact] = useState(0);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const selectContact = (contact: number) => {
+    setSelectedContact(contact);
+    if (!sidebarOpen)
+      toggleSidebar();
+  };
 
   return (
     <div className="flex h-[calc(100vh-80px)] bg-gray-100">
@@ -77,7 +85,11 @@ export function ChatUi() {
         </div>
         <nav className="p-2">
           {contacts.map((contact) => (
-            <button onClick={toggleSidebar} key={contact.id} className="w-full">
+            <button
+              onClick={() => selectContact(contact.id)}
+              key={contact.id}
+              className="w-full"
+            >
               <LeftContact contacts={contact} />
             </button>
           ))}
@@ -97,10 +109,10 @@ export function ChatUi() {
           <div className="flex items-center">
             <img
               className="h-10 w-10 rounded-full"
-              src="https://i.pravatar.cc/40?img=1"
+              src={`https://i.pravatar.cc/40?img=${selectedContact}`}
               alt="Alice"
             />
-            <h1 className="ml-3 text-xl font-semibold">Alice</h1>
+            <h1 className="ml-3 text-xl font-semibold">{contacts[selectedContact].name}</h1>
           </div>
           {/* <div className="flex space-x-2">
             <Button variant="ghost" size="icon">
