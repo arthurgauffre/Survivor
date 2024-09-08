@@ -1,7 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Menu, X, Send, Phone, Video } from "lucide-react";
+import { ArrowLeftIcon } from "@heroicons/react/20/solid";
+import { Menu, Send } from "lucide-react";
 
 export function LeftMessage({
   image,
@@ -44,9 +45,7 @@ export function LeftContact({
   contacts: { id: number; name: string; lastMessage: string };
 }): JSX.Element {
   return (
-    <button
-      className="flex items-center w-full p-3 rounded-lg hover:bg-gray-100 transition-colors"
-    >
+    <div className="flex items-center w-full p-3 rounded-lg hover:bg-gray-100 transition-colors">
       <img
         className="h-10 w-10 rounded-full"
         src={`https://i.pravatar.cc/40?img=${contacts.id}`}
@@ -56,7 +55,7 @@ export function LeftContact({
         <p className="text-sm font-medium">{contacts.name}</p>
         <p className="text-xs text-gray-500">{contacts.lastMessage}</p>
       </div>
-    </button>
+    </div>
   );
 }
 
@@ -69,8 +68,8 @@ export function ChatUi() {
     <div className="flex h-[calc(100vh-80px)] bg-gray-100">
       {/* Sidebar */}
       <div
-        className={`bg-white w-full max-w-xs flex-shrink-0 ${
-          sidebarOpen ? "block" : "hidden"
+        className={`bg-white w-full flex-shrink-0 sm:max-w-xs ${
+          sidebarOpen ? "hidden" : "block"
         } md:block`}
       >
         <div className="p-4 border-b" style={{ height: "73px" }}>
@@ -78,17 +77,21 @@ export function ChatUi() {
         </div>
         <nav className="p-2">
           {contacts.map((contact) => (
-            <LeftContact contacts={contact} key={contact.id}/>
+            <button onClick={toggleSidebar} key={contact.id} className="w-full">
+              <LeftContact contacts={contact} />
+            </button>
           ))}
         </nav>
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 flex flex-col">
+      <div
+        className={`flex-1 flex flex-col ${sidebarOpen ? "block" : "hidden"}`}
+      >
         {/* Chat Header */}
         <header className="bg-white border-b p-4 flex items-center justify-between">
           <button className="md:hidden" onClick={toggleSidebar}>
-            <Menu className="h-6 w-6" />
+            <ArrowLeftIcon className="h-6 w-6" />
             <span className="sr-only">Toggle sidebar</span>
           </button>
           <div className="flex items-center">
