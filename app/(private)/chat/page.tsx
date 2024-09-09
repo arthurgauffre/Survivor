@@ -1,4 +1,4 @@
-import { ChatUi } from "@/app/components/chat-ui"
+import { ChatUi } from "@/app/(private)/chat/chat-ui";
 
 export default function Page() {
     return (<ChatUi/>)
