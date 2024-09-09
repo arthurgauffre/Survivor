@@ -106,7 +106,7 @@ export async function login(
 
   // 4. If login successful, create a session for the user and redirect
   // const userId = user.id.toString();
-  await createSession("1", "user");
+  await createSession("1", "admin");
 }
 
 export async function logout() {

@@ -1,4 +1,4 @@
-import { usePathname } from "next/navigation";
+import { usePathname, redirect } from "next/navigation";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
@@ -6,27 +6,56 @@ function classNames(...classes) {
 
 export default function Navigation({
   mobileMenuOpen,
+  UserRole,
 }: {
-  mobileMenuOpen: boolean;
+  readonly mobileMenuOpen: boolean;
+  readonly UserRole : string;
 }) {
   const pathname = usePathname();
-  const navigation = [
-    { name: "Dashboard", href: "/dashboard", current: "/dashboard" === pathname },
-    { name: "Coaches", href: "/coaches", current: "/coaches" === pathname },
-    {
-      name: "Customers",
-      href: "/customers",
-      current: "/customers" === pathname,
-    },
-    { name: "Tips", href: "/tips", current: "/tips" === pathname },
-    { name: "Events", href: "/events", current: "/events" === pathname },
-    { name: "Clothes", href: "/clothes", current: "/clothes" === pathname },
-    {
-      name: "Compatibility",
-      href: "/compatibility",
-      current: "/compatibility" === pathname,
-    },
-  ];
+  let navigation = [];
+
+  if (UserRole === "admin") {
+    navigation = [
+      {
+        name: "Dashboard",
+        href: "/dashboard",
+        current: "/dashboard" === pathname,
+      },
+      { name: "Coaches", href: "/coaches", current: "/coaches" === pathname },
+      {
+        name: "Customers",
+        href: "/customers",
+        current: "/customers" === pathname,
+      },
+      { name: "Tips", href: "/tips", current: "/tips" === pathname },
+      { name: "Events", href: "/events", current: "/events" === pathname },
+      { name: "Clothes", href: "/clothes", current: "/clothes" === pathname },
+      {
+        name: "Compatibility",
+        href: "/compatibility",
+        current: "/compatibility" === pathname,
+      },
+    ];
+  } else if (UserRole === "user") {
+    navigation = [
+      {
+        name: "Dashboard",
+        href: "/dashboard",
+        current: "/dashboard" === pathname,
+      },
+
+      { name: "Tips", href: "/tips", current: "/tips" === pathname },
+      { name: "Events", href: "/events", current: "/events" === pathname },
+      { name: "Clothes", href: "/clothes", current: "/clothes" === pathname },
+      {
+        name: "Compatibility",
+        href: "/compatibility",
+        current: "/compatibility" === pathname,
+      },
+    ];
+  } else {
+    redirect("/login");
+  }
 
   if (mobileMenuOpen) {
     // mobile
