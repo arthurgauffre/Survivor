@@ -18,6 +18,13 @@ const images = [
   },
 ];
 
+type Image = {
+  id: number;
+  customer_id: number;
+  type: string;
+  link: string;
+};
+
 export default async function ClothesPage() {
   // let customers = [];
   // let images = []
@@ -29,43 +36,40 @@ export default async function ClothesPage() {
   // } catch (error) {
   //   console.error("Error fetching data:", error);
   // }
-  let customers = await fetch("http://fastapi:8000/api/customers");
-  let customersData = await customers.json();
-  let hatData = await fetch("http://fastapi:8000/api/customers/1/clothes/hat");
-  let hat: {
-    id: number;
-    customer_id: number;
-    type: string;
-    link: string;
-  }[] = await hatData.json();
-  let topData = await fetch("http://fastapi:8000/api/customers/1/clothes/top");
-  let top: {
-    id: number;
-    customer_id: number;
-    type: string;
-    link: string;
-  }[] = await topData.json();
-  let bottomData = await fetch("http://fastapi:8000/api/customers/1/clothes/bottom");
-  let bottom: {
-    id: number;
-    customer_id: number;
-    type: string;
-    link: string;
-  }[] = await bottomData.json();
-  let shoesData = await fetch("http://fastapi:8000/api/customers/1/clothes/shoes");
-  let shoes: {
-    id: number;
-    customer_id: number;
-    type: string;
-    link: string;
-  }[] = await shoesData.json();
+  let customers = [];
+  let hat: Image[] = [];
+  let top: Image[] = [];
+  let bottom: Image[] = [];
+  let shoes: Image[] = [];
+  try {
+    let customersData = await fetch("http://fastapi:8000/api/customers");
+    let hatData = await fetch(
+      "http://fastapi:8000/api/customers/1/clothes/hat"
+    );
+    let topData = await fetch(
+      "http://fastapi:8000/api/customers/1/clothes/top"
+    );
+    let bottomData = await fetch(
+      "http://fastapi:8000/api/customers/1/clothes/bottom"
+    );
+    let shoesData = await fetch(
+      "http://fastapi:8000/api/customers/1/clothes/shoes"
+    );
+    hat = await hatData.json();
+    customers = await customersData.json();
+    top = await topData.json();
+    bottom = await bottomData.json();
+    shoes = await shoesData.json();
+  } catch (error) {
+    customers = [];
+  }
 
   return (
     <SpawnHeadband title="Clothes" littleText="Customize your drip">
       <div className="bg-white rounded-md shadow-md rounded-t-lg">
         <div>
           <div className="justify-center border-2">
-            <SearchBar customers={customersData}></SearchBar>
+            <SearchBar customers={customers}></SearchBar>
           </div>
           <div className="mx-auto max-w-2xl px-4 py-4 sm:px-6 sm:py-24 lg:max-w-7xl lg:px-8 space-y-1">
             <ImgDisplay images={hat}></ImgDisplay>

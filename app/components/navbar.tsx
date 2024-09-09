@@ -70,27 +70,19 @@ export default function NavBar() {
           </button>
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
-          <div className="ml-10 flex items-baseline space-x-4 ">
+          <div className="ml-10 flex items-baseline gap-6">
             <Navigation mobileMenuOpen={mobileMenuOpen} />
           </div>
         </PopoverGroup>
-        <div className="hidden lg:flex lg:flex-1 lg:justify-end">
+        <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-3">
           {/* NOTIFICATIONS */}
-          <button
-            type="button"
-            className="relative rounded-full p-1 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-          >
-            <span className="absolute -inset-1.5" />
-            <span className="sr-only">View notifications</span>
-            <ChatBubbleLeftEllipsisIcon
-              aria-hidden="true"
-              className="h-6 w-6"
-            />
-          </button>
+          <a href="chat" className="h-8 w-8">
+            <ChatBubbleLeftEllipsisIcon />
+          </a>
           {/* LANGUAGE */}
           <img alt="" src={user.language} className="h-8 w-8 rounded-full" />
           {/* PROFILE */}
-          <Menu as="div" className="relative ml-3">
+          <Menu as="div" className="relative">
             <div>
               <MenuButton className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
                 <span className="absolute -inset-1.5" />
@@ -171,23 +163,15 @@ export default function NavBar() {
                       </div>
                     </div>
                     {/* LANGUAGE */}
-                    <div className="ml-auto flex-none">
+                    <div className="ml-auto flex gap-3">
                       <img
                         alt=""
                         src={user.language}
                         className="h-8 w-8 rounded-full"
                       />
-                      <button
-                        type="button"
-                        className="relative ml-auto flex-shrink-0 rounded-full p-1 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
-                      >
-                        <span className="absolute -inset-1.5" />
-                        <span className="sr-only">View notifications</span>
-                        <ChatBubbleLeftEllipsisIcon
-                          aria-hidden="true"
-                          className="h-6 w-6"
-                        />
-                      </button>
+                      <a href="chat" className="h-8 w-8">
+                        <ChatBubbleLeftEllipsisIcon />
+                      </a>
                     </div>
                   </div>
                   <div className="mt-3 space-y-1 px-2">

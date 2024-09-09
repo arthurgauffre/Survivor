@@ -29,6 +29,7 @@ COPY ./.eslintrc.json ./
 COPY ./postcss.config.js ./
 COPY ./tailwind.config.js ./
 COPY ./tsconfig.json ./
+COPY ./components.json ./components.json
 COPY ./public/ ./public/
 COPY ./app/ ./app/
 

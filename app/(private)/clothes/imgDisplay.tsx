@@ -17,9 +17,6 @@ export default function ImgDisplay({
   let [i, setI] = useState(0);
   let listLen = images.length;
 
-  if (listLen === 0) {
-    return <div>No images available</div>; // Handle empty array case
-  }
   // Ensure that the index is always valid
   const prevIndex: number = i - 1 < 0 ? listLen - 1 : i - 1;
   const nextIndex: number = (i + 1) % listLen;
