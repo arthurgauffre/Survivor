@@ -17,13 +17,12 @@ from database.tableRelationships import Customer, PayementHistory, Clothes
 
 load_dotenv()
 
-SessionFactory = sessionmaker(bind=engine)
-
 TOKEN_API = os.getenv("TOKEN_API")
 AUTH_EMAIL = os.getenv("AUTH_EMAIL")
 AUTH_PASSWORD = os.getenv("AUTH_PASSWORD")
 CUSTOMER_PASSWORD = os.getenv("FAKE_CUSTOMER_PASSWORD")
 
+SessionFactory = sessionmaker(bind=engine)
 
 def fetchingAllCustomer(access_token, database):
     url = 'https://soul-connection.fr/api/customers'

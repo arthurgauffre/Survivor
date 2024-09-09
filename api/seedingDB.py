@@ -3,15 +3,15 @@ from fastapi import HTTPException, status
 
 from database.tableRelationships import Employee
 
-
+from sqlalchemy.orm import sessionmaker
+from database.database import engine
 from fetch.fetchingEvents import fetchingAllEvents
 from fetch.fetchingEncounter import getAllEncounters, getEncounterById
 from fetch.fetchingTips import fetchingAllTips
 from fetch.fetchingCustomer import fetchingAllCustomer, fetchingCustomerDetail
 from loginTokenRetriever import loginToken
 from fetch.fetchingEmployee import (fillingEmployeeCustomerTable,
-                                    getAllEmployees, getEmployeeById,
-                                    getEmployeeImg)
+                                    getAllEmployees, getEmployeeDetail)
 
 
 access_token = loginToken()
@@ -28,8 +28,7 @@ class SeedState:
             fetchingAllCustomer(access_token, db)
             fetchingCustomerDetail(access_token, db)
             getAllEmployees(access_token, db)
-            getEmployeeById(access_token, db)
-            getEmployeeImg(access_token, db)
+            getEmployeeDetail(access_token, db)
             fillingEmployeeCustomerTable(db)
             fetchingAllTips(access_token, db)
             getAllEncounters(access_token, db)
