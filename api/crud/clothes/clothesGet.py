@@ -1,4 +1,4 @@
-import os
+import base64
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
@@ -14,7 +14,7 @@ def getAllClothesImgs(db: Session):
             id=clothe.id,
             customer_id=clothe.customer_id,
             type=clothe.type,
-            img_content=clothe.img_content
+            img_content=base64.b64encode(clothe.img_content).decode("utf-8")
         ))
     return listOfAllClothes
 
@@ -29,7 +29,7 @@ def getAllHatFromAUser(db: Session, customer_id: int):
                 id=clothe.id,
                 customer_id=clothe.customer_id,
                 type=clothe.type,
-                img_content=clothe.img_content
+                img_content=base64.b64encode(clothe.img_content).decode("utf-8")
             ))
     return listOfAllClothes
 
@@ -44,7 +44,7 @@ def getAllTopFromAUser(db: Session, customer_id: int):
                 id=clothe.id,
                 customer_id=clothe.customer_id,
                 type=clothe.type,
-                img_content=clothe.img_content
+                img_content=base64.b64encode(clothe.img_content).decode("utf-8")
             ))
     return listOfAllClothes
 
@@ -59,7 +59,7 @@ def getAllBottomFromAUser(db: Session, customer_id: int):
                 id=clothe.id,
                 customer_id=clothe.customer_id,
                 type=clothe.type,
-                img_content=clothe.img_content
+                img_content=base64.b64encode(clothe.img_content).decode("utf-8")
             ))
     return listOfAllClothes
 
@@ -74,6 +74,6 @@ def getAllShoesFromAUser(db: Session, customer_id: int):
                 id=clothe.id,
                 customer_id=clothe.customer_id,
                 type=clothe.type,
-                img_content=clothe.img_content
+                img_content=base64.b64encode(clothe.img_content).decode("utf-8")
             ))
     return listOfAllClothes

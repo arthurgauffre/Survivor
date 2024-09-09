@@ -115,7 +115,7 @@ def getEmployeeImg(access_token, db):
             return getEmployeeImg(acccess_token, db)
 
         if image_response.status_code == 200:
-            employee.img_profil_content = image_response
+            employee.img_profil_content = image_response.content
         else:
             print(f"Failed to retrieve image. Status code: {image_response.status_code}")
 

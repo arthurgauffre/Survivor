@@ -78,12 +78,12 @@ def fetchingCustomerDetail(acccess_token, database):
         url = f'https://soul-connection.fr/api/customers/{customerId.id}'
         getCustomerDetail(url, headers, customerId, database)
         database.commit()
-        # getCustomerImage(acccess_token, customerId, headers, database)
-        # database.commit()
+        getCustomerImage(acccess_token, customerId, headers, database)
+        database.commit()
         getCustomerPaymentHistory(customerId, headers, database)
         database.commit()
-        # getClothesImage(customerId, database, headers)
-        # database.commit()
+        getClothesImage(customerId, database, headers)
+        database.commit()
 
     return {"message": "All customers have been fetched"}
 
@@ -134,7 +134,7 @@ def getCustomerImage(acccess_token, customerId, headers, database):
         return getCustomerImage(acccess_token, customerId, headers, database)
     
     if image_response.status_code == 200:
-        customer.img_profil_content = base64.b64decode(image_response.content)
+        customer.img_profil_content = image_response.content
     else:
         print(f"Failed to retrieve image. Status code: {image_response.status_code}")
 
@@ -230,7 +230,7 @@ def getClothesImage(customerId, database, headers):
             customer_id=customer.id,
             id=clothes_data.get('id'),
             type=clothes_data.get('type'),
-            img_content=base64.b64decode(clothe_image_response.content)
+            img_content=clothe_image_response.content
         )
         if not database.query(Clothes).filter(
                 Clothes.id == clothes_data.get('id')).first():

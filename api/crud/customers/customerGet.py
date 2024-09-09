@@ -1,4 +1,4 @@
-import os
+import base64
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
@@ -59,7 +59,7 @@ def getCurrentCustomerImg(db: Session, customer_id: int):
     customer = db.query(Customer).filter(Customer.id == customer_id).first()
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
-    return customer.img_profil_content
+    return base64.b64encode(customer.img_profil_content).decode("utf-8")
 
 def getCustomerPaymentHistory(db: Session, customer_id: int):
     payementHistory = db.query(PayementHistory).filter(

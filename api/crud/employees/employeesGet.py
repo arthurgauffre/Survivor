@@ -49,8 +49,6 @@ def getCurrentEmployeeImg(db: Session, employee_id: int):
     employee = db.query(Employee).filter(Employee.id == employee_id).first()
     if not employee:
         raise HTTPException(status_code=404, detail="Employee not found")
-
-    # Return the base64-encoded image as a string
     return base64.b64encode(employee.img_profil_content).decode("utf-8")
 
 
