@@ -1,13 +1,21 @@
-import NavBar from "@/app/components/navbar";
+import NavBar from "@/app/components/NavBar";
+import { verifySession } from "@/app/lib/dal";
 
-export default function PrivateLayout({
+export default async function PrivateLayout({
   children,
 }: {
-  children: React.ReactNode;
+  readonly children: React.ReactNode;
 }) {
+  const session: { isAuth: boolean; userId: any; role: string } =
+    await verifySession();
+  const userRole = session?.role;
+
+  console.log("session: ", session);
+  console.log("User Role: ", userRole);
+
   return (
     <main>
-      <NavBar/>
+      <NavBar UserRole={userRole}/>
       {children}
     </main>
   );

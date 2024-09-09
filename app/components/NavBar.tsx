@@ -44,7 +44,11 @@ const userNavigation: {
   },
 ];
 
-export default function NavBar() {
+export default function AdminNavBar({
+  UserRole,
+}: {
+  readonly UserRole: string;
+}) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -71,7 +75,7 @@ export default function NavBar() {
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           <div className="ml-10 flex items-baseline gap-6">
-            <Navigation mobileMenuOpen={mobileMenuOpen} />
+            <Navigation mobileMenuOpen={mobileMenuOpen} UserRole={UserRole}/>
           </div>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-3">
@@ -136,7 +140,7 @@ export default function NavBar() {
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
-                <Navigation mobileMenuOpen={mobileMenuOpen} />
+                <Navigation mobileMenuOpen={mobileMenuOpen} UserRole={UserRole}/>
               </div>
               <div className="py-6">
                 <a
