@@ -84,6 +84,22 @@ export async function login(
     };
   }
 
+  let response: {
+    access_token: string
+  };
+  try {
+    const responseData: Response = await fetch('http://fastapi:8000/login', {
+      method: 'POST',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({ email: 'jeanne.martin@soul-connection.fr', password: 'password' }),
+    })
+    response = await responseData.json()
+  } catch (error) {
+    return errorMessage;
+  }
+  console.log(response)
   // 2. Query the database for the user with the given email
   // const user = await db.query.users.findFirst({
   //   where: eq(users.email, validatedFields.data.email),

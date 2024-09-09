@@ -1,8 +1,12 @@
-from fastapi import APIRouter, Depends
+import asyncio
+from fastapi import APIRouter, Body, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
+from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
+from schemas.chatSchemas import SendChatDataSchema
+from crud.chat.chatPost import sendChatData
 from seedingDB import SeedState
 from auth.autenticateUser import getAccessToken
 from crud.tips.tipsGet import getAllTips
@@ -47,6 +51,28 @@ router.mount("/static/clothes", StaticFiles(
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
+# def seed_database():
+#     seed_state = SeedState()
+#     with next(get_db()) as db:
+#         seed_state.seed_database(db)
+
+
+# async def run_periodically(interval: int, func):
+#     """Runs a function periodically every `interval` seconds."""
+#     while True:
+#         func()
+#         await asyncio.sleep(interval)
+
+
+# @router.on_event("startup")
+# async def startup_event():
+#     interval_in_minutes = 10
+#     interval_in_seconds = interval_in_minutes * 60
+#     # Run the seeding function immediately
+#     seed_database()
+#     # Schedule periodic execution
+#     asyncio.create_task(run_periodically(interval_in_seconds, seed_database))
+
 @router.on_event("startup")
 def startup_event():
     seed_state = SeedState()
@@ -57,9 +83,10 @@ def startup_event():
 @router.post("/login", response_model=Token)
 def loginForAccessToken(
     db: Session = Depends(get_db),
-    form_data: OAuth2PasswordRequestForm = Depends()
+    email: str = Body(...),
+    password: SecretStr = Body(...),
 ) -> Token:
-    return getAccessToken(db, form_data)
+    return getAccessToken(db, email, password)
 
 
 @router.get("/api/encounters/customer/{customer_id}",
@@ -183,3 +210,11 @@ def getEmployeeEvents(employee_id: int, db: Session = Depends(get_db)):
             dependencies=[Depends(oauth2_scheme)])
 def getTips(db: Session = Depends(get_db)) -> list[AllTipsSchema]:
     return getAllTips(db)
+
+
+@router.post("/api/chat",
+             tags=["chat"],
+             dependencies=[Depends(oauth2_scheme)])
+def chatWithEmployee(chatData: SendChatDataSchema,
+                     db: Session = Depends(get_db)):
+    return sendChatData(chatData, db)
