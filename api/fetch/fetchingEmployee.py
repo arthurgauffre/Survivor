@@ -111,8 +111,8 @@ def getEmployeeImg(access_token, db):
             print(f"Error fetching image: {e}")
             continue
         if image_response.status_code == 401:
-            acccess_token = loginToken()  # Assuming loginToken() refreshes the token
-            return getEmployeeImg(acccess_token, db)
+            access_token = loginToken()  # Assuming loginToken() refreshes the token
+            return getEmployeeImg(access_token, db)
 
         if image_response.status_code == 200:
             employee.img_profil_content = image_response.content

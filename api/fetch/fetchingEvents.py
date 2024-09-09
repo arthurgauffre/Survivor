@@ -13,31 +13,31 @@ AUTH_EMAIL = os.getenv("AUTH_EMAIL")
 AUTH_PASSWORD = os.getenv("AUTH_PASSWORD")
 
 
-def fetchingAllEvents(acccess_token, database):
+def fetchingAllEvents(access_token, database):
     url = 'https://soul-connection.fr/api/events'
 
     headers = {
         'accept': 'application/json',
         'X-Group-Authorization': TOKEN_API,
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + acccess_token["access_token"],
+        'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
     try:
         response = requests.get(url, headers=headers)
     except BaseException:
-        acccess_token = loginToken()
-        fetchingAllEvents(acccess_token, database)
+        access_token = loginToken()
+        fetchingAllEvents(access_token, database)
 
     if response.status_code == 401:
-        acccess_token = loginToken()
-        fetchingAllEvents(acccess_token, database)
+        access_token = loginToken()
+        fetchingAllEvents(access_token, database)
 
     try:
         events_data = response.json()
     except BaseException:
-        # acccess_token = loginToken()
-        # fetchingAllEvents(acccess_token, database)
+        # access_token = loginToken()
+        # fetchingAllEvents(access_token, database)
         pass
 
     for event_data in events_data:

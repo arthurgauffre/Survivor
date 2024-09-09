@@ -1,7 +1,10 @@
 import requests
-import os, base64
+import os
 from dotenv import load_dotenv
 
+from database.database import engine
+from sqlalchemy.orm import sessionmaker
+from concurrent.futures import ThreadPoolExecutor
 from passwordOperations import getPasswordHash
 from loginTokenRetriever import loginToken
 from database.tableRelationships import Customer, PayementHistory, Clothes
@@ -14,31 +17,33 @@ from database.tableRelationships import Customer, PayementHistory, Clothes
 
 load_dotenv()
 
+SessionFactory = sessionmaker(bind=engine)
+
 TOKEN_API = os.getenv("TOKEN_API")
 AUTH_EMAIL = os.getenv("AUTH_EMAIL")
 AUTH_PASSWORD = os.getenv("AUTH_PASSWORD")
 CUSTOMER_PASSWORD = os.getenv("FAKE_CUSTOMER_PASSWORD")
 
 
-def fetchingAllCustomer(acccess_token, database):
+def fetchingAllCustomer(access_token, database):
     url = 'https://soul-connection.fr/api/customers'
 
     headers = {
         'accept': 'application/json',
         'X-Group-Authorization': TOKEN_API,
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + acccess_token["access_token"],
+        'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
     try:
         response = requests.get(url, json=None, headers=headers)
     except BaseException:
-        acccess_token = loginToken()
-        fetchingAllCustomer(acccess_token, database)
+        access_token = loginToken()
+        fetchingAllCustomer(access_token, database)
 
     if response.status_code == 401:
-        acccess_token = loginToken()
-        fetchingAllCustomer(acccess_token)
+        access_token = loginToken()
+        fetchingAllCustomer(access_token)
 
     customers_data = response.json()
 
@@ -66,24 +71,55 @@ def fetchingAllCustomer(acccess_token, database):
     return {"message": "All customers have been fetched"}
 
 
-def fetchingCustomerDetail(acccess_token, database):
+def fetchCustomerDetailThread(customerId, headers, access_token):
+    # Create a new session for each thread
+    session = SessionFactory()
+
+    try:
+        # Fetch customer details
+        url = f'https://soul-connection.fr/api/customers/{customerId.id}'
+        getCustomerDetail(url, headers, customerId, session)
+
+        # Fetch customer image
+        if getCustomerImage(access_token, customerId, headers, session) != 200:
+            getCustomerImage(access_token, customerId, headers, session)
+
+        # Fetch payment history
+        if getCustomerPaymentHistory(customerId, headers, session) != 200:
+            getCustomerPaymentHistory(customerId, headers, session)
+
+        # Fetch clothes image
+        if getClothesImage(customerId, session, headers) != 200:
+            getClothesImage(customerId, session, headers)
+
+        session.commit()  # Commit the transaction
+    except Exception as e:
+        session.rollback()  # Rollback in case of an error
+        print(f"Error in thread for customer {customerId.id}: {e}")
+    finally:
+        session.close()  # Close the session after work is done
+
+def fetchingCustomerDetail(access_token, database):
     headers = {
         'accept': 'application/json',
         'X-Group-Authorization': TOKEN_API,
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + acccess_token["access_token"],
+        'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
-    for customerId in database.query(Customer).all():
-        url = f'https://soul-connection.fr/api/customers/{customerId.id}'
-        getCustomerDetail(url, headers, customerId, database)
-        database.commit()
-        getCustomerImage(acccess_token, customerId, headers, database)
-        database.commit()
-        getCustomerPaymentHistory(customerId, headers, database)
-        database.commit()
-        getClothesImage(customerId, database, headers)
-        database.commit()
+    with ThreadPoolExecutor(max_workers=4) as executor:
+        # Submit tasks to the thread pool, each with its own session
+        futures = [
+            executor.submit(fetchCustomerDetailThread, customerId, headers, access_token)
+            for customerId in database.query(Customer).all()
+        ]
+
+        # Wait for all tasks to complete
+        for future in futures:
+            try:
+                future.result()
+            except Exception as e:
+                print(f"Error in thread: {e}")
 
     return {"message": "All customers have been fetched"}
 
@@ -95,13 +131,15 @@ def getCustomerDetail(url, headers, customerId, database):
         getCustomerDetail(url, headers, customerId, database)
 
     if response.status_code == 401:
-        # acccess_token = loginToken()
+        # access_token = loginToken()
         getCustomerDetail(url, headers, customerId, database)
+    if response.status_code != 200:
+        getCustomerDetail(url, headers ,customerId, database)
     customer_data = {}
     try:
         customer_data = response.json()
     except BaseException:
-        # acccess_token = loginToken()
+        # access_token = loginToken()
         # getCustomerDetail(url, headers, customerId, database)
         pass
     customer = database.query(Customer).filter(
@@ -118,7 +156,7 @@ def getCustomerDetail(url, headers, customerId, database):
     return customer
 
 
-def getCustomerImage(acccess_token, customerId, headers, database):
+def getCustomerImage(access_token, customerId, headers, database):
     customer = database.query(Customer).filter(
         Customer.id == customerId.id).first()
     image_url = f'https://soul-connection.fr/api/customers/{customer.id}/image'
@@ -127,16 +165,16 @@ def getCustomerImage(acccess_token, customerId, headers, database):
         image_response = requests.get(image_url, headers=headers)
     except Exception as e:
         print(f"Error fetching image: {e}")
-        return
 
     if image_response.status_code == 401:
-        acccess_token = loginToken()  # Assuming loginToken() refreshes the token
-        return getCustomerImage(acccess_token, customerId, headers, database)
+        access_token = loginToken()  # Assuming loginToken() refreshes the token
+        return getCustomerImage(access_token, customerId, headers, database)
     
     if image_response.status_code == 200:
         customer.img_profil_content = image_response.content
     else:
         print(f"Failed to retrieve image. Status code: {image_response.status_code}")
+        return image_response.status_code
 
 
 def getCustomerPaymentHistory(customerId, headers, database):
@@ -151,15 +189,15 @@ def getCustomerPaymentHistory(customerId, headers, database):
     except BaseException:
         pass
     if payement_history_response.status_code == 401:
-        # acccess_token = loginToken()
+        # access_token = loginToken()
         getCustomerPaymentHistory(customerId, headers, database)
     payement_history_datas = {}
     try:
         payement_history_datas = payement_history_response.json()
     except BaseException:
-        # acccess_token = loginToken()
+        # access_token = loginToken()
         # getCustomerPaymentHistory(customerId, headers, database)
-        pass
+        return payement_history_response.status_code
     if database.query(PayementHistory).filter(
             PayementHistory.customer_id == customer.id).first():
         database.query(PayementHistory).filter(
@@ -184,6 +222,7 @@ def getCustomerPaymentHistory(customerId, headers, database):
             currentPayementHistory.amount = payement_history.amount
             currentPayementHistory.comment = payement_history.comment
             currentPayementHistory.payment_method = payement_history.payment_method
+    return payement_history_response.status_code
 
 
 def getClothesImage(customerId, database, headers):
@@ -202,7 +241,7 @@ def getClothesImage(customerId, database, headers):
 
     clothes_datas = {}
     if clothes_response.status_code == 401:
-        acccess_token = loginToken()
+        access_token = loginToken()
         getClothesImage(customer, database, headers)
     try:
         clothes_datas = clothes_response.json()
@@ -213,17 +252,17 @@ def getClothesImage(customerId, database, headers):
         database.query(Clothes).filter(
             Clothes.customer_id == customer.id).delete()
     for clothes_data in clothes_datas:
-        clothe_image = f'https://soul-connection.fr/api/clothes/{
+        clothe_image_url = f'https://soul-connection.fr/api/clothes/{
             clothes_data.get("id")}/image'
         try:
-            clothe_image_response = requests.get(clothe_image, headers=headers)
+            clothe_image_response = requests.get(clothe_image_url, headers=headers)
         except BaseException:
             getClothesImage(customerId, database, headers)
         if not (isinstance(clothe_image_response, requests.models.Response)):
             # TODO
             pass
         if clothe_image_response.status_code == 401:
-            # acccess_token = loginToken()
+            access_token = loginToken()
             getClothesImage(customerId, database, headers)
 
         clothe = Clothes(
@@ -242,85 +281,5 @@ def getClothesImage(customerId, database, headers):
             currentClothe.id = clothe.id
             currentClothe.type = clothe.type
             currentClothe.img_content = clothe.img_content
-    # except ConnectionError as e:
+        return clothe_image_response.status_code
     #     print("An error from the soul-connection API has occurred:", e)
-
-
-
-
-
-
-
-# DB_USERNAME = os.getenv("POSTGRES_USER")
-# DB_PASSWORD = os.getenv("POSTGRES_PASSWORD")
-# DB_HOST = os.getenv("DB_HOST")
-# DB_PORT = os.getenv("DB_PORT")
-# DB_NAME = os.getenv("POSTGRES_DB")
-
-# SQLALCHEMY_DATABASE_URL = f"postgresql://{DB_USERNAME}:{
-#     DB_PASSWORD}@{DB_HOST}:{DB_PORT}/{DB_NAME}"
-
-# engine = create_engine(
-#     SQLALCHEMY_DATABASE_URL
-# )
-# SessionFactory = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-
-# def download_image(clothe_data, headers):
-#     # Create a new Session for each thread
-#     session = SessionFactory()
-
-#     try:
-#         clothe_image = f'https://soul-connection.fr/api/clothes/{clothe_data.get("id")}/image'
-#         clothe_image_response = requests.get(clothe_image, headers=headers)
-
-#         if clothe_image_response.status_code == 401:
-#             acccess_token = loginToken()
-#             fetchingCustomerDetail(acccess_token)
-#             clothe_image_response = requests.get(clothe_image, headers=headers)
-
-#         clothe_image_path = f'images/clothes/{clothe_data.get("id")}.jpg'
-#         if os.path.exists(clothe_image_path):
-#             os.remove(clothe_image_path)
-#         with open(clothe_image_path, 'wb') as image_file:
-#             image_file.write(clothe_image_response.content)
-
-#         clothe = Clothes(
-#             customer_id=clothe_data.get('customer_id'),
-#             id=clothe_data.get('id'),
-#             type=clothe_data.get('type'),
-#         )
-
-#         if not session.query(Clothes).filter(Clothes.id == clothe_data.get('id')).first():
-#             session.add(clothe)
-#             session.commit()  # Commit the transaction
-
-#     except SQLAlchemyError as e:
-#         print("An error occurred while saving to the database:", e)
-#         session.rollback()
-#     finally:
-#         session.close()
-
-
-# def getClothesImage(customer, headers, database):
-#     try:
-#         clothes_url = f'https://soul-connection.fr/api/customers/{customer.id}/clothes'
-#         clothes_response = requests.get(clothes_url, headers=headers)
-
-#         if clothes_response.status_code == 401:
-#             acccess_token = loginToken()
-#             fetchingCustomerDetail(acccess_token)
-#             clothes_response = requests.get(clothes_url, headers=headers)
-
-#         clothes_datas = clothes_response.json()
-
-#         # Use a ThreadPoolExecutor to handle concurrent tasks
-#         num_cores = os.cpu_count()
-#         os.write(1, f"Number of cores: {num_cores}\n".encode())
-#         with ThreadPoolExecutor(max_workers=num_cores) as executor:
-#             futures = [executor.submit(download_image, clothe_data, headers) for clothe_data in clothes_datas]
-#             for future in futures:
-#                 future.result()
-
-#     except BaseException as e:
-#         print("An error from the soul-connection API has occurred:", e)
