@@ -1,6 +1,7 @@
 "use client";
+
 import SpawnHeadband from "@/app/components/SpawnHeadband";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { ChevronLeftIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 
 const events = [
@@ -19,7 +20,7 @@ const events = [
     location_y: "3.0573",
   },
   {
-    date: "2024-07-05",
+    date: "2024-09-05",
     title: "The leap into electronic",
     color: "bg-blue-600",
     location_x: "48.8566",
@@ -32,7 +33,6 @@ const events = [
     location_x: "45.1852",
     location_y: "5.7319",
   },
-  { date: "2024-07-12", title: "Gibmuza viib hxpoibe.", color: "bg-pink-200" },
   {
     date: "2024-07-14",
     title: "1:30p Rabfov va hezow.",
@@ -40,37 +40,47 @@ const events = [
     location_x: "49.2241",
     location_y: "6.0781",
   },
-  { date: "2024-07-16", title: "4p Ke uzipiz zip.", color: "bg-sky-200" },
   {
-    date: "2024-07-18",
+    date: "2024-09-18",
     title: "5a Rujfogve kabwih haznojuf.",
     color: "bg-red-500",
     location_x: "48.7184",
     location_y: "5.9375",
   },
   {
-    date: "2024-07-18",
+    date: "2024-09-18",
     title: "7a simply dummy text of the printin",
     color: "bg-blue-200",
     location_x: "48.5734",
     location_y: "7.7521",
   },
   {
-    date: "2024-07-18",
+    date: "2024-08-18",
     title: "Piece of classical Latin literature",
     color: "bg-blue-600",
     location_x: "45.7580",
     location_y: "4.8000",
-  },
+  }
 ];
 
 export default function ResponsiveCalendarMap() {
-  const [currentMonth, setCurrentMonth] = useState(new Date(2024, 6, 1)); // July 2024
+  const [currentMonth, setCurrentMonth] = useState(new Date());
   const [selectedEvent, setSelectedEvent] = useState({
-    location_x: "50.6292",
-    location_y: "3.0573",
+    location_x: "0",
+    location_y: "0",
     title: "Default Location",
   });
+  const [isClient, setIsClient] = useState(false);
+
+  // Ensure this code runs only on the client
+  useEffect(() => {
+    setIsClient(true); // This flag ensures rendering happens after the component is mounted
+  }, []);
+
+  if (!isClient) {
+    // Prevent SSR-related mismatch issues
+    return null; // Prevents rendering until the component is fully loaded on the client
+  }
 
   const daysInMonth = new Date(
     currentMonth.getFullYear(),
@@ -97,39 +107,37 @@ export default function ResponsiveCalendarMap() {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-2xl font-bold">{`${monthName} ${currentMonth.getFullYear()}`}</h2>
               <div className="flex items-center space-x-2">
-                <button>
-                  <ChevronLeftIcon
-                    className="h-4 w-4"
-                    onClick={() =>
-                      setCurrentMonth(
-                        new Date(
-                          currentMonth.getFullYear(),
-                          currentMonth.getMonth() - 1,
-                          1
-                        )
+                <button
+                  onClick={() =>
+                    setCurrentMonth(
+                      new Date(
+                        currentMonth.getFullYear(),
+                        currentMonth.getMonth() - 1,
+                        1
                       )
-                    }
-                  />
+                    )
+                  }
+                >
+                  <ChevronLeftIcon className="h-4 w-4" />
                 </button>
-                <button>
-                  <ChevronRightIcon
-                    className="h-4 w-4"
-                    onClick={() =>
-                      setCurrentMonth(
-                        new Date(
-                          currentMonth.getFullYear(),
-                          currentMonth.getMonth() + 1,
-                          1
-                        )
+                <button
+                  onClick={() =>
+                    setCurrentMonth(
+                      new Date(
+                        currentMonth.getFullYear(),
+                        currentMonth.getMonth() + 1,
+                        1
                       )
-                    }
-                  />
+                    )
+                  }
+                >
+                  <ChevronRightIcon className="h-4 w-4" />
                 </button>
               </div>
             </div>
             <div className="grid grid-cols-7 gap-2 mb-2">
-              {days.map((day) => (
-                <div key={day} className="text-center font-semibold">
+              {days.map((day, index) => (
+                <div key={index} className="text-center font-semibold">
                   {day}
                 </div>
               ))}
@@ -151,7 +159,7 @@ export default function ResponsiveCalendarMap() {
                 const dayEvents = getEventsForDate(dateString);
                 return (
                   <div
-                    key={i}
+                    key={`day-${i}`}
                     className="h-24 w-full md:h-32 border rounded-md p-1 overflow-hidden"
                   >
                     <div className="text-right">{i + 1}</div>
