@@ -89,7 +89,7 @@ def getEncounterByIdThread(encounterId, access_token):
         session.close()  # Close the session when done
 
 def getEncounterById(access_token, db):
-    with ThreadPoolExecutor(max_workers=4) as executor:
+    with ThreadPoolExecutor(max_workers=max(1, os.cpu_count() - 4)) as executor:
         # Submit tasks to the thread pool
         futures = [
             executor.submit(getEncounterByIdThread, encounterId, access_token)

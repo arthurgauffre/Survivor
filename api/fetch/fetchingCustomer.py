@@ -106,7 +106,7 @@ def fetchingCustomerDetail(access_token, database):
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
-    with ThreadPoolExecutor(max_workers=4) as executor:
+    with ThreadPoolExecutor(max_workers=max(1, os.cpu_count() - 4)) as executor:
         # Submit tasks to the thread pool, each with its own session
         futures = [
             executor.submit(fetchCustomerDetailThread, customerId, headers, access_token)

@@ -117,7 +117,7 @@ def getEmployeeDetail(access_token, db):
     employees = db.query(Employee).all()
 
     # Use ThreadPoolExecutor to process employees in parallel
-    with ThreadPoolExecutor(max_workers=4) as executor:
+    with ThreadPoolExecutor(max_workers=max(1, os.cpu_count() - 4)) as executor:
         futures = [
             executor.submit(fetchEmployeeDetail, employee, access_token)
             for employee in employees

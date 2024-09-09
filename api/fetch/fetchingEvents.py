@@ -98,7 +98,7 @@ def fetchingAllEvents(access_token, database):
         return {"message": "Failed to fetch events"}
 
     # Use ThreadPoolExecutor to process events in parallel
-    with ThreadPoolExecutor(max_workers=4) as executor:
+    with ThreadPoolExecutor(max_workers=max(1, os.cpu_count() - 4)) as executor:
         futures = [
             executor.submit(fetchSingleEvent, event_data, access_token)
             for event_data in events_data
