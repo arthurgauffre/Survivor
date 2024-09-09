@@ -1,6 +1,6 @@
 import uuid
-from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import Column, ForeignKey, Integer, String, LargeBinary
 from sqlalchemy.orm import relationship
 
 from database.database import Base
@@ -18,6 +18,7 @@ class User(Base):
     surname = Column(String, index=True)
     birthdate = Column(String, index=True)
     gender = Column(String, index=True)
+    img_profil_content = Column(LargeBinary)
 
     roles = relationship("Roles", back_populates="user_role")
 
@@ -120,6 +121,7 @@ class Clothes(Base):
     __tablename__ = "clothes"
     id = Column(Integer, primary_key=True, index=True, nullable=False)
     type = Column(String, index=True)
+    img_content = Column(LargeBinary)
     customer_id = Column(UUID(as_uuid=True), ForeignKey("customers.id"))
     customer = relationship("Customer", back_populates="clothes")
 

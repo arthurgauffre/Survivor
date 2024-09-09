@@ -2,8 +2,9 @@ import requests
 from loginTokenRetriever import loginToken
 import os
 from dotenv import load_dotenv
-
 from database.tableRelationships import Customer, Encounter
+from concurrent.futures import ThreadPoolExecutor
+from fetch.fetchingCustomer import SessionFactory
 
 load_dotenv()
 
@@ -47,33 +48,65 @@ def getAllEncounters(access_token, db):
     return {"message": "Database seeded with encounters"}
 
 
-def getEncounterById(access_token, db):
-
+def getEncounterByIdThread(encounterId, access_token):
+    session = SessionFactory()  # Create a new session for the thread
     headers = {
         'accept': 'application/json',
         'X-Group-Authorization': TOKEN_API,
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
-    encounters = db.query(Encounter).all()
+    url = f'https://soul-connection.fr/api/encounters/{encounterId.id}'
+    try:
+        response = requests.get(url, headers=headers)
+    except BaseException:
+        print(f"Error fetching encounter {encounterId.id}")
+        session.rollback()
+        session.close()
+        return
 
-    for encounterId in encounters:
-        url = f'https://soul-connection.fr/api/encounters/{encounterId.id}'
-        try:
-            response = requests.get(url, headers=headers)
-        except BaseException:
-            pass
-        if response.status_code == 401:
-            access_token = loginToken()
-            getEncounterById(access_token, db)
-        encounter_data = {}
-        try:
-            encounter_data = response.json()
-        except BaseException:
-            pass
-        actualEncounter = db.query(Encounter).filter(
-            Encounter.id == encounterId.id).first()
+    if response.status_code == 401:
+        session.close()  # Close the session if you re-fetch the access token
+        access_token = loginToken()  # Refresh token
+        return getEncounterByIdThread(encounterId, access_token)
+
+    try:
+        encounter_data = response.json()
+    except BaseException:
+        print(f"Error decoding JSON for encounter {encounterId.id}")
+        session.rollback()
+        session.close()
+        return
+
+    # Fetch the encounter from the database and update it
+    actualEncounter = session.query(Encounter).filter(
+        Encounter.id == encounterId.id).first()
+    if actualEncounter:
         actualEncounter.comment = encounter_data.get("comment")
         actualEncounter.source = encounter_data.get("source")
-        db.commit()
+
+    try:
+        session.commit()
+    except Exception as e:
+        print(f"Error committing encounter {encounterId.id}: {e}")
+        session.rollback()
+    finally:
+        session.close()  # Close the session when done
+
+
+def getEncounterById(access_token, db):
+    with ThreadPoolExecutor(max_workers=max(1, os.cpu_count() - 4)) as executor:
+        # Submit tasks to the thread pool
+        futures = [
+            executor.submit(getEncounterByIdThread, encounterId, access_token)
+            for encounterId in db.query(Encounter).all()
+        ]
+
+        # Wait for all tasks to complete
+        for future in futures:
+            try:
+                future.result()  # This will raise exceptions if any occurred during thread execution
+            except Exception as e:
+                print(f"Error in thread: {e}")
+
     return {"message": "Database seeded with encounters"}
