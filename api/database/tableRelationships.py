@@ -1,4 +1,4 @@
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, LargeBinary
 from sqlalchemy.orm import relationship
 
 from database.database import Base
@@ -60,6 +60,7 @@ class Employee(Base):
     birthdate = Column(String, index=True)
     gender = Column(String, index=True)
     work = Column(String, index=True)
+    img_profil_content = Column(LargeBinary)
     # customer_id = Column(Integer, ForeignKey("customers.id"))
 
 
@@ -79,6 +80,7 @@ class Customer(Base):
     address = Column(String, index=True)
     payementHistory = relationship("PayementHistory",
                                    back_populates="customer")
+    img_profil_content = Column(LargeBinary)
     clothes = relationship("Clothes", back_populates="customer")
     # employees = relationship("Employee", back_populates="customer")
 
@@ -107,6 +109,7 @@ class Clothes(Base):
     __tablename__ = "clothes"
     id = Column(Integer, primary_key=True, index=True, nullable=False)
     type = Column(String, index=True)
+    img_content = Column(LargeBinary)
     customer_id = Column(Integer, ForeignKey("customers.id"))
     customer = relationship("Customer", back_populates="clothes")
 

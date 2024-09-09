@@ -1,4 +1,4 @@
-import os
+import base64
 import random
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
@@ -46,13 +46,12 @@ def getAnEmployeePersonalInfos(db: Session, employee_id: int):
 
 
 def getCurrentEmployeeImg(db: Session, employee_id: int):
-    image_path = f"/app/api/images/employees/{employee_id}.jpg"
+    employee = db.query(Employee).filter(Employee.id == employee_id).first()
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
 
-    if not os.path.exists(image_path):
-        image_url = None
-
-    image_url = f"http://fastapi:8000/static/employees/{employee_id}.jpg"
-    return {"image_url": image_url}
+    # Return the base64-encoded image as a string
+    return base64.b64encode(employee.img_profil_content).decode("utf-8")
 
 
 def getListOfCustomerForEmployee(db: Session, employee_id: int):

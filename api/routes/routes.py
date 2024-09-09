@@ -88,7 +88,7 @@ def getCustomer(customer_id: int, db: Session = Depends(get_db)
 
 
 @router.get("/api/customers/{customer_id}/image", tags=["customers"])
-def getCustomerImg(customer_id: int, db: Session = Depends(get_db)):
+def getCustomerImg(customer_id: int, db: Session = Depends(get_db)) -> str:
     return getCurrentCustomerImg(db, customer_id)
 
 
@@ -120,8 +120,8 @@ def getAnEmployeeInfos(employee_id: int, db: Session = Depends(
 
 
 @router.get("/api/employees/{employee_id}/image",
-            tags=["employees"],
-            dependencies=[Depends(oauth2_scheme)])
+            tags=["employees"])
+            # dependencies=[Depends(oauth2_scheme)])
 def getTheCurrentEmployeeImg(employee_id: int, db: Session = Depends(
         get_db)):
     return getCurrentEmployeeImg(db, employee_id)
@@ -135,8 +135,8 @@ def getCustomersOfAnEmployee(employee_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/api/clothes",
-            tags=["clothes"], response_model=list[ClothesAllSchema],
-            dependencies=[Depends(oauth2_scheme)])
+            tags=["clothes"], response_model=list[ClothesAllSchema])
+            # dependencies=[Depends(oauth2_scheme)])
 def getClothes(db: Session = Depends(get_db)) -> list[ClothesAllSchema]:
     return getAllClothesImgs(db)
 

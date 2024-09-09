@@ -1,10 +1,11 @@
 import requests
-import os
+import os, base64
 from dotenv import load_dotenv
 
 from passwordOperations import getPasswordHash
 from loginTokenRetriever import loginToken
 from database.tableRelationships import Customer, PayementHistory, Clothes
+
 
 # from concurrent.futures import ThreadPoolExecutor
 # from sqlalchemy.exc import SQLAlchemyError
@@ -120,19 +121,22 @@ def getCustomerDetail(url, headers, customerId, database):
 def getCustomerImage(acccess_token, customerId, headers, database):
     customer = database.query(Customer).filter(
         Customer.id == customerId.id).first()
-    image_url = f'https://soul-connection.fr/api/customers/{
-            customer.id}/image'
+    image_url = f'https://soul-connection.fr/api/customers/{customer.id}/image'
+    
     try:
         image_response = requests.get(image_url, headers=headers)
-    except BaseException:
-        getCustomerImage(acccess_token, customerId, headers, database)
+    except Exception as e:
+        print(f"Error fetching image: {e}")
+        return
 
     if image_response.status_code == 401:
-        acccess_token = loginToken()
-        getCustomerImage(acccess_token, customerId, headers)
-    image_path = f'images/customers/{customer.id}.jpg'
-    with open(image_path, 'wb') as image_file:
-        image_file.write(image_response.content)
+        acccess_token = loginToken()  # Assuming loginToken() refreshes the token
+        return getCustomerImage(acccess_token, customerId, headers, database)
+    
+    if image_response.status_code == 200:
+        customer.img_profil_content = base64.b64decode(image_response.content)
+    else:
+        print(f"Failed to retrieve image. Status code: {image_response.status_code}")
 
 
 def getCustomerPaymentHistory(customerId, headers, database):
@@ -221,14 +225,12 @@ def getClothesImage(customerId, database, headers):
         if clothe_image_response.status_code == 401:
             # acccess_token = loginToken()
             getClothesImage(customerId, database, headers)
-        clothe_image_path = f'images/clothes/{clothes_data.get("id")}.jpg'
-        with open(clothe_image_path, 'wb') as image_file:
-            image_file.write(clothe_image_response.content)
 
         clothe = Clothes(
             customer_id=customer.id,
             id=clothes_data.get('id'),
             type=clothes_data.get('type'),
+            img_content=base64.b64decode(clothe_image_response.content)
         )
         if not database.query(Clothes).filter(
                 Clothes.id == clothes_data.get('id')).first():
@@ -239,6 +241,7 @@ def getClothesImage(customerId, database, headers):
             currentClothe.customer_id = clothe.customer_id
             currentClothe.id = clothe.id
             currentClothe.type = clothe.type
+            currentClothe.img_content = clothe.img_content
     # except ConnectionError as e:
     #     print("An error from the soul-connection API has occurred:", e)
 

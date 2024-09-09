@@ -3,7 +3,7 @@ import requests
 from passwordOperations import getPasswordHash
 from loginTokenRetriever import loginToken
 from sqlalchemy.orm import Session
-import os
+import os, base64
 from dotenv import load_dotenv
 
 from database.tableRelationships import Customer, Employee, EmployeeCustomer
@@ -95,7 +95,7 @@ def getEmployeeById(access_token, db):
 
 
 def getEmployeeImg(access_token, db):
-
+    image_response = ""
     headers = {
         'accept': 'application/json',
         'X-Group-Authorization': TOKEN_API,
@@ -103,22 +103,21 @@ def getEmployeeImg(access_token, db):
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
-    for employeeId in db.query(Employee).all():
-        url = f'https://soul-connection.fr/api/employees/{employeeId.id}/image'
+    for employee in db.query(Employee).all():
+        url = f'https://soul-connection.fr/api/employees/{employee.id}/image'
         try:
-            response = requests.get(url, headers=headers)
-        except BaseException:
-            access_token = loginToken()
-            getEmployeeImg(access_token, db)
-        if response.status_code == 401:
-            access_token = loginToken()
-            getEmployeeImg(access_token, db)
-        employee = db.query(Employee).filter(
-            Employee.id == employeeId.id).first()
-        img_path = f'./images/employees/{employee.id}.jpg'
-        with open(img_path, 'wb') as file:
-            file.write(response.content)
-    return {"message": "Images downloaded"}
+            image_response = requests.get(url, headers=headers)
+        except Exception as e:
+            print(f"Error fetching image: {e}")
+            continue
+        if image_response.status_code == 401:
+            acccess_token = loginToken()  # Assuming loginToken() refreshes the token
+            return getEmployeeImg(acccess_token, db)
+
+        if image_response.status_code == 200:
+            employee.img_profil_content = image_response
+        else:
+            print(f"Failed to retrieve image. Status code: {image_response.status_code}")
 
 
 def fillingEmployeeCustomerTable(db: Session):

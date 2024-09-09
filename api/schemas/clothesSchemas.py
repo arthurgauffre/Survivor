@@ -5,4 +5,4 @@ class ClothesAllSchema(BaseModel):
     id: int
     customer_id: int
     type: str
-    link: str | None
+    img_content: str | None
