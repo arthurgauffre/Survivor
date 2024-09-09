@@ -111,6 +111,17 @@ class Clothes(Base):
     customer = relationship("Customer", back_populates="clothes")
 
 
+# Chat table
+class Chat(Base):
+    __tablename__ = "chat"
+    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    customer_id = Column(Integer, ForeignKey("customers.id"))
+    employee_id = Column(Integer, ForeignKey("employees.id"))
+    message = Column(String, index=True)
+    date = Column(String, index=True)
+    senderId = Column(Integer, index=True)
+
+
 # Employee / Customer relationship table
 class EmployeeCustomer(Base):
     __tablename__ = "employeeCustomer"

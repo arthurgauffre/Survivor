@@ -1,6 +1,7 @@
 import os
 from fastapi import HTTPException, status
 from fastapi.security import OAuth2PasswordRequestForm
+from pydantic import SecretStr
 from sqlalchemy.orm import Session
 from auth.createToken import create_access_token
 from passwordOperations import verifyPassword
@@ -14,7 +15,7 @@ load_dotenv()
 ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 
 
-def authenticateUser(db: Session, email: str, password: str):
+def authenticateUser(db: Session, email: str, password: SecretStr):
     employee = getEmployee(db, email)
     customer = getCustomer(db, email)
 
@@ -25,9 +26,9 @@ def authenticateUser(db: Session, email: str, password: str):
     return user
 
 
-def getAccessToken(db: Session, form_data: OAuth2PasswordRequestForm):
-    user = authenticateUser(db, form_data.username,
-                            form_data.password)
+def getAccessToken(db: Session, email: str, password: SecretStr):
+    user = authenticateUser(db, email,
+                            password)
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

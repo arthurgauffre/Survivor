@@ -1,9 +1,12 @@
 import asyncio
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Body, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
+from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
+from schemas.chatSchemas import SendChatDataSchema
+from crud.chat.chatPost import sendChatData
 from seedingDB import SeedState
 from auth.autenticateUser import getAccessToken
 from crud.tips.tipsGet import getAllTips
@@ -80,9 +83,10 @@ def startup_event():
 @router.post("/login", response_model=Token)
 def loginForAccessToken(
     db: Session = Depends(get_db),
-    form_data: OAuth2PasswordRequestForm = Depends()
+    email: str = Body(...),
+    password: SecretStr = Body(...),
 ) -> Token:
-    return getAccessToken(db, form_data)
+    return getAccessToken(db, email, password)
 
 
 @router.get("/api/encounters/customer/{customer_id}",
@@ -206,3 +210,11 @@ def getEmployeeEvents(employee_id: int, db: Session = Depends(get_db)):
             dependencies=[Depends(oauth2_scheme)])
 def getTips(db: Session = Depends(get_db)) -> list[AllTipsSchema]:
     return getAllTips(db)
+
+
+@router.post("/api/chat",
+             tags=["chat"],
+             dependencies=[Depends(oauth2_scheme)])
+def chatWithEmployee(chatData: SendChatDataSchema,
+                     db: Session = Depends(get_db)):
+    return sendChatData(chatData, db)
