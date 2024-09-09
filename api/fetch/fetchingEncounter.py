@@ -1,10 +1,9 @@
-from json import JSONDecodeError
 import requests
 from loginTokenRetriever import loginToken
 import os
 from dotenv import load_dotenv
 
-from database.tableRelationships import Encounter
+from database.tableRelationships import Customer, Encounter
 
 load_dotenv()
 
@@ -31,10 +30,14 @@ def getAllEncounters(access_token, db):
         access_token = loginToken()
         getAllEncounters(access_token, db)
 
-    for encounter in response.json():
+    encountersData = response.json()
+
+    for encounter in encountersData:
+        currentCustomer = db.query(Customer).filter(
+            Customer.user_id == encounter["customer_id"]).first()
         encounter = Encounter(
             id=encounter["id"],
-            customer_id=encounter["customer_id"],
+            customer_id=currentCustomer.id,
             date=encounter["date"],
             rating=encounter["rating"])
         if not db.query(Encounter).filter(
@@ -52,7 +55,9 @@ def getEncounterById(access_token, db):
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
-    for encounterId in db.query(Encounter).all():
+    encounters = db.query(Encounter).all()
+
+    for encounterId in encounters:
         url = f'https://soul-connection.fr/api/encounters/{encounterId.id}'
         try:
             response = requests.get(url, headers=headers)

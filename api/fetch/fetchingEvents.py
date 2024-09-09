@@ -1,10 +1,9 @@
-from json import JSONDecodeError
 import requests
 import os
 from dotenv import load_dotenv
 
 from loginTokenRetriever import loginToken
-from database.tableRelationships import Events
+from database.tableRelationships import Employee, Events
 
 load_dotenv()
 
@@ -40,7 +39,6 @@ def fetchingAllEvents(acccess_token, database):
         fetchingAllEvents(acccess_token, database)
 
     for event_data in events_data:
-        # Create a new Customer object
         event_url = f'https://soul-connection.fr/api/events/{event_data.get(
             "id")}'
         try:
@@ -54,8 +52,13 @@ def fetchingAllEvents(acccess_token, database):
         try:
             event_data = response.json()
         except BaseException:
-            pass
+            access_token = loginToken()
+            fetchingAllEvents(access_token, database)
         if event_data is not None:
+            actualId = (event_data.get('employee_id')) + 100
+            actualEmployee = database.query(Employee).filter(
+                Employee.user_id == actualId).first(
+            )
             event = Events(
                 id=event_data.get('id'),
                 name=event_data.get('name'),
@@ -65,10 +68,9 @@ def fetchingAllEvents(acccess_token, database):
                 location_x=event_data.get('location_x'),
                 location_y=event_data.get('location_y'),
                 type=event_data.get('type'),
-                employee_id=event_data.get('employee_id'),
+                employee_id=actualEmployee.id,
                 location_name=event_data.get('location_name'))
 
-        # Add the new customer to the customers table
         if not database.query(Events).filter(
                 Events.id == event.id).first():
             database.add(event)
