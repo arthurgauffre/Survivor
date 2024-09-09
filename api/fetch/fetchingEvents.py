@@ -3,58 +3,56 @@ import requests
 import os
 from dotenv import load_dotenv
 
-from schemas.eventsSchemas import AllEventsSchema, EmployeeEventsSchema
-from schemas.accessToken import AccessToken
 from loginTokenRetriever import loginToken
 from database.tableRelationships import Events
 
 load_dotenv()
 
-TOKEN_API: str = os.getenv("TOKEN_API")
-AUTH_EMAIL: str = os.getenv("AUTH_EMAIL")
-AUTH_PASSWORD: str = os.getenv("AUTH_PASSWORD")
+TOKEN_API = os.getenv("TOKEN_API")
+AUTH_EMAIL = os.getenv("AUTH_EMAIL")
+AUTH_PASSWORD = os.getenv("AUTH_PASSWORD")
 
 
-def fetchingAllEvents(access_token, database) -> dict[str, str]:
-    url: str = 'https://soul-connection.fr/api/events'
+def fetchingAllEvents(acccess_token, database):
+    url = 'https://soul-connection.fr/api/events'
 
-    headers: dict[str,str] = {
+    headers = {
         'accept': 'application/json',
         'X-Group-Authorization': TOKEN_API,
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + access_token["access_token"],
+        'Authorization': 'Bearer ' + acccess_token["access_token"],
     }
 
     try:
-        response: requests.models.Response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers)
     except BaseException:
-        access_token: AccessToken = loginToken()
-        fetchingAllEvents(access_token, database)
+        acccess_token = loginToken()
+        fetchingAllEvents(acccess_token, database)
 
     if response.status_code == 401:
-        access_token: AccessToken = loginToken()
-        fetchingAllEvents(access_token, database)
+        acccess_token = loginToken()
+        fetchingAllEvents(acccess_token, database)
 
     try:
-        events_data: list[AllEventsSchema] = response.json()
+        events_data = response.json()
     except BaseException:
-        # access_token = loginToken()
-        # fetchingAllEvents(access_token, database)
+        # acccess_token = loginToken()
+        # fetchingAllEvents(acccess_token, database)
         pass
 
     for event_data in events_data:
         # Create a new Customer object
-        event_url:str = f'https://soul-connection.fr/api/events/{event_data.get("id")}'
+        event_url = f'https://soul-connection.fr/api/events/{event_data.get("id")}'
         try:
-            response: requests.models.Response = requests.get(event_url, headers=headers)
+            response = requests.get(event_url, headers=headers)
         except BaseException:
-            access_token: AccessToken = loginToken()
+            access_token = loginToken()
             fetchingAllEvents(access_token, database)
         if response.status_code == 401:
-            access_token: AccessToken = loginToken()
+            access_token = loginToken()
             fetchingAllEvents(access_token, database)
         try:
-            event_data: EmployeeEventsSchema = response.json()
+            event_data = response.json()
         except BaseException:
             pass
         if event_data is not None:
@@ -69,14 +67,14 @@ def fetchingAllEvents(access_token, database) -> dict[str, str]:
                 type=event_data.get('type'),
                 employee_id=event_data.get('employee_id'),
                 location_name=event_data.get('location_name')
-            )
+        )
 
         # Add the new customer to the customers table
         if not database.query(Events).filter(
                 Events.id == event.id).first():
             database.add(event)
         else:
-            currentEvent: Events = database.query(Events).filter(
+            currentEvent = database.query(Events).filter(
                 Events.id == event.id).first()
             currentEvent.name = event.name
             currentEvent.date = event.date

@@ -1,13 +1,6 @@
 from pydantic import BaseModel
 
 
-class AllEventsSchema(BaseModel):
-    id: int
-    name: str
-    date: str
-    duration: int
-    max_participants: int
-
 class EmployeeEventsSchema(BaseModel):
     id: int
     name: str

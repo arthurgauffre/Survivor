@@ -1,11 +1,6 @@
 from random import choice
 import requests
-<<<<<<< HEAD
-from schemas.employeeSchemas import EmployeeBaseSchema, EmployeeInfo
-from schemas.accessToken import AccessToken
-=======
 from passwordOperations import getPasswordHash
->>>>>>> 6a468d2a8f058b0f4d47149e772fc2f4f534bba1
 from loginTokenRetriever import loginToken
 from sqlalchemy.orm import Session
 import os
@@ -16,36 +11,30 @@ from database.tableRelationships import Customer, Employee, EmployeeCustomer
 load_dotenv()
 
 
-<<<<<<< HEAD
-TOKEN_API: str = os.getenv("TOKEN_API")
-=======
 TOKEN_API = os.getenv("TOKEN_API")
 EMPLOYEE_PASSWORD = os.getenv("FAKE_EMPLOYEE_PASSWORD")
->>>>>>> 6a468d2a8f058b0f4d47149e772fc2f4f534bba1
 
 
-def getAllEmployees(access_token, db) -> dict:
-    url:str = 'https://soul-connection.fr/api/employees'
+def getAllEmployees(access_token, db):
+    url = 'https://soul-connection.fr/api/employees'
 
-    headers: dict[str, str] = {
+    headers = {
         'accept': 'application/json',
         'X-Group-Authorization': TOKEN_API,
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
     try:
-        response: requests.models.Response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers)
     except BaseException:
-        access_token: AccessToken = loginToken()
+        access_token = loginToken()
         getAllEmployees(access_token, db)
 
     if response.status_code == 401:
-        access_token: AccessToken = loginToken()
+        access_token = loginToken()
         getAllEmployees(access_token, db)
 
-    employees: list[EmployeeBaseSchema] = response.json()
-
-    for employee in employees:
+    for employee in response.json():
         employee = Employee(
             id=employee["id"],
             email=employee["email"],
@@ -66,9 +55,9 @@ def getAllEmployees(access_token, db) -> dict:
     return response.json()
 
 
-def getEmployeeById(access_token, db) -> dict:
+def getEmployeeById(access_token, db):
 
-    headers: dict[str, str] = {
+    headers = {
         'accept': 'application/json',
         'X-Group-Authorization': TOKEN_API,
         'Content-Type': 'application/json',
@@ -79,15 +68,15 @@ def getEmployeeById(access_token, db) -> dict:
     for employeeId in db.query(Employee).all():
         url = f'https://soul-connection.fr/api/employees/{employeeId.id}'
         try:
-            response: requests.models.Response = requests.get(url, headers=headers)
+            response = requests.get(url, headers=headers)
         except BaseException:
-            access_token: AccessToken = loginToken()
+            access_token = loginToken()
             getEmployeeById(access_token, db)
         if response.status_code == 401:
-            access_token: AccessToken = loginToken()
+            access_token = loginToken()
             getEmployeeById(access_token, db)
         try:
-            employee_data: EmployeeInfo = response.json()
+            employee_data = response.json()
         except BaseException:
             # access_token = loginToken()
             # getEmployeeById(access_token, db)
@@ -105,19 +94,17 @@ def getEmployeeById(access_token, db) -> dict:
     return response.json()
 
 
-def getEmployeeImg(access_token, db) -> dict[str, str]:
+def getEmployeeImg(access_token, db):
 
-    headers: dict[str, str] = {
+    headers = {
         'accept': 'application/json',
         'X-Group-Authorization': TOKEN_API,
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
-    employees: list[EmployeeBaseSchema] = db.query(Employee).all()
-
-    for employee in employees:
-        url: str = f'https://soul-connection.fr/api/employees/{employee.id}/image'
+    for employeeId in db.query(Employee).all():
+        url = f'https://soul-connection.fr/api/employees/{employeeId.id}/image'
         try:
             response = requests.get(url, headers=headers)
         except BaseException:
@@ -127,14 +114,14 @@ def getEmployeeImg(access_token, db) -> dict[str, str]:
             access_token = loginToken()
             getEmployeeImg(access_token, db)
         employee = db.query(Employee).filter(
-            Employee.id == employee.id).first()
-        img_path: str = f'./images/employees/{employee.id}.jpg'
+            Employee.id == employeeId.id).first()
+        img_path = f'./images/employees/{employee.id}.jpg'
         with open(img_path, 'wb') as file:
             file.write(response.content)
     return {"message": "Images downloaded"}
 
 
-def fillingEmployeeCustomerTable(db: Session) -> None:
+def fillingEmployeeCustomerTable(db: Session):
     allEmployees = db.query(Employee).all()
     allCustomers = db.query(Customer).all()
 

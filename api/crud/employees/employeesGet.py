@@ -40,8 +40,8 @@ def getAnEmployeePersonalInfos(db: Session, employee_id: int):
         birthdate=actualEmployee.birthdate,
         gender=actualEmployee.gender,
         work=actualEmployee.work,
-        customer_list=[
-            relation.customer_id for relation in relationEmployeeCustomers if relation.employee_id == employee_id])
+        customer_list=[relation.customer_id for relation in relationEmployeeCustomers if relation.employee_id == employee_id]
+    )
     return employeeInfos
 
 
@@ -57,7 +57,7 @@ def getCurrentEmployeeImg(db: Session, employee_id: int):
 
 def getListOfCustomerForEmployee(db: Session, employee_id: int):
     # actualEmployee = db.query(Employee).filter(
-    # Employee.id == employee_id).first()
+        # Employee.id == employee_id).first()
     allCustomers = db.query(Customer).all()
     listOfCustomers = []
     listOfAllCustomersId = []

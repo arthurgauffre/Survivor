@@ -2,13 +2,9 @@ from fastapi import APIRouter, Depends
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from fastapi.staticfiles import StaticFiles
 from sqlalchemy.orm import Session
-<<<<<<< HEAD
-from schemas.accessToken import AccessToken
-=======
 
 from seedingDB import SeedState
 from auth.autenticateUser import getAccessToken
->>>>>>> 6a468d2a8f058b0f4d47149e772fc2f4f534bba1
 from crud.tips.tipsGet import getAllTips
 from schemas.tipsSchemas import AllTipsSchema
 from crud.events.eventsGet import getAllEventsPerEmployee
@@ -39,48 +35,6 @@ from database.database import get_db
 
 router = APIRouter()
 
-<<<<<<< HEAD
-access_token: AccessToken = loginToken()
-while access_token == {}:
-    access_token: AccessToken = loginToken()
-
-
-class SeedState:
-    def __init__(self):
-        self._is_seeded: bool = False
-
-    def seed_database(self, db: Session):
-        if not db.query(Employee).first():
-            fetchingAllCustomer(access_token, db)
-            fetchingCustomerDetail(access_token, db)
-            getAllEmployees(access_token, db)
-            getEmployeeById(access_token, db)
-            getEmployeeImg(access_token, db)
-            fillingEmployeeCustomerTable(db)
-            fetchingAllTips(access_token, db)
-            getAllEncounters(access_token, db)
-            getEncounterById(access_token, db)
-            fetchingAllEvents(access_token, db)
-            self._is_seeded = True
-            with open("seeded.txt", "w") as f:
-                f.write("Database seeded")
-            return {"message": "Database seeded successfully"}
-        # else:
-        #     self._is_seeded = True
-
-    def check_seeded(self):
-        if self._is_seeded is False:
-            raise HTTPException(
-                status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
-                detail="Database is not yet seeded, please try again later."
-            )
-
-
-def get_seed_state():
-    return SeedState()
-
-=======
->>>>>>> 6a468d2a8f058b0f4d47149e772fc2f4f534bba1
 
 router.mount("/static/employees", StaticFiles(
     directory="/app/api/images/employees/"), name="employees")
