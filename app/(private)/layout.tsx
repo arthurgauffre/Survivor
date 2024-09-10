@@ -10,8 +10,8 @@ export default async function PrivateLayout({
     await verifySession();
   const userRole = session?.role;
 
-  // console.log("session: ", session);
-  // console.log("User Role: ", userRole);
+  console.log("session: ", session);
+  console.log("User Role: ", userRole);
 
   return (
     <main>
