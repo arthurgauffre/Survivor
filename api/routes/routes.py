@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Body, Depends
+from fastapi import APIRouter, Body, Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
 from pydantic import SecretStr
@@ -217,3 +217,17 @@ def getTips(db: Session = Depends(get_db)) -> list[AllTipsSchema]:
 def chatWithEmployee(chatData: SendChatDataSchema,
                      db: Session = Depends(get_db)):
     return sendChatData(chatData, db)
+
+
+# @router.get("/api/chat",
+#             tags=["chat"],
+#             dependencies=[Depends(oauth2_scheme)])
+# def getChatWithEmployee(db: Session = Depends(get_db)):
+#     return getChatData(db)
+
+
+@router.get("/api/role",
+            tags=["role"],
+            dependencies=[Depends(oauth2_scheme)])
+def getRole(req: Request, db: Session = Depends(get_db)):
+    return {"role": "customer"}
