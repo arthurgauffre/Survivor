@@ -40,26 +40,6 @@ export function RightMessage({ text }: { text: string }): JSX.Element {
   );
 }
 
-export function LeftContact({
-  contacts,
-}: {
-  contacts: { id: number; name: string; lastMessage: string };
-}): JSX.Element {
-  return (
-    <div className="flex items-center w-full p-3 rounded-lg hover:bg-gray-100 transition-colors">
-      <img
-        className="h-10 w-10 rounded-full"
-        src={`https://i.pravatar.cc/40?img=${contacts.id}`}
-        alt={contacts.name[0]}
-      />
-      <div className="ml-3 text-left">
-        <p className="text-sm font-medium">{contacts.name}</p>
-        <p className="text-xs text-gray-500">{contacts.lastMessage}</p>
-      </div>
-    </div>
-  );
-}
-
 export function MainChat({
   selectedContact,
   toggleSidebar,
@@ -111,7 +91,7 @@ export function MainChat({
             className="flex h-9 w-full rounded-md border border-neutral-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:placeholder:text-neutral-400 dark:focus-visible:ring-neutral-300"
             placeholder="Type a message ..."
           />
-          <SendButton setMessage={setMessage} />
+          {message && <SendButton setMessage={setMessage} />}
         </form>
       </div>
     </>
@@ -149,7 +129,7 @@ export function ChatUi() {
   const [selectedContact, setSelectedContact] = useState(0);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
-  const selectContact = (contact: number) => {
+  const handleContactSelect = (contact: number) => {
     setSelectedContact(contact);
     if (!sidebarOpen) toggleSidebar();
   };
@@ -162,13 +142,13 @@ export function ChatUi() {
           sidebarOpen ? "hidden" : "block"
         } md:block`}
       >
-        <div className="p-4 border-b" style={{ height: "73px" }}>
+        <div className="p-4">
           <h2 className="text-xl font-semibold">Conversations</h2>
         </div>
         <nav className="p-2">
           {contacts.map((contact) => (
             <button
-              onClick={() => selectContact(contact.id)}
+              onClick={() => handleContactSelect(contact.id)}
               key={contact.id}
               className="w-full"
             >
