@@ -61,8 +61,13 @@ export default function Calendar({
     )
   )[0];
   if (!firstEventOfMonth) {
-    firstEventOfMonth = events[0];
+    firstEventOfMonth = events.filter(
+      (event) =>
+        new Date(event.date) >=
+        new Date(new Date().valueOf() - 1000 * 60 * 60 * 24)
+    )[0];
   }
+  console.log(firstEventOfMonth);
   const [isClient, setIsClient] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(firstEventOfMonth);
 
@@ -76,8 +81,6 @@ export default function Calendar({
     return null; // Prevents rendering until the component is fully loaded on the client
   }
 
-  console.log("firstEventOfMonth", firstEventOfMonth);
-  if (!firstEventOfMonth) return null;
   const daysInMonth = new Date(
     currentMonth.getFullYear(),
     currentMonth.getMonth() + 1,
@@ -103,7 +106,7 @@ export default function Calendar({
     let g = Math.round(Math.random() * 255);
     let b = Math.round(Math.random() * 255);
     return `rgb(${r}, ${g}, ${b})`;
-  }
+  };
 
   const eventTypesColors = uniqueEventTypes.reduce((acc, eventType, index) => {
     acc[eventType] = generateColor(index, uniqueEventTypes.length);
@@ -135,27 +138,36 @@ export default function Calendar({
             const date = new Date(
               currentMonth.getFullYear(),
               currentMonth.getMonth(),
-              i + 1
+              i + 2
             );
             const dateString = date.toISOString().split("T")[0];
             const dayEvents = getEventsForDate(dateString);
             return (
               <div
                 key={`day-${i}`}
-                className="h-24 w-full md:h-32 border rounded-md p-1 overflow-hidden"
+                className="h-24 w-full md:h-32 border rounded-md p-1 overflow-y-scroll overflow-hidden"
+                style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
               >
+                <style>
+                  {`
+      div::-webkit-scrollbar {
+        display: none;
+      }
+    `}
+                </style>
                 <div className="text-right">{i + 1}</div>
-                {dayEvents.map((event) => (
+                {dayEvents.map((event, index) => (
                   <button
                     key={event.location_name}
                     className="w-full"
-                    onClick={() =>
-                      setSelectedEvent(event)
-                    }
+                    onClick={() => setSelectedEvent(event)}
                   >
                     <div
-                    style={{ backgroundColor: eventTypesColors[event.type], color: "white" }}
-                      className={`text-xs p-1 mb-1 rounded truncate`}
+                      style={{
+                        backgroundColor: eventTypesColors[event.type],
+                        color: "white",
+                      }}
+                      className={`text-xs p-1 rounded truncate`}
                       title={event.location_name}
                     >
                       {event.location_name}
@@ -170,12 +182,16 @@ export default function Calendar({
       <div className="w-full justify-center">
         <div className="p-4 w-full justify-center">
           <h2 className="text-2xl font-bold mb-4">
-            {selectedEvent.location_name}
+            {selectedEvent ? selectedEvent.location_name : "No event selected"}
           </h2>
           <div className="h-80">
             <iframe
               title="Map"
-              src={`https://www.google.com/maps?q=${selectedEvent.location_x},${selectedEvent.location_y}&z=15&output=embed`}
+              src={`https://www.google.com/maps?q=${
+                selectedEvent ? selectedEvent.location_x : "0"
+              },${
+                selectedEvent ? selectedEvent.location_y : "0"
+              }&z=15&output=embed`}
               width="100%"
               height="100%"
               style={{ border: 0 }}

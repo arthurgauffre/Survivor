@@ -63,7 +63,7 @@ export async function signUp(
 
   // 4. Create a session for the user
   // const userId = user.id.toString();
-  await createSession("1", "user");
+  await createSession("1", "admin");
 }
 
 export async function login(
