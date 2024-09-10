@@ -44,6 +44,8 @@ export type MessageFormState =
 | undefined;
 
 export type SessionPayload = {
-  userId: string | number;
+  accessToken: string;
+  userId: number;
+  role: string;
   expiresAt: Date;
 };

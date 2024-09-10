@@ -119,7 +119,7 @@ def getCustomer(customer_id: int, db: Session = Depends(get_db)
 @router.get("/api/customers/{customer_id}/image",
             tags=["customers"],
             )
-def getCustomerImg(customer_id: int, db: Session = Depends(get_db)) -> str:
+def getCustomerImg(customer_id: int, db: Session = Depends(get_db)) -> str | None:
     return getCurrentCustomerImg(db, customer_id)
 
 
@@ -154,7 +154,7 @@ def getAnEmployeeInfos(employee_id: int, db: Session = Depends(
             tags=["employees"],
             )
 def getTheCurrentEmployeeImg(employee_id: int, db: Session = Depends(
-        get_db)):
+        get_db)) -> str | None:
     return getCurrentEmployeeImg(db, employee_id)
 
 

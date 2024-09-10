@@ -113,7 +113,7 @@ export default function CustomersTable({
                       <div className="flex items-center">
                         <Image
                           alt="picture of user"
-                          src={customersImage[person.id]?.image_url}
+                          src={`data:image/png;base64,${customersImage.shift()}`}
                           width={48}
                           height={48}
                           className="rounded-full mr-4 my-1"

@@ -1,8 +1,31 @@
 import CoachesTable from "@/app/(private)/coaches/coachesTable";
+import { verifySession } from "@/app/lib/session";
+import { redirect } from "next/navigation";
+import { customFetch } from "@/app/components/customFetch";
+import { HTTP_METHODS } from "next/dist/server/web/http";
 
-export default async function Home() {
+
+export default async function Page() {
+  const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
+    await verifySession();
+  const userRole = session?.role;
+  const accessToken: string = session?.accessToken;
+
+  switch (userRole) {
+    case "admin":
+      return <CoachesPage accessToken={accessToken} />;
+      case "user":
+      redirect("/dashboard");
+    case "coach":
+      redirect("/dashboard");
+    default:
+      redirect("/login");
+  }
+}
+
+export async function CoachesPage ({accessToken}: {accessToken: string}) {
   try {
-    let data = await fetch("http://fastapi:8000/api/employees");
+    let data = await customFetch("http://fastapi:8000/api/employees", accessToken);
     let coaches: {
       id: number;
       email: string;
@@ -19,8 +42,8 @@ export default async function Home() {
     }[] = [];
 
     for (let coach of coaches) {
-      let dataImg = await fetch(
-        "http://fastapi:8000/api/employees/" + coach.id + "/image"
+      let dataImg = await customFetch(
+        "http://fastapi:8000/api/employees/" + coach.id + "/image", accessToken
       );
       let Img = await dataImg.json();
       IMGS.push(Img);

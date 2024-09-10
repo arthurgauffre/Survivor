@@ -2,11 +2,33 @@ import SpawnHeadband from "@/app/components/SpawnHeadband";
 import Collapsible from "@/app/components/collapse";
 import { PlusIcon } from "@heroicons/react/20/solid";
 
-export default async function Home() {
+import { verifySession } from "@/app/lib/session";
+import { redirect } from "next/navigation";
+import { customFetch } from "@/app/components/customFetch";
+
+export default async function Page() {
+  const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
+    await verifySession();
+  const userRole = session?.role;
+  const accessToken: string = session?.accessToken;
+
+  switch (userRole) {
+    case "admin":
+      return <TipsPage accessToken={accessToken} />;
+    case "user":
+      return <TipsPage accessToken={accessToken} />
+    case "coach":
+      return <TipsPage accessToken={accessToken} />;
+    default:
+      redirect("/login");
+  }
+}
+
+export async function TipsPage({ accessToken }: { accessToken: string }) {
   let posts: { id: number; title: string; tip: string }[] = [];
 
   try {
-    let data = await fetch("http://fastapi:8000/api/tips");
+    let data = await customFetch("http://fastapi:8000/api/tips", accessToken);
     posts = await data.json();
   } catch (e) {
     console.log("i");
