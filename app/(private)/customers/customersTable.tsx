@@ -25,7 +25,7 @@ export default function CustomersTable({
   customers,
   customersImage,
 }: {
-  customers: {
+  readonly customers: {
     id: number;
     email: string;
     name: string;
@@ -35,7 +35,7 @@ export default function CustomersTable({
     description: string;
     astrologicalSign: string;
   }[];
-  customersImage: {
+  readonly customersImage: {
     id: number;
     image_url: string;
   }[];
