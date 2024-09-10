@@ -5,9 +5,10 @@ import jwt
 from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
-from crud.chat.chatGet import getChatData
+from crud.chat.chatGet import getChatData, getDataInChat
 from database.tableRelationships import Employee, User, Customer
-from schemas.chatSchemas import ChatDataSchema, SendChatDataSchema
+from schemas.chatSchemas import (ChatDataSchema, ChatMessagesSchema,
+                                 SendChatDataSchema)
 from crud.chat.chatPost import sendChatData
 from seedingDB import SeedState
 from auth.autenticateUser import getAccessToken
@@ -216,7 +217,17 @@ def chatWithEmployee(chatData: SendChatDataSchema,
     return sendChatData(chatData, db)
 
 
-@router.get("/api/chat",
+@router.get("/api/chat/{user_id}",
+            tags=["chat"],
+            response_model=list[ChatMessagesSchema],
+            )
+def getAllChatData(user_id: int,
+                   db: Session = Depends(get_db)
+                   ) -> list[ChatMessagesSchema]:
+    return getDataInChat(db, user_id)
+
+
+@router.get("/api/chat/",
             tags=["chat"],
             response_model=list[ChatDataSchema],
             )

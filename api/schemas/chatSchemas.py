@@ -15,3 +15,11 @@ class ChatDataSchema(BaseModel):
     lastMessage: str
     dateOfLastMessage: str
     senderOfLastMessage: int
+
+
+class ChatMessagesSchema(BaseModel):
+    id: int
+    contactId: int
+    senderId: int
+    message: str
+    date: str
