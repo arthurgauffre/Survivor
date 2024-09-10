@@ -1,9 +1,12 @@
 from fastapi import APIRouter, Body, Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
+import jwt
 from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
+# from crud.chat.chatGet import getChatData
+from database.tableRelationships import Employee, User, Customer
 from schemas.chatSchemas import SendChatDataSchema
 from crud.chat.chatPost import sendChatData
 from seedingDB import SeedState
@@ -213,7 +216,7 @@ def getTips(db: Session = Depends(get_db)) -> list[AllTipsSchema]:
 
 @router.post("/api/chat",
              tags=["chat"],
-             dependencies=[Depends(oauth2_scheme)])
+             )
 def chatWithEmployee(chatData: SendChatDataSchema,
                      db: Session = Depends(get_db)):
     return sendChatData(chatData, db)
@@ -228,6 +231,31 @@ def chatWithEmployee(chatData: SendChatDataSchema,
 
 @router.get("/api/role",
             tags=["role"],
-            dependencies=[Depends(oauth2_scheme)])
+            )
 def getRole(req: Request, db: Session = Depends(get_db)):
-    return {"role": "customer", "id": 1}
+    print(req.headers)
+    newHeader = req.headers.get("authorization")
+    email = None
+    user = None
+    customer = None
+    employee = None
+    if newHeader:
+        newHeader = newHeader.split(" ")[1]
+        decoded = jwt.decode(newHeader, options={"verify_signature": False})
+        email = decoded["sub"]
+    if email is not None:
+        user = db.query(User).filter(
+            User.email == email).first()
+    if user is not None:
+        employee = db.query(Employee).filter(
+            Employee.user_id == user.id).first()
+        customer = db.query(Customer).filter(
+            Customer.user_id == user.id).first()
+
+    if customer is not None:
+        return {"role": "customer", "id": customer.user_id}
+    elif employee is not None:
+        if employee.work == "Coach":
+            return {"role": employee.work, "id": employee.user_id}
+        else:
+            return {"role": "Admin", "id": employee.user_id}
