@@ -5,9 +5,9 @@ import jwt
 from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
-# from crud.chat.chatGet import getChatData
+from crud.chat.chatGet import getChatData
 from database.tableRelationships import Employee, User, Customer
-from schemas.chatSchemas import SendChatDataSchema
+from schemas.chatSchemas import ChatDataSchema, SendChatDataSchema
 from crud.chat.chatPost import sendChatData
 from seedingDB import SeedState
 from auth.autenticateUser import getAccessToken
@@ -94,7 +94,7 @@ def loginForAccessToken(
 @router.get("/api/encounters/customer/{customer_id}",
             response_model=list[EncounterByCustomerSchema],
             tags=["encounters"],
-            dependencies=[Depends(oauth2_scheme)])
+            )
 def getEmployeesEncounter(customer_id: int, db: Session = Depends(
         get_db)) -> list[EncounterByCustomerSchema]:
     return getEncounterForCustomer(db, customer_id)
@@ -102,7 +102,7 @@ def getEmployeesEncounter(customer_id: int, db: Session = Depends(
 
 @router.get("/api/customers/", response_model=list[CustomerBasicSchema],
             tags=["customers"],
-            dependencies=[Depends(oauth2_scheme)])
+            )
 def getCustomers(db: Session = Depends(get_db)) -> list[
         CustomerBasicSchema]:
     return getAllRealCustomers(db)
@@ -110,20 +110,22 @@ def getCustomers(db: Session = Depends(get_db)) -> list[
 
 @router.get("/api/customers/{customer_id}", response_model=CustomerBasicSchema,
             tags=["customers"],
-            dependencies=[Depends(oauth2_scheme)])
+            )
 def getCustomer(customer_id: int, db: Session = Depends(get_db)
                 ) -> CustomerBasicSchema:
     return getACustomer(db, customer_id)
 
 
-@router.get("/api/customers/{customer_id}/image", tags=["customers"])
+@router.get("/api/customers/{customer_id}/image",
+            tags=["customers"],
+            )
 def getCustomerImg(customer_id: int, db: Session = Depends(get_db)) -> str:
     return getCurrentCustomerImg(db, customer_id)
 
 
 @router.get("/api/employees/", response_model=list[EmployeePersonalInfoSchema],
             tags=["employees"],
-            dependencies=[Depends(oauth2_scheme)])
+            )
 def getEmployees(db: Session = Depends(get_db)) -> list[
         EmployeePersonalInfoSchema]:
     return getAllRealEmployees(db)
@@ -142,58 +144,58 @@ def getCustomerPayment(customer_id: int,
 @router.get("/api/employees/{employee_id}",
             response_model=EmployeePersonalInfoSchema,
             tags=["employees"],
-            dependencies=[Depends(oauth2_scheme)])
+            )
 def getAnEmployeeInfos(employee_id: int, db: Session = Depends(
         get_db)) -> EmployeePersonalInfoSchema:
     return getAnEmployeePersonalInfos(db, employee_id)
 
 
 @router.get("/api/employees/{employee_id}/image",
-            tags=["employees"])
-            # dependencies=[Depends(oauth2_scheme)])
+            tags=["employees"],
+            )
 def getTheCurrentEmployeeImg(employee_id: int, db: Session = Depends(
         get_db)):
     return getCurrentEmployeeImg(db, employee_id)
 
 
-@router.get("/api/{employee_id}/customers",
-            tags=["employees"],
-            dependencies=[Depends(oauth2_scheme)])
-def getCustomersOfAnEmployee(employee_id: int, db: Session = Depends(get_db)):
-    return getListOfCustomerForEmployee(db, employee_id)
+# @router.get("/api/{employee_id}/customers",
+#             tags=["employees"],
+#             )
+# def getCustomersOfAnEmployee(employee_id: int, db: Session = Depends(get_db)):
+#     return getListOfCustomerForEmployee(db, employee_id)
 
 
 @router.get("/api/clothes",
-            tags=["clothes"], response_model=list[ClothesAllSchema])
-            # dependencies=[Depends(oauth2_scheme)])
+            tags=["clothes"], response_model=list[ClothesAllSchema],
+            )
 def getClothes(db: Session = Depends(get_db)) -> list[ClothesAllSchema]:
     return getAllClothesImgs(db)
 
 
 @router.get("/api/customers/{customer_id}/clothes/hat",
             tags=["clothes"],
-            dependencies=[Depends(oauth2_scheme)])
+            )
 def getGivenCustomerHat(customer_id: int, db: Session = Depends(get_db)):
     return getAllHatFromAUser(db, customer_id)
 
 
 @router.get("/api/customers/{customer_id}/clothes/top",
             tags=["clothes"],
-            dependencies=[Depends(oauth2_scheme)])
+            )
 def getGivenCustomerTop(customer_id: int, db: Session = Depends(get_db)):
     return getAllTopFromAUser(db, customer_id)
 
 
 @router.get("/api/customers/{customer_id}/clothes/bottom",
             tags=["clothes"],
-            dependencies=[Depends(oauth2_scheme)])
+            )
 def getGivenCustomerBottom(customer_id: int, db: Session = Depends(get_db)):
     return getAllBottomFromAUser(db, customer_id)
 
 
 @router.get("/api/customers/{customer_id}/clothes/shoes",
             tags=["clothes"],
-            dependencies=[Depends(oauth2_scheme)])
+            )
 def getGivenCustomerShoes(customer_id: int, db: Session = Depends(get_db)):
     return getAllShoesFromAUser(db, customer_id)
 
@@ -201,7 +203,7 @@ def getGivenCustomerShoes(customer_id: int, db: Session = Depends(get_db)):
 @router.get("/api/events/{employee_id}",
             tags=["events"],
             response_model=list[EmployeeEventsSchema],
-            dependencies=[Depends(oauth2_scheme)])
+            )
 def getEmployeeEvents(employee_id: int, db: Session = Depends(get_db)):
     return getAllEventsPerEmployee(db, employee_id)
 
@@ -209,7 +211,7 @@ def getEmployeeEvents(employee_id: int, db: Session = Depends(get_db)):
 @router.get("/api/tips",
             tags=["tips"],
             response_model=list[AllTipsSchema],
-            dependencies=[Depends(oauth2_scheme)])
+            )
 def getTips(db: Session = Depends(get_db)) -> list[AllTipsSchema]:
     return getAllTips(db)
 
@@ -222,18 +224,19 @@ def chatWithEmployee(chatData: SendChatDataSchema,
     return sendChatData(chatData, db)
 
 
-# @router.get("/api/chat",
-#             tags=["chat"],
-#             dependencies=[Depends(oauth2_scheme)])
-# def getChatWithEmployee(db: Session = Depends(get_db)):
-#     return getChatData(db)
+@router.get("/api/chat",
+            tags=["chat"],
+            response_model=list[ChatDataSchema],
+            )
+def getChatWithEmployee(req: Request,
+                        db: Session = Depends(get_db)) -> list[ChatDataSchema]:
+    return getChatData(req, db)
 
 
 @router.get("/api/role",
             tags=["role"],
             )
 def getRole(req: Request, db: Session = Depends(get_db)):
-    print(req.headers)
     newHeader = req.headers.get("authorization")
     email = None
     user = None

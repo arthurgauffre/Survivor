@@ -129,7 +129,8 @@ class Clothes(Base):
 # Chat table
 class Chat(Base):
     __tablename__ = "chat"
-    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    id = Column(Integer, primary_key=True, index=True, nullable=False,
+                autoincrement=True)
     customer_id = Column(UUID(as_uuid=True), ForeignKey("customers.id"))
     employee_id = Column(UUID(as_uuid=True), ForeignKey("employees.id"))
     message = Column(String, index=True)
