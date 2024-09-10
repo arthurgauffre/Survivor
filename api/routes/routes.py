@@ -5,7 +5,7 @@ import jwt
 from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
-from crud.chat.chatGet import getChatData
+# from crud.chat.chatGet import getChatData
 from database.tableRelationships import Employee, User, Customer
 from schemas.chatSchemas import SendChatDataSchema
 from crud.chat.chatPost import sendChatData
