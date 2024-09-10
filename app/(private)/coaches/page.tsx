@@ -3,6 +3,7 @@ import { verifySession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import { customFetch } from "@/app/components/customFetch";
 import { HTTP_METHODS } from "next/dist/server/web/http";
+import {getCoachesImage} from "@/app/(private)/coaches/getCoachesImage";
 
 
 export default async function Page() {
@@ -36,18 +37,7 @@ export async function CoachesPage ({accessToken}: {accessToken: string}) {
       description: string;
       astrologicalSign: string;
     }[] = await data.json();
-    let IMGS: {
-      id: number;
-      image_url: string;
-    }[] = [];
-
-    for (let coach of coaches) {
-      let dataImg = await customFetch(
-        "http://fastapi:8000/api/employees/" + coach.id + "/image", accessToken
-      );
-      let Img = await dataImg.json();
-      IMGS.push(Img);
-    }
+    let IMGS: string[] = await getCoachesImage(accessToken);
 
     return <CoachesTable coaches={coaches} CoachImages={IMGS}/>;
   } catch (e) {

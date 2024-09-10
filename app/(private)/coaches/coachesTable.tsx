@@ -35,10 +35,7 @@ export default function CoachesTable({
     description: string;
     astrologicalSign: string;
   }[];
-  readonly CoachImages: {
-    id: number;
-    image_url: string
-  }[];
+  readonly CoachImages: string[];
 }): JSX.Element {
   let littletext = "You have total of " + coaches.length + " coaches";
   const router = useRouter();

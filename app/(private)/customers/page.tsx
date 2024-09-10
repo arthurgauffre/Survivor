@@ -3,6 +3,7 @@ import CustomersTable from "@/app/(private)/customers/customersTable";
 import { verifySession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import { customFetch } from "@/app/components/customFetch";
+import { getCustomersImage } from "@/app/(private)/customers/getCustomersImage";
 
 export default async function Page() {
   const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
@@ -27,18 +28,7 @@ export async function CustomersPage({accessToken}: {accessToken: string}) {
     let customersData = await customFetch("http://fastapi:8000/api/customers", accessToken);
     let customers = await customersData.json();
 
-    let IMGS: {
-      id: number;
-      image_url: string;
-    }[] = [];
-
-    for (let customer of customers) {
-      let dataImg = await customFetch(
-        "http://fastapi:8000/api/customers/" + customer.id + "/image", accessToken
-      );
-      let Img = await dataImg.json();
-      IMGS.push(Img);
-    }
+    let IMGS: string[] = await getCustomersImage(accessToken);
 
     return <CustomersTable customers={customers} customersImage={IMGS}/>;
   } catch (e) {

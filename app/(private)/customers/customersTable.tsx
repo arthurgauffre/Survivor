@@ -35,10 +35,7 @@ export default function CustomersTable({
     description: string;
     astrologicalSign: string;
   }[];
-  readonly customersImage: {
-    id: number;
-    image_url: string;
-  }[];
+  readonly customersImage: string[];
 }): JSX.Element {
   let littleText = "You have total of " + customers.length + " Customers";
   const router = useRouter();
