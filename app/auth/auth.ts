@@ -123,7 +123,7 @@ export async function login(
   } catch (error) {
     return errorMessage;
   }
-  await createSession(responseRole.id.toString(), responseRole.role.toLocaleLowerCase());
+  await createSession(responseRole.id, responseRole.role.toLocaleLowerCase(), response.access_token);
 }
 
 export async function logout() {

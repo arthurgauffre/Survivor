@@ -2,21 +2,9 @@ import NewDropdownMenu from "@/app/components/NewDropdownMenu";
 import SpawnHeadband from "@/app/components/SpawnHeadband";
 import ImgDisplay from "./imgDisplay";
 import SearchBar from "./searchBar";
-
-const images = [
-  {
-    id: 62,
-    customer_id: 1,
-    type: "hat/cap",
-    link: "http://fastapi:8000/static/clothes/62.jpg",
-  },
-  {
-    id: 104,
-    customer_id: 1,
-    type: "hat/cap",
-    link: "http://fastapi:8000/static/clothes/104.jpg",
-  },
-];
+import { verifySession } from "@/app/lib/session";
+import { redirect } from "next/navigation";
+import { customFetch } from "@/app/components/customFetch";
 
 type Image = {
   id: number;
@@ -25,25 +13,44 @@ type Image = {
   link: string;
 };
 
-export default async function ClothesPage() {
+export default async function Page() {
+  const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
+    await verifySession();
+  const userRole = session?.role;
+  const accessToken: string = session?.accessToken;
+
+  switch (userRole) {
+    case "admin":
+      return <ClothesPage accessToken={accessToken} />;
+    case "user":
+      return <ClothesPage accessToken={accessToken} />
+    case "coach":
+      return <ClothesPage accessToken={accessToken} />;
+    default:
+      redirect("/login");
+  }
+}
+
+export async function ClothesPage({accessToken}: {accessToken: string}) {
   let customers = [];
   let hat: Image[] = [];
   let top: Image[] = [];
   let bottom: Image[] = [];
   let shoes: Image[] = [];
   try {
-    let customersData = await fetch("http://fastapi:8000/api/customers");
-    let hatData = await fetch(
-      "http://fastapi:8000/api/customers/1/clothes/hat"
+
+    let customersData = await customFetch("http://fastapi:8000/api/customers", accessToken);
+    let hatData = await customFetch(
+      "http://fastapi:8000/api/customers/1/clothes/hat", accessToken
     );
-    let topData = await fetch(
-      "http://fastapi:8000/api/customers/1/clothes/top"
+    let topData = await customFetch(
+      "http://fastapi:8000/api/customers/1/clothes/top", accessToken
     );
-    let bottomData = await fetch(
-      "http://fastapi:8000/api/customers/1/clothes/bottom"
+    let bottomData = await customFetch(
+      "http://fastapi:8000/api/customers/1/clothes/bottom", accessToken
     );
-    let shoesData = await fetch(
-      "http://fastapi:8000/api/customers/1/clothes/shoes"
+    let shoesData = await customFetch(
+      "http://fastapi:8000/api/customers/1/clothes/shoes", accessToken
     );
     hat = await hatData.json();
     customers = await customersData.json();
