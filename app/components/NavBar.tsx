@@ -35,13 +35,6 @@ const userNavigation: {
 }[] = [
   { name: "Your Profile", href: "profil", click: undefined },
   { name: "Settings", href: "#", click: undefined },
-  {
-    name: "Sign out",
-    href: "#",
-    click: async () => {
-      await logout();
-    },
-  },
 ];
 
 export default function AdminNavBar({
@@ -75,7 +68,7 @@ export default function AdminNavBar({
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           <div className="ml-10 flex items-baseline gap-6">
-            <Navigation mobileMenuOpen={mobileMenuOpen} UserRole={UserRole}/>
+            <Navigation mobileMenuOpen={mobileMenuOpen} UserRole={UserRole} />
           </div>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-3">
@@ -112,6 +105,16 @@ export default function AdminNavBar({
                   </a>
                 </MenuItem>
               ))}
+              <MenuItem>
+                <button
+                  className="block px-4 py-2 text-sm text-gray-700 data-[focus]:bg-gray-100"
+                  onClick={async () => {
+                    await logout();
+                  }}
+                >
+                  Sign out
+                </button>
+              </MenuItem>
             </MenuItems>
           </Menu>
         </div>
@@ -140,7 +143,10 @@ export default function AdminNavBar({
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
-                <Navigation mobileMenuOpen={mobileMenuOpen} UserRole={UserRole}/>
+                <Navigation
+                  mobileMenuOpen={mobileMenuOpen}
+                  UserRole={UserRole}
+                />
               </div>
               <div className="py-6">
                 <a
@@ -188,6 +194,13 @@ export default function AdminNavBar({
                         {item.name}
                       </a>
                     ))}
+                    <button
+                      className="block rounded-md px-3 py-2 text-base font-medium"
+                      onClick={async () => {
+                        await logout();
+                      }}>
+                      Sign out
+                      </button>
                   </div>
                 </div>
               </div>
