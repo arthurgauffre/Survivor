@@ -12,25 +12,25 @@ AUTH_EMAIL = os.getenv("AUTH_EMAIL")
 AUTH_PASSWORD = os.getenv("AUTH_PASSWORD")
 
 
-def fetchingAllTips(acccess_token, database):
+def fetchingAllTips(access_token, database):
     url = 'https://soul-connection.fr/api/tips'
 
     headers = {
         'accept': 'application/json',
         'X-Group-Authorization': TOKEN_API,
         'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + acccess_token["access_token"],
+        'Authorization': 'Bearer ' + access_token["access_token"],
     }
 
     try:
         response = requests.get(url, headers=headers)
     except BaseException:
-        acccess_token = loginToken()
-        fetchingAllTips(acccess_token, database)
+        access_token = loginToken()
+        fetchingAllTips(access_token, database)
 
     if response.status_code == 401:
-        acccess_token = loginToken()
-        fetchingAllTips(acccess_token, database)
+        access_token = loginToken()
+        fetchingAllTips(access_token, database)
 
     # Parse JSON response and create Customer instances
     tips_data = response.json()

@@ -23,10 +23,12 @@ def loginToken():
         "email": AUTH_EMAIL,
         "password": AUTH_PASSWORD,
     }
-
+    response = {}
+    finalResponse = {}
     try:
         response = requests.post(url, json=data, headers=headers)
+        finalResponse = response.json()
     except BaseException:
         return {}
 
-    return response.json()
+    return finalResponse

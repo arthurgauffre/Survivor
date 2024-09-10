@@ -13,4 +13,4 @@ def sendChatData(chatData: SendChatDataSchema, db: Session):
     )
     db.add(newChat)
     db.commit()
-    return newChat
+    return {"message": "Chat sent successfully"}

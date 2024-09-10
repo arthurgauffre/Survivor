@@ -5,8 +5,11 @@ from loginTokenRetriever import loginToken
 from sqlalchemy.orm import Session
 import os
 from dotenv import load_dotenv
+from concurrent.futures import ThreadPoolExecutor
+from fetch.fetchingCustomer import SessionFactory
 
-from database.tableRelationships import Customer, Employee, EmployeeCustomer
+from database.tableRelationships import (Customer, Employee, EmployeeCustomer,
+                                         User)
 
 load_dotenv()
 
@@ -25,7 +28,7 @@ def getAllEmployees(access_token, db):
     }
     response = {}
     try:
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, json=None, headers=headers)
     except BaseException:
         access_token = loginToken()
         getAllEmployees(access_token, db)
@@ -34,66 +37,37 @@ def getAllEmployees(access_token, db):
         access_token = loginToken()
         getAllEmployees(access_token, db)
 
-    for employee in response.json():
-        employee = Employee(
-            id=employee["id"],
-            email=employee["email"],
-            name=employee["name"],
-            surname=employee["surname"],
+    employeesData = response.json()
+
+    for employee in employeesData:
+        actualId = (employee.get('id')) + 100
+        user = User(
+            id=actualId,
+            password=getPasswordHash(EMPLOYEE_PASSWORD),
+            email=employee.get('email'),
+            name=employee.get('name'),
+            surname=employee.get('surname')
         )
-        if not db.query(Employee).filter(
-                Employee.id == employee.id).first():
-            db.add(employee)
-        else:
-            currentEmployee = db.query(Employee).filter(
-                Employee.id == employee.id).first()
-            currentEmployee.email = employee.email
-            currentEmployee.name = employee.name
-            currentEmployee.surname = employee.surname
-        db.commit()
 
-    return response.json()
+        # existing_user = db.query(User).filter(
+        # User.email == user.email).first()
+        # if not existing_user:
+        db.add(user)
+        db.flush()
 
-
-def getEmployeeById(access_token, db):
-
-    headers = {
-        'accept': 'application/json',
-        'X-Group-Authorization': TOKEN_API,
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + access_token["access_token"],
-    }
-
-    for employeeId in db.query(Employee).all():
-        url = f'https://soul-connection.fr/api/employees/{employeeId.id}'
-        try:
-            response = requests.get(url, headers=headers)
-        except BaseException:
-            access_token = loginToken()
-            getEmployeeById(access_token, db)
-        if response.status_code == 401:
-            access_token = loginToken()
-            getEmployeeById(access_token, db)
-        try:
-            employee_data = response.json()
-        except BaseException:
-            # access_token = loginToken()
-            # getEmployeeById(access_token, db)
-            pass
-        actualEmployee = db.query(Employee).filter(
-            Employee.id == employeeId.id).first()
-        actualEmployee.password = getPasswordHash(EMPLOYEE_PASSWORD)
-        actualEmployee.email = employee_data.get("email")
-        actualEmployee.name = employee_data.get("name")
-        actualEmployee.surname = employee_data.get("surname")
-        actualEmployee.birthdate = employee_data.get("birth_date")
-        actualEmployee.gender = employee_data.get("gender")
-        actualEmployee.work = employee_data.get("work")
+        employee = Employee(
+            user_id=user.id,
+        )
+        db.add(employee)
+        # else:
+        #     existing_user.email = user.email
+        #     existing_user.name = user.name
+        #     existing_user.surname = user.surname
     db.commit()
-    return response.json()
 
 
-def getEmployeeImg(access_token, db):
+def fetchEmployeeDetail(employee, access_token, db):
+    session = SessionFactory()  # Create a new session for each thread
 
     headers = {
         'accept': 'application/json',
@@ -101,23 +75,79 @@ def getEmployeeImg(access_token, db):
         'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + access_token["access_token"],
     }
+    # employees = db.query(Employee).all()
 
-    for employeeId in db.query(Employee).all():
-        url = f'https://soul-connection.fr/api/employees/{employeeId.id}/image'
-        try:
-            response = requests.get(url, headers=headers)
-        except BaseException:
-            access_token = loginToken()
-            getEmployeeImg(access_token, db)
+    actualEmployeeId = (employee.user_id) - 100
+
+    try:
+        # Fetch employee details
+        url = f'https://soul-connection.fr/api/employees/{actualEmployeeId}'
+        response = requests.get(url, headers=headers)
         if response.status_code == 401:
             access_token = loginToken()
-            getEmployeeImg(access_token, db)
-        employee = db.query(Employee).filter(
-            Employee.id == employeeId.id).first()
-        img_path = f'./images/employees/{employee.id}.jpg'
-        with open(img_path, 'wb') as file:
-            file.write(response.content)
-    return {"message": "Images downloaded"}
+            return fetchEmployeeDetail(employee, access_token)
+
+        employee_data = response.json()
+
+        # Update employee details in the database
+        actualEmployee = session.query(Employee).filter(
+            Employee.user_id == employee.user_id).first()
+        if actualEmployee:
+        # actualEmployee.password = getPasswordHash(EMPLOYEE_PASSWORD)
+            user = db.query(User).filter(
+                User.id == employee.user_id).first()
+            user.email = employee_data.get('email')
+            user.name = employee_data.get('name')
+            user.surname = employee_data.get('surname')
+            user.birthdate = employee_data.get('birth_date')
+            user.gender = employee_data.get('gender')
+            # actualEmployee = db.query(Employee).filter(
+            #     Employee.user_id == employee.user_id).first()
+            actualEmployee.work = employee_data.get("work")
+
+        # Fetch employee image
+        image_url = f'https://soul-connection.fr/api/employees/{actualEmployeeId}/image'
+        image_response = requests.get(image_url, headers=headers)
+        if image_response.status_code == 200:
+            user.img_profil_content = image_response.content
+        elif image_response.status_code == 401:
+            access_token = loginToken()
+            return fetchEmployeeDetail(employee, access_token)
+        else:
+            print(f"Failed to retrieve image for employee {employee.user_id}. Status code: {image_response.status_code}")
+
+        session.commit()
+    except Exception as e:
+        print(f"Error fetching or updating employee {employee.user_id}: {e}")
+        session.rollback()
+    finally:
+        session.close()
+
+
+def getEmployeeDetail(access_token, db):
+    # headers = {
+    #     'accept': 'application/json',
+    #     'X-Group-Authorization': TOKEN_API,
+    #     'Content-Type': 'application/json',
+    #     'Authorization': 'Bearer ' + access_token["access_token"],
+    # }
+    employees = db.query(Employee).all()
+
+    # Use ThreadPoolExecutor to process employees in parallel
+    with ThreadPoolExecutor(max_workers=max(1, os.cpu_count() - 4)) as executor:
+        futures = [
+            executor.submit(fetchEmployeeDetail, employee, access_token, db)
+            for employee in employees
+        ]
+
+        # Wait for all threads to complete
+        for future in futures:
+            try:
+                future.result()  # This will raise exceptions if any occurred during thread execution
+            except Exception as e:
+                print(f"Error in thread: {e}")
+
+    return {"message": "All employee details fetched and updated successfully"}
 
 
 def fillingEmployeeCustomerTable(db: Session):
