@@ -1,6 +1,6 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, ForeignKey, Integer, String, LargeBinary
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, LargeBinary
 from sqlalchemy.orm import relationship
 
 from database.database import Base
@@ -136,6 +136,17 @@ class Chat(Base):
     message = Column(String, index=True)
     date = Column(String, index=True)
     senderId = Column(Integer, index=True)
+
+
+# Note table
+class Note(Base):
+    __tablename__ = "notes"
+    id = Column(Integer, primary_key=True, index=True, nullable=False,
+                autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    title = Column(String, index=True)
+    content = Column(String, index=True)
+    shared = Column(Boolean, index=True)
 
 
 # Employee / Customer relationship table

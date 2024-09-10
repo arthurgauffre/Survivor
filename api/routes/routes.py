@@ -5,6 +5,8 @@ import jwt
 from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
+from crud.notes.notePost import takeNote
+from schemas.noteSchemas import InsertNoteSchema
 from crud.chat.chatGet import getChatData, getDataInChat
 from database.tableRelationships import Employee, User, Customer
 from schemas.chatSchemas import (ChatDataSchema, ChatMessagesSchema,
@@ -234,6 +236,14 @@ def getAllChatData(user_id: int,
 def getChatWithEmployee(req: Request,
                         db: Session = Depends(get_db)) -> list[ChatDataSchema]:
     return getChatData(req, db)
+
+
+@router.post("/api/note/",
+             tags=["chat"],
+             )
+def postNoteInfos(noteObject: InsertNoteSchema,
+                  db: Session = Depends(get_db)):
+    return takeNote(noteObject, db)
 
 
 @router.get("/api/role",
