@@ -1,6 +1,7 @@
 from fastapi import APIRouter, Body, Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
+import jwt
 from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
@@ -220,11 +221,11 @@ def chatWithEmployee(chatData: SendChatDataSchema,
     return sendChatData(chatData, db)
 
 
-@router.get("/api/chat",
-            tags=["chat"],
-            dependencies=[Depends(oauth2_scheme)])
-def getChatWithEmployee(db: Session = Depends(get_db)):
-    return getChatData(db)
+# @router.get("/api/chat",
+#             tags=["chat"],
+#             dependencies=[Depends(oauth2_scheme)])
+# def getChatWithEmployee(db: Session = Depends(get_db)):
+#     return getChatData(db)
 
 
 @router.get("/api/role",
@@ -232,14 +233,15 @@ def getChatWithEmployee(db: Session = Depends(get_db)):
             )
 def getRole(req: Request, db: Session = Depends(get_db)):
     print(req.headers)
-    newHeader = req.headers.get("Authorization")
+    newHeader = req.headers.get("authorization")
     email = None
     user = None
     customer = None
     employee = None
     if newHeader:
         newHeader = newHeader.split(" ")[1]
-        email = newHeader["sub"]
+        decoded = jwt.decode(newHeader, options={"verify_signature": False})
+        email = decoded["sub"]
     if email is not None:
         user = db.query(User).filter(
             User.email == email).first()
