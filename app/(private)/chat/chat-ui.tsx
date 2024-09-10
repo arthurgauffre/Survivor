@@ -4,14 +4,7 @@ import { useState } from "react";
 import { useFormState, useFormStatus } from "react-dom";
 import { ArrowLeftIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { SubmitMessage } from "@/app/(private)/chat/submitMessage";
-
-const contacts = [
-  { id: 1, name: "Alice", lastMessage: "Hey, how are you doing?" },
-  { id: 2, name: "Bob", lastMessage: "I'm good, thanks! How about you?" },
-  { id: 3, name: "Charlie", lastMessage: "lol, I'm good too!" },
-  { id: 4, name: "David", lastMessage: "I'm good, thanks! How about you?" },
-  { id: 5, name: "Eve", lastMessage: "lol, I'm good too!" },
-];
+import Image from "next/image";
 
 export function LeftMessage({
   image,
@@ -43,14 +36,16 @@ export function RightMessage({ text }: { text: string }): JSX.Element {
 export function LeftContact({
   contacts,
 }: {
-  contacts: { id: number; name: string; lastMessage: string };
+  contacts: { id: number; name: string; lastMessage: string; image: string };
 }): JSX.Element {
   return (
     <div className="flex items-center w-full p-3 rounded-lg hover:bg-gray-100 transition-colors">
-      <img
-        className="h-10 w-10 rounded-full"
-        src={`https://i.pravatar.cc/40?img=${contacts.id}`}
-        alt={contacts.name[0]}
+      <Image
+        src={`data:image/png;base64,${contacts.image}`}
+        alt=""
+        width={40}
+        height={40}
+        className="rounded-full"
       />
       <div className="ml-3 text-left">
         <p className="text-sm font-medium">{contacts.name}</p>
@@ -84,9 +79,9 @@ export function MainChat({
             src={`https://i.pravatar.cc/40?img=${selectedContact}`}
             alt="Alice"
           />
-          <h1 className="ml-3 text-xl font-semibold">
+          {/* <h1 className="ml-3 text-xl font-semibold">
             {contacts.find((contact) => contact.id === selectedContact)?.name}
-          </h1>
+          </h1> */}
         </div>
       </header>
       {/* Chat Messages */}
@@ -144,7 +139,18 @@ export function SendButton({
   );
 }
 
-export function ChatUi() {
+export function ChatUi({
+  contacts,
+}: {
+  contacts: {
+    contact_id: number;
+    message: string;
+    date: string;
+    senderId: number;
+    name: string;
+    image: string;
+  }[];
+}) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedContact, setSelectedContact] = useState(0);
 
@@ -168,11 +174,18 @@ export function ChatUi() {
         <nav className="p-2">
           {contacts.map((contact) => (
             <button
-              onClick={() => selectContact(contact.id)}
-              key={contact.id}
+              onClick={() => selectContact(contact.contact_id)}
+              key={contact.date}
               className="w-full"
             >
-              <LeftContact contacts={contact} />
+              <LeftContact
+                contacts={{
+                  id: contact.contact_id,
+                  name: contact.name,
+                  lastMessage: contact.message,
+                  image: contact.image
+                }}
+              />
             </button>
           ))}
         </nav>
