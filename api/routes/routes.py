@@ -230,4 +230,4 @@ def chatWithEmployee(chatData: SendChatDataSchema,
             tags=["role"],
             dependencies=[Depends(oauth2_scheme)])
 def getRole(req: Request, db: Session = Depends(get_db)):
-    return {"role": "customer"}
+    return {"role": "customer", "id": 1}
