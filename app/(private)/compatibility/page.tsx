@@ -1,9 +1,31 @@
 import AstrologicalDropDownMenu from "./AstroCompatibility";
 
-export default async function Home() {
+import { verifySession } from "@/app/lib/session";
+import { redirect } from "next/navigation";
+import { customFetch } from "@/app/components/customFetch";
+
+export default async function Page() {
+  const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
+    await verifySession();
+  const userRole = session?.role;
+  const accessToken: string = session?.accessToken;
+
+  switch (userRole) {
+    case "admin":
+      return <CompatibilityPage accessToken={accessToken} />;
+    case "user":
+      redirect("/dashboard");
+    case "coach":
+      return <CompatibilityPage accessToken={accessToken} />;
+    default:
+      redirect("/login");
+  }
+}
+
+export async function CompatibilityPage({accessToken}: {accessToken: string}) {
 
   try {
-    let data = await fetch("http://fastapi:8000/api/customers");
+    let data = await customFetch("http://fastapi:8000/api/customers", accessToken);
     let posts: {
       id: number;
       name: string;

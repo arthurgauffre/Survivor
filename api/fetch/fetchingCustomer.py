@@ -187,7 +187,7 @@ def getCustomerImage(access_token, customerId, headers, database):
 
     if image_response.status_code == 401:
         access_token = loginToken()
-        return getCustomerImage(access_token, customerId, headers, database)
+        getCustomerImage(access_token, customerId, headers, database)
 
     if image_response.status_code == 200:
         currentUser = database.query(User).filter(

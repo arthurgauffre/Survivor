@@ -1,5 +1,4 @@
 import base64
-import random
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
@@ -30,12 +29,15 @@ def getAllRealEmployees(db: Session):
 
 
 def getAnEmployeePersonalInfos(db: Session, employee_id: int):
-    newEmployeeId = employee_id + 100
     listOfCustomers = []
     user = db.query(User).filter(
-        User.id == newEmployeeId).first()
+        User.id == employee_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Employee not found")
     actualEmployee = db.query(Employee).filter(
         Employee.user_id == user.id).first()
+    if not actualEmployee:
+        raise HTTPException(status_code=404, detail="Employee not found")
     relationEmployeeCustomers = db.query(EmployeeCustomer).filter(
         EmployeeCustomer.employee_id == actualEmployee.id).all()
     for relation in relationEmployeeCustomers:
@@ -56,20 +58,19 @@ def getAnEmployeePersonalInfos(db: Session, employee_id: int):
 
 
 def getCurrentEmployeeImg(db: Session, employee_id: int):
-    newEmployeeId = employee_id + 100
     user = db.query(User).filter(
-        User.id == newEmployeeId).first()
+        User.id == employee_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="Employee not found")
     return base64.b64encode(user.img_profil_content).decode("utf-8")
 
 
 def getListOfCustomerForEmployee(db: Session, employee_id: int):
-    newEmployeeId = employee_id + 100
-    # user = db.query(User).filter(
-    #         User.id == newEmployeeId).first()
     actualEmployee = db.query(Employee).filter(
-        Employee.user_id == newEmployeeId).first()
+        Employee.user_id == employee_id).first()
+    if not actualEmployee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+
     allCustomers = db.query(EmployeeCustomer).all()
     listOfCustomers = []
 

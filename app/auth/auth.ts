@@ -123,17 +123,9 @@ export async function login(
   } catch (error) {
     return errorMessage;
   }
-  console.log(responseRole)
-  await createSession(responseRole.id.toString(), responseRole.role);
+  await createSession(responseRole.id, responseRole.role.toLocaleLowerCase(), response.access_token);
 }
 
 export async function logout() {
   deleteSession();
 }
-
-
-
-// create route role back
-// fetch route role back
-// create session with variable
-// login front input

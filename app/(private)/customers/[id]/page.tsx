@@ -10,66 +10,29 @@ import Image from "next/image";
 import "@/app/components/table.css";
 import SpawnHeadband from "@/app/components/SpawnHeadband";
 
-const paymentsA = [
-  {
-    id: 7,
-    date: "2024-05-31",
-    payment_method: "PayPal",
-    amount: -78.44,
-    comment: "Discount applied",
-  },
-  {
-    id: 1,
-    date: "2024-05-25",
-    payment_method: "Bank Transfer",
-    amount: 646.94,
-    comment: "Annual subscription payment",
-  },
-  {
-    id: 8,
-    date: "2024-04-15",
-    payment_method: "Bank Transfer",
-    amount: 202.17,
-    comment: "Annual subscription payment",
-  },
-  {
-    id: 6,
-    date: "2024-04-05",
-    payment_method: "PayPal",
-    amount: 0.16,
-    comment: "Late fee included",
-  },
-  {
-    id: 3,
-    date: "2024-03-08",
-    payment_method: "Credit Card",
-    amount: -24.8,
-    comment: "Discount applied",
-  },
-  {
-    id: 2,
-    date: "2024-02-08",
-    payment_method: "PayPal",
-    amount: 7.42,
-    comment: "Monthly subscription payment",
-  },
-  {
-    id: 5,
-    date: "2024-02-04",
-    payment_method: "Bank Transfer",
-    amount: -48.91,
-    comment: "Discount applied",
-  },
-  {
-    id: 4,
-    date: "2023-12-04",
-    payment_method: "PayPal",
-    amount: 89.82,
-    comment: "Quarterly subscription payment",
-  },
-];
+import { verifySession } from "@/app/lib/session";
+import { redirect } from "next/navigation";
+import { customFetch } from "@/app/components/customFetch";
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({params}: {params: {id: string}}) {
+  const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
+    await verifySession();
+  const userRole = session?.role;
+  const accessToken: string = session?.accessToken;
+
+  switch (userRole) {
+    case "admin":
+      return <PaymentHistoryPage params={params} accessToken={accessToken} />;
+    case "user":
+      redirect("/dashboard");
+    case "coach":
+      return <PaymentHistoryPage params={params} accessToken={accessToken} />;
+    default:
+      redirect("/login");
+  }
+}
+
+export async function PaymentHistoryPage({ params, accessToken }: { params: { id: string }, accessToken: string }): Promise<JSX.Element> {
   // let customersData = await fetch(
   //   "http://localhost:3000/api/customers/" + params.id
   // );
@@ -91,28 +54,28 @@ export default async function Page({ params }: { params: { id: string } }) {
   }[] = [];
   let picture: {image_url: string;} = {image_url: ""};
   try {
-    let meetingsData = await fetch(
-      "http://fastapi:8000/api/encounters/customer/" + params.id
+    let meetingsData = await customFetch(
+      "http://fastapi:8000/api/encounters/customer/" + params.id, accessToken
     );
     meetings = await meetingsData.json();
   } catch (e) {
     meetings = [];
   }
   try {
-    let paymentsData = await fetch(
+    let paymentsData = await customFetch(
       "http://fastapi:8000/api/customers/" +
         params.id +
-        "/payement_history"
+        "/payement_history", accessToken
     );
     payments = await paymentsData.json();
   } catch (e) {
     payments = [];
   }
   try {
-    let pictureData = await fetch(
+    let pictureData = await customFetch(
       "http://fastapi:8000/api/customers/" +
         params.id +
-        "/image"
+        "/image", accessToken
     );
     picture = await pictureData.json();
   } catch (e) {
