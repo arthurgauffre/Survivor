@@ -1,11 +1,12 @@
 from sqlalchemy.orm import Session
 
-from database.tableRelationships import Encounter
+from database.tableRelationships import Encounter, Customer
 
 
 def getEncounterForCustomer(db: Session, customer_id: int):
+    customer = db.query(Customer).filter(Customer.user_id == customer_id).first()
     actualEncounterForActualUser = db.query(
-        Encounter).filter(Encounter.customer_id == customer_id).all()
+        Encounter).filter(Encounter.customer_id == customer.id).all()
 
     listOfDataNeededForCustomer = []
 
@@ -13,7 +14,7 @@ def getEncounterForCustomer(db: Session, customer_id: int):
         listOfDataNeededForCustomer.append(
             {
                 "id": actualUser.id,
-                "customer_id": actualUser.customer_id,
+                "customer_id": customer.user_id,
                 "date": actualUser.date,
                 "rating": actualUser.rating,
                 "comment": actualUser.comment,

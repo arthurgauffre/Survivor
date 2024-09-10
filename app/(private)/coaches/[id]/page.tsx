@@ -63,11 +63,7 @@ export async function CoachesIdProfilPage({
         customer_list: [],
     };
 
-    let Img: {
-        image_url: string;
-    } = {
-        image_url: "",
-    };
+    let Img: string = "";
 
     let postsEvents: {
         id: number;
@@ -76,8 +72,6 @@ export async function CoachesIdProfilPage({
         location: string;
         description: string;
     }[] = [];
-
-    let postsCustomerList: number[] = [];
 
     let postsCustomerRatings: {
         id: number;
@@ -141,16 +135,9 @@ export async function CoachesIdProfilPage({
         console.log(e);
     }
 
-    try {
-        let dataCustomerList = await customFetch("http://fastapi:8000/api/" + params.id + "/customers", accessToken)
-        postsCustomerList = await dataCustomerList.json()
-    } catch (e) {
-        console.log(e);
-    }
-
     let ratingMeetings: number[] = [0, 0, 0, 0, 0];
     let GenderStats: number[] = [0, 0, 0]
-    for (const customerId of postsCustomerList) {
+    for (const customerId of postsEmployees.customer_list) {
         try {
             let dataCustomers = await customFetch(
                 "http://fastapi:8000/api/encounters/customer/" + customerId, accessToken
@@ -235,7 +222,7 @@ export async function CoachesIdProfilPage({
 
                         <div className="mt-4">
                             <p className="text-gray-500">Number of clients:</p>
-                            <p>{postsCustomerList.length}</p>
+                            <p>{postsEmployees.customer_list.length}</p>
                         </div>
                     </div>
                 </div>

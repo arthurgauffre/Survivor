@@ -62,18 +62,3 @@ def getCurrentEmployeeImg(db: Session, employee_id: int):
     if not user.img_profil_content:
         return None
     return base64.b64encode(user.img_profil_content).decode("utf-8")
-
-
-def getListOfCustomerForEmployee(db: Session, employee_id: int):
-    actualEmployee = db.query(Employee).filter(
-        Employee.user_id == employee_id).first()
-    allCustomers = db.query(EmployeeCustomer).all()
-    listOfCustomers = []
-
-    for customer in allCustomers:
-        customer = db.query(Customer).filter(
-            Customer.id == customer.customer_id).first()
-        if customer.employee_id == actualEmployee.id:
-            listOfCustomers.append(customer.user_id)
-
-    return listOfCustomers
