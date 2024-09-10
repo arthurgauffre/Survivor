@@ -1,7 +1,7 @@
 import { LoginForm } from "./form";
 import Link from "next/link";
 
-export default function Page() {
+export default function Page() : JSX.Element {
   return (
     <div className="flex flex-col p-4 lg:w-1/3 rounded-lg bg-white">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
