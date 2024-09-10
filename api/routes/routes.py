@@ -25,8 +25,7 @@ from crud.customers.customerGet import getCurrentCustomerImg
 from crud.customers.customerGet import getCustomerPaymentHistory
 from crud.employees.employeesGet import (getAllRealEmployees,
                                          getAnEmployeePersonalInfos,
-                                         getCurrentEmployeeImg,
-                                         getListOfCustomerForEmployee)
+                                         getCurrentEmployeeImg)
 from crud.encounters.encountersGet import getEncounterForCustomer
 from schemas.tokenSchemas import Token
 from schemas.eventsSchemas import EmployeeEventsSchema
@@ -156,13 +155,6 @@ def getAnEmployeeInfos(employee_id: int, db: Session = Depends(
 def getTheCurrentEmployeeImg(employee_id: int, db: Session = Depends(
         get_db)) -> str | None:
     return getCurrentEmployeeImg(db, employee_id)
-
-
-# @router.get("/api/{employee_id}/customers",
-#             tags=["employees"],
-#             )
-# def getCustomersOfAnEmployee(employee_id: int, db: Session = Depends(get_db)):
-#     return getListOfCustomerForEmployee(db, employee_id)
 
 
 @router.get("/api/clothes",
