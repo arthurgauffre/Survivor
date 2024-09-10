@@ -6,9 +6,8 @@ from datetime import datetime
 
 
 def getAllEventsPerEmployee(db: Session, employee_id: int):
-    newEmployeeId = employee_id + 100
     employee = db.query(Employee).filter(
-        Employee.user_id == newEmployeeId).first()
+        Employee.user_id == employee_id).first()
     events = db.query(Events).filter(
         Events.employee_id == employee.id).all()
     datesOfAllEvents = []

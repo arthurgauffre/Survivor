@@ -1,7 +1,9 @@
-import CoachesTable from "@/app/(private)/compatibility/coaches/coachesTable";
+import CoachesTable from "@/app/(private)/coaches/coachesTable";
 import { verifySession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import { customFetch } from "@/app/components/customFetch";
+import { HTTP_METHODS } from "next/dist/server/web/http";
+
 
 export default async function Page() {
   const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
@@ -12,10 +14,10 @@ export default async function Page() {
   switch (userRole) {
     case "admin":
       return <CoachesPage accessToken={accessToken} />;
-    case "user":
-      return <CoachesPage accessToken={accessToken} />
+      case "user":
+      redirect("/dashboard");
     case "coach":
-      return <CoachesPage accessToken={accessToken} />;
+      redirect("/dashboard");
     default:
       redirect("/login");
   }

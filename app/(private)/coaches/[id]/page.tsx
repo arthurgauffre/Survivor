@@ -28,9 +28,9 @@ export default async function Page({params}: {params: {id: string}}) {
     case "admin":
       return <CoachesIdProfilPage params={params} accessToken={accessToken} />;
     case "user":
-      return <CoachesIdProfilPage params={params} accessToken={accessToken} />
+      redirect("/dashboard");
     case "coach":
-      return <CoachesIdProfilPage params={params} accessToken={accessToken} />;
+      redirect("/dashboard");
     default:
       redirect("/login");
   }

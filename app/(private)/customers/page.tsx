@@ -14,7 +14,7 @@ export default async function Page() {
     case "admin":
       return <CustomersPage accessToken={accessToken} />;
     case "user":
-      return <CustomersPage accessToken={accessToken} />
+      redirect("/dashboard");
     case "coach":
       return <CustomersPage accessToken={accessToken} />;
     default:

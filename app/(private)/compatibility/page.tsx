@@ -14,7 +14,7 @@ export default async function Page() {
     case "admin":
       return <CompatibilityPage accessToken={accessToken} />;
     case "user":
-      return <CompatibilityPage accessToken={accessToken} />
+      redirect("/dashboard");
     case "coach":
       return <CompatibilityPage accessToken={accessToken} />;
     default:

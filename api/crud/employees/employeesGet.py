@@ -30,10 +30,9 @@ def getAllRealEmployees(db: Session):
 
 
 def getAnEmployeePersonalInfos(db: Session, employee_id: int):
-    newEmployeeId = employee_id + 100
     listOfCustomers = []
     user = db.query(User).filter(
-        User.id == newEmployeeId).first()
+        User.id == employee_id).first()
     actualEmployee = db.query(Employee).filter(
         Employee.user_id == user.id).first()
     relationEmployeeCustomers = db.query(EmployeeCustomer).filter(
@@ -56,22 +55,16 @@ def getAnEmployeePersonalInfos(db: Session, employee_id: int):
 
 
 def getCurrentEmployeeImg(db: Session, employee_id: int):
-    newEmployeeId = employee_id + 100
-    employee = db.query(Employee).filter(
-        Employee.user_id == newEmployeeId).first()
     user = db.query(User).filter(
-        User.id == employee.user_id).first()
-    if not employee:
+        User.id == employee_id).first()
+    if not user:
         raise HTTPException(status_code=404, detail="Employee not found")
     return base64.b64encode(user.img_profil_content).decode("utf-8")
 
 
 def getListOfCustomerForEmployee(db: Session, employee_id: int):
-    newEmployeeId = employee_id + 100
-    # user = db.query(User).filter(
-    #         User.id == newEmployeeId).first()
     actualEmployee = db.query(Employee).filter(
-        Employee.user_id == newEmployeeId).first()
+        Employee.user_id == employee_id).first()
     allCustomers = db.query(EmployeeCustomer).all()
     listOfCustomers = []
 

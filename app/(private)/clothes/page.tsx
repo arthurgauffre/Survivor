@@ -23,7 +23,7 @@ export default async function Page() {
     case "admin":
       return <ClothesPage accessToken={accessToken} />;
     case "user":
-      return <ClothesPage accessToken={accessToken} />
+      redirect("/dashboard");
     case "coach":
       return <ClothesPage accessToken={accessToken} />;
     default:
