@@ -5,6 +5,7 @@ import jwt
 from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
+from crud.chat.chatGet import getChatData
 from database.tableRelationships import Employee, User, Customer
 from schemas.chatSchemas import SendChatDataSchema
 from crud.chat.chatPost import sendChatData
@@ -252,9 +253,9 @@ def getRole(req: Request, db: Session = Depends(get_db)):
             Customer.user_id == user.id).first()
 
     if customer is not None:
-        return {"role": "customer", "id": customer.id}
+        return {"role": "customer", "id": customer.user_id}
     elif employee is not None:
         if employee.work == "Coach":
-            return {"role": employee.work, "id": employee.id}
+            return {"role": employee.work, "id": employee.user_id}
         else:
-            return {"role": "Admin", "id": employee.id}
+            return {"role": "Admin", "id": employee.user_id}
