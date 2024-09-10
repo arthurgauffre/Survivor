@@ -4,22 +4,25 @@ from sqlalchemy.orm import Session
 
 from schemas.customerSchemas import CustomerBasicSchema
 from schemas.paymentsHistorySchemas import PaymentHistorySchema
-from database.tableRelationships import Customer, PayementHistory
+from database.tableRelationships import Customer, PayementHistory, User
 
 
 def getAllRealCustomers(db: Session):
     customers = db.query(Customer).all()
+
     listOfAllCustomers = []
 
     for customer in customers:
+        user = db.query(User).filter(
+            User.id == customer.user_id).first()
         listOfAllCustomers.append(
             {
-                "id": customer.id,
-                "name": customer.name,
-                "surname": customer.surname,
-                "email": customer.email,
-                "birthdate": customer.birthdate,
-                "gender": customer.gender,
+                "id": customer.user_id,
+                "name": user.name,
+                "surname": user.surname,
+                "email": user.email,
+                "birthdate": user.birthdate,
+                "gender": user.gender,
                 "description": customer.description,
                 "astrologicalSign": customer.astrologicalSign,
                 "phone_number": customer.phone_number,
@@ -30,14 +33,17 @@ def getAllRealCustomers(db: Session):
 
 
 def getACustomer(db: Session, customer_id: int):
-    customer = db.query(Customer).filter(Customer.id == customer_id).first()
+    customer = db.query(Customer).filter(
+        Customer.user_id == customer_id).first()
+    user = db.query(User).filter(
+        User.id == customer.user_id).first()
     return CustomerBasicSchema(
-        id=customer.id,
-        name=customer.name,
-        surname=customer.surname,
-        email=customer.email,
-        birthdate=customer.birthdate,
-        gender=customer.gender,
+        id=customer.user_id,
+        name=user.name,
+        surname=user.surname,
+        email=user.email,
+        birthdate=user.birthdate,
+        gender=user.gender,
         description=customer.description,
         astrologicalSign=customer.astrologicalSign,
         phone_number=customer.phone_number,
@@ -46,20 +52,25 @@ def getACustomer(db: Session, customer_id: int):
 
 
 def getCurrentCustomerImg(db: Session, customer_id: int):
-    customer = db.query(Customer).filter(Customer.id == customer_id).first()
+    customer = db.query(Customer).filter(
+        Customer.user_id == customer_id).first()
+    user = db.query(User).filter(
+        User.id == customer.user_id).first()
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
-    return base64.b64encode(customer.img_profil_content).decode("utf-8")
+    return base64.b64encode(user.img_profil_content).decode("utf-8")
 
 
 def getCustomerPaymentHistory(db: Session, customer_id: int):
+    customer = db.query(Customer).filter(
+        Customer.user_id == customer_id).first()
     payementHistory = db.query(PayementHistory).filter(
-        PayementHistory.customer_id == customer_id).all()
+        PayementHistory.customer_id == customer.id).all()
     AllpayementHistory = []
     for payement in payementHistory:
         AllpayementHistory.append(PaymentHistorySchema(
             id=payement.id,
-            customer_id=payement.customer_id,
+            customer_id=customer.user_id,
             date=payement.date,
             amount=payement.amount,
             comment=payement.comment,
