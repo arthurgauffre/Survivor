@@ -4,7 +4,7 @@ from pydantic import SecretStr
 from sqlalchemy.orm import Session
 from auth.createToken import create_access_token
 from passwordOperations import verifyPassword
-from crud.user.userGet import getCustomer, getEmployee
+from crud.user.userGet import getUser
 from datetime import timedelta
 from schemas.tokenSchemas import Token
 from dotenv import load_dotenv
@@ -15,10 +15,7 @@ ACCESS_TOKEN_EXPIRE_MINUTES = os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES")
 
 
 def authenticateUser(db: Session, email: str, password: SecretStr):
-    employee = getEmployee(db, email)
-    customer = getCustomer(db, email)
-
-    user = employee if employee is not None else customer
+    user = getUser(db, email)
 
     if not verifyPassword(password, user.password):
         return False
