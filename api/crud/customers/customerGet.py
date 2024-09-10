@@ -58,6 +58,8 @@ def getCurrentCustomerImg(db: Session, customer_id: int):
         User.id == customer.user_id).first()
     if not customer:
         raise HTTPException(status_code=404, detail="Customer not found")
+    if not user.img_profil_content:
+        return None
     return base64.b64encode(user.img_profil_content).decode("utf-8")
 
 

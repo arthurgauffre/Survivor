@@ -129,7 +129,7 @@ export async function CoachesIdProfilPage({
     } catch (e) {
         console.log(e);
     }
-    const imgUrl: string = Img.image_url;
+    const img: string = Img;
 
     try {
         let dataEvents = await customFetch(
@@ -200,7 +200,7 @@ export async function CoachesIdProfilPage({
                     <div className="sm:flex flex-col items-center justify-center text-center border-b p-2">
                         <Image
                             alt="Image of user"
-                            src={imgUrl}
+                            src={`data:image/png;base64,${img}`}
                             width={56}
                             height={56}
                             className="rounded-full"

@@ -13,6 +13,8 @@ import {
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
 import { MenuButton, Menu, MenuItem, MenuItems } from "@headlessui/react";
+import { number } from "zod";
+import { useState } from "react";
 
 const ActionsActions = [
   { name: "Edit", href: "coaches", class: "" },
@@ -76,7 +78,6 @@ export default function CoachesTable({
               </div>
             </div>
           </li>
-
           <li>
             <table className="bg-white">
               <thead>
@@ -106,7 +107,7 @@ export default function CoachesTable({
                       <span className="cell-header">Coach:</span>
                       <div className="flex items-center">
                         <Image
-                          src={CoachImages[person.id - 1].image_url}
+                          src={`data:image/png;base64,${CoachImages.shift()}`}
                           alt=""
                           width={48}
                           height={48}
