@@ -5,9 +5,9 @@ import jwt
 from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
-# from crud.chat.chatGet import getChatData
+from crud.chat.chatGet import getChatData
 from database.tableRelationships import Employee, User, Customer
-from schemas.chatSchemas import SendChatDataSchema
+from schemas.chatSchemas import ChatDataSchema, SendChatDataSchema
 from crud.chat.chatPost import sendChatData
 from seedingDB import SeedState
 from auth.autenticateUser import getAccessToken
@@ -116,7 +116,9 @@ def getCustomer(customer_id: int, db: Session = Depends(get_db)
     return getACustomer(db, customer_id)
 
 
-@router.get("/api/customers/{customer_id}/image", tags=["customers"])
+@router.get("/api/customers/{customer_id}/image",
+            tags=["customers"],
+            dependencies=[Depends(oauth2_scheme)])
 def getCustomerImg(customer_id: int, db: Session = Depends(get_db)) -> str:
     return getCurrentCustomerImg(db, customer_id)
 
@@ -132,7 +134,7 @@ def getEmployees(db: Session = Depends(get_db)) -> list[
 @router.get("/api/customers/{customer_id}/payement_history",
             response_model=list[PaymentHistorySchema],
             tags=["customers"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getCustomerPayment(customer_id: int,
                        db: Session = Depends(get_db)) -> list[
                            PaymentHistorySchema]:
@@ -149,8 +151,8 @@ def getAnEmployeeInfos(employee_id: int, db: Session = Depends(
 
 
 @router.get("/api/employees/{employee_id}/image",
-            tags=["employees"])
-            # dependencies=[Depends(oauth2_scheme)])
+            tags=["employees"],
+            dependencies=[Depends(oauth2_scheme)])
 def getTheCurrentEmployeeImg(employee_id: int, db: Session = Depends(
         get_db)):
     return getCurrentEmployeeImg(db, employee_id)
@@ -164,8 +166,8 @@ def getCustomersOfAnEmployee(employee_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/api/clothes",
-            tags=["clothes"], response_model=list[ClothesAllSchema])
-            # dependencies=[Depends(oauth2_scheme)])
+            tags=["clothes"], response_model=list[ClothesAllSchema],
+            dependencies=[Depends(oauth2_scheme)])
 def getClothes(db: Session = Depends(get_db)) -> list[ClothesAllSchema]:
     return getAllClothesImgs(db)
 
@@ -216,24 +218,25 @@ def getTips(db: Session = Depends(get_db)) -> list[AllTipsSchema]:
 
 @router.post("/api/chat",
              tags=["chat"],
-             )
+             dependencies=[Depends(oauth2_scheme)])
 def chatWithEmployee(chatData: SendChatDataSchema,
                      db: Session = Depends(get_db)):
     return sendChatData(chatData, db)
 
 
-# @router.get("/api/chat",
-#             tags=["chat"],
-#             dependencies=[Depends(oauth2_scheme)])
-# def getChatWithEmployee(db: Session = Depends(get_db)):
-#     return getChatData(db)
+@router.get("/api/chat",
+            tags=["chat"],
+            response_model=list[ChatDataSchema],
+            dependencies=[Depends(oauth2_scheme)])
+def getChatWithEmployee(req: Request,
+                        db: Session = Depends(get_db)) -> list[ChatDataSchema]:
+    return getChatData(req, db)
 
 
 @router.get("/api/role",
             tags=["role"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getRole(req: Request, db: Session = Depends(get_db)):
-    print(req.headers)
     newHeader = req.headers.get("authorization")
     email = None
     user = None
