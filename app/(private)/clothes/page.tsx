@@ -26,16 +26,6 @@ type Image = {
 };
 
 export default async function ClothesPage() {
-  // let customers = [];
-  // let images = []
-  // try {
-  //   let data = await fetch('http://fastapi:8000/api/customers');
-  //   customers = await data.json();
-  //   data = await fetch('http://fastapi:8000/api/images');
-  //   iages = await data.json();
-  // } catch (error) {
-  //   console.error("Error fetching data:", error);
-  // }
   let customers = [];
   let hat: Image[] = [];
   let top: Image[] = [];
