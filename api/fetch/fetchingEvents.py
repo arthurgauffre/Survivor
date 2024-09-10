@@ -45,7 +45,7 @@ def fetchSingleEvent(event_data, access_token, db):
                 Events.id == event_data.get('id')).first()
             if not existing_event:
                 # Create new event
-                actualId = (event_data.get('employee_id')) + 100
+                actualId = (event_details.get('employee_id')) + 100
                 actualEmployee = db.query(Employee).filter(
                     Employee.user_id == actualId).first(
                 )

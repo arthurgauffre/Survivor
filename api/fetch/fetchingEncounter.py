@@ -73,10 +73,11 @@ def getEncounterByIdThread(encounterId, access_token):
     try:
         encounter_data = response.json()
     except BaseException:
-        print(f"Error decoding JSON for encounter {encounterId.id}")
+        # print(f"Error decoding JSON for encounter {encounterId.id}")
         session.rollback()
         session.close()
-        return
+        access_token = loginToken()  # Refresh token
+        return getEncounterByIdThread(encounterId, access_token)
 
     # Fetch the encounter from the database and update it
     actualEncounter = session.query(Encounter).filter(

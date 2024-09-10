@@ -183,6 +183,7 @@ def getCustomerImage(access_token, customerId, headers, database):
         image_response = requests.get(image_url, headers=headers)
     except Exception as e:
         print(f"Error fetching image: {e}")
+        getCustomerImage(access_token, customerId, headers, database)
 
     if image_response.status_code == 401:
         access_token = loginToken()
