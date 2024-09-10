@@ -6,9 +6,7 @@ export default function Page() {
     <div className="flex flex-col p-4 lg:w-1/3 rounded-lg bg-white">
       <div className="sm:mx-auto sm:w-full sm:max-w-sm">
         <div className="flex lg:flex-1 justify-center">
-          <a href="/" className="-m-1.5 p-1.5 text-2xl">
-            <h1 className="font-bold">Soul Connection</h1>
-          </a>
+          <h1 className="text-4xl -m-1.5 p-1.5 font-bold">Soul Connection</h1>
         </div>
       </div>
       <div className="text-center">
