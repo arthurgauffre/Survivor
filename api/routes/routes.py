@@ -4,6 +4,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
+from database.tableRelationships import Employee, User, Customer
 from schemas.chatSchemas import SendChatDataSchema
 from crud.chat.chatPost import sendChatData
 from seedingDB import SeedState
@@ -213,21 +214,45 @@ def getTips(db: Session = Depends(get_db)) -> list[AllTipsSchema]:
 
 @router.post("/api/chat",
              tags=["chat"],
-             dependencies=[Depends(oauth2_scheme)])
+             )
 def chatWithEmployee(chatData: SendChatDataSchema,
                      db: Session = Depends(get_db)):
     return sendChatData(chatData, db)
 
 
-# @router.get("/api/chat",
-#             tags=["chat"],
-#             dependencies=[Depends(oauth2_scheme)])
-# def getChatWithEmployee(db: Session = Depends(get_db)):
-#     return getChatData(db)
+@router.get("/api/chat",
+            tags=["chat"],
+            dependencies=[Depends(oauth2_scheme)])
+def getChatWithEmployee(db: Session = Depends(get_db)):
+    return getChatData(db)
 
 
 @router.get("/api/role",
             tags=["role"],
-            dependencies=[Depends(oauth2_scheme)])
+            )
 def getRole(req: Request, db: Session = Depends(get_db)):
-    return {"role": "customer", "id": 1}
+    print(req.headers)
+    newHeader = req.headers.get("Authorization")
+    email = None
+    user = None
+    customer = None
+    employee = None
+    if newHeader:
+        newHeader = newHeader.split(" ")[1]
+        email = newHeader["sub"]
+    if email is not None:
+        user = db.query(User).filter(
+            User.email == email).first()
+    if user is not None:
+        employee = db.query(Employee).filter(
+            Employee.user_id == user.id).first()
+        customer = db.query(Customer).filter(
+            Customer.user_id == user.id).first()
+
+    if customer is not None:
+        return {"role": "customer", "id": customer.id}
+    elif employee is not None:
+        if employee.work == "Coach":
+            return {"role": employee.work, "id": employee.id}
+        else:
+            return {"role": "Admin", "id": employee.id}
