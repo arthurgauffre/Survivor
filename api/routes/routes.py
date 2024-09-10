@@ -1,6 +1,5 @@
-import asyncio
-from fastapi import APIRouter, Body, Depends
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi import APIRouter, Body, Depends, Request
+from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
 from pydantic import SecretStr
 from sqlalchemy.orm import Session
@@ -115,7 +114,7 @@ def getCustomer(customer_id: int, db: Session = Depends(get_db)
 
 
 @router.get("/api/customers/{customer_id}/image", tags=["customers"])
-def getCustomerImg(customer_id: int, db: Session = Depends(get_db)):
+def getCustomerImg(customer_id: int, db: Session = Depends(get_db)) -> str:
     return getCurrentCustomerImg(db, customer_id)
 
 
@@ -147,8 +146,8 @@ def getAnEmployeeInfos(employee_id: int, db: Session = Depends(
 
 
 @router.get("/api/employees/{employee_id}/image",
-            tags=["employees"],
-            dependencies=[Depends(oauth2_scheme)])
+            tags=["employees"])
+            # dependencies=[Depends(oauth2_scheme)])
 def getTheCurrentEmployeeImg(employee_id: int, db: Session = Depends(
         get_db)):
     return getCurrentEmployeeImg(db, employee_id)
@@ -162,8 +161,8 @@ def getCustomersOfAnEmployee(employee_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/api/clothes",
-            tags=["clothes"], response_model=list[ClothesAllSchema],
-            dependencies=[Depends(oauth2_scheme)])
+            tags=["clothes"], response_model=list[ClothesAllSchema])
+            # dependencies=[Depends(oauth2_scheme)])
 def getClothes(db: Session = Depends(get_db)) -> list[ClothesAllSchema]:
     return getAllClothesImgs(db)
 
@@ -218,3 +217,17 @@ def getTips(db: Session = Depends(get_db)) -> list[AllTipsSchema]:
 def chatWithEmployee(chatData: SendChatDataSchema,
                      db: Session = Depends(get_db)):
     return sendChatData(chatData, db)
+
+
+# @router.get("/api/chat",
+#             tags=["chat"],
+#             dependencies=[Depends(oauth2_scheme)])
+# def getChatWithEmployee(db: Session = Depends(get_db)):
+#     return getChatData(db)
+
+
+@router.get("/api/role",
+            tags=["role"],
+            dependencies=[Depends(oauth2_scheme)])
+def getRole(req: Request, db: Session = Depends(get_db)):
+    return {"role": "customer", "id": 1}
