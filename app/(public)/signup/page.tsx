@@ -10,9 +10,9 @@ export default function Page() {
         </div>
       </div>
       <div className="text-center">
-        <h1 className="text-3xl font-bold pb-4 pt-3">REgister</h1>
+        <h1 className="text-3xl font-bold pb-4 pt-3">Register</h1>
         <p className="text-gray-500">
-          Enter your email below to login to your account
+          complete the form below to create your account
         </p>
       </div>
       <div className="mt-6">

@@ -7,7 +7,7 @@ import React from "react";
 export default function PaymentHistoryTable({
   paymentsHistory,
 }: {
-  paymentsHistory: {
+  readonly paymentsHistory: {
     id: number;
     date: string;
     payment_method: string;

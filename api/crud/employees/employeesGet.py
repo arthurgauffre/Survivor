@@ -62,6 +62,8 @@ def getCurrentEmployeeImg(db: Session, employee_id: int):
         User.id == employee_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="Employee not found")
+    if not user.img_profil_content:
+        return None
     return base64.b64encode(user.img_profil_content).decode("utf-8")
 
 
