@@ -1,7 +1,7 @@
 'use server';
 
 import {
-  FormState,
+  LoginFormState,
   LoginFormSchema,
   SignUpFormSchema,
 } from '@/app/lib/definitions';
@@ -9,9 +9,9 @@ import { createSession, deleteSession } from '@/app/lib/session';
 import { redirect } from 'next/dist/server/api-utils';
 
 export async function signUp(
-  state: FormState,
+  state: LoginFormState,
   formData: FormData,
-): Promise<FormState> {
+): Promise<LoginFormState> {
   // 1. Validate form fields
   const validatedFields = SignUpFormSchema.safeParse({
     name: formData.get('name'),
@@ -67,9 +67,9 @@ export async function signUp(
 }
 
 export async function login(
-  state: FormState,
+  state: LoginFormState,
   formData: FormData,
-): Promise<FormState> {
+): Promise<LoginFormState> {
   // 1. Validate form fields
   const validatedFields = LoginFormSchema.safeParse({
     email: formData.get('email'),

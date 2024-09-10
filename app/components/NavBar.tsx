@@ -140,7 +140,7 @@ export default function AdminNavBar({
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
-                <Navigation mobileMenuOpen={mobileMenuOpen} />
+                <Navigation mobileMenuOpen={mobileMenuOpen} UserRole={UserRole}/>
               </div>
               <div className="py-6">
                 <a
