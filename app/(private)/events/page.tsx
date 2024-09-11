@@ -16,7 +16,7 @@ export default async function ResponsiveCalendarMap() {
     case "admin":
       data = await customFetch("http://fastapi:8000/api/events/" + session.userId, accessToken);
       break;
-    case "user":
+    case "customer":
       data = await customFetch("http://fastapi:8000/api/customers/" + session.userId, accessToken);
       let client = await data.json();
       data = await customFetch("http://fastapi:8000/api/events/" + client.linkedCoach, accessToken);

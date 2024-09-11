@@ -5,7 +5,8 @@ import MeetingsChart from "@/app/components/charts/MeetingsChart";
 
 
 export default function DashboardClientsPage({accessToken, userId}: {accessToken: string, userId: number}) {
-    return (
+  console.log("DashboardClientsPage");  
+  return (
       <SpawnHeadband title="Dashboard" littleText="Welcome!">
         <div className="flex flex-wrap gap-6 text-black">
           {/* Row 1, Column 1 */}

@@ -13,7 +13,7 @@ export default async function Page() {
   switch (userRole) {
     case "admin":
       return <CustomersPage accessToken={accessToken} />;
-    case "user":
+    case "customer":
       redirect("/dashboard");
     case "coach":
       return <CustomersCoachingPage accessToken={accessToken} userId={session.userId}/>;

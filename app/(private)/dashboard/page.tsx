@@ -12,7 +12,7 @@ export default async function Dashboard() {
   switch (userRole) {
     case "admin":
       return <DashboardAdminPage accessToken={session.accessToken} userId={session.userId} />;
-    case "user":
+    case "customer":
       return <DashboardClientsPage accessToken={session.accessToken} userId={session.userId} />;
     case "coach":
       return <DashboardCoachesPage accessToken={session.accessToken} userId={session.userId} />
