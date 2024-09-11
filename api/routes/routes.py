@@ -1,3 +1,4 @@
+import asyncio
 from fastapi import APIRouter, Body, Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
@@ -5,8 +6,9 @@ import jwt
 from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
+from crud.notes.noteGet import getAllNotes
 from crud.notes.notePost import takeNote
-from schemas.noteSchemas import InsertNoteSchema
+from schemas.noteSchemas import InsertNoteSchema, ReturnGetNoteSchema
 from crud.chat.chatGet import getChatData, getDataInChat
 from database.tableRelationships import Employee, User, Customer
 from schemas.chatSchemas import (ChatDataSchema, ChatMessagesSchema,
@@ -55,33 +57,34 @@ router.mount("/static/clothes", StaticFiles(
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
-# def seed_database():
-#     seed_state = SeedState()
-#     with next(get_db()) as db:
-#         seed_state.seed_database(db)
-
-
-# async def run_periodically(interval: int, func):
-#     """Runs a function periodically every `interval` seconds."""
-#     while True:
-#         func()
-#         await asyncio.sleep(interval)
-
-
-# @router.on_event("startup")
-# async def startup_event():
-#     interval_in_minutes = 10
-#     interval_in_seconds = interval_in_minutes * 60
-#     # Run the seeding function immediately
-#     seed_database()
-#     # Schedule periodic execution
-#     asyncio.create_task(run_periodically(interval_in_seconds, seed_database))
-
-@router.on_event("startup")
-def startup_event():
+def seed_database():
     seed_state = SeedState()
     with next(get_db()) as db:
         seed_state.seed_database(db)
+
+
+async def run_periodically(interval: int, func):
+    """Runs a function periodically every `interval` seconds."""
+    while True:
+        func()
+        await asyncio.sleep(interval)
+
+
+@router.on_event("startup")
+async def startup_event():
+    print("Starting up...")
+    interval_in_minutes = 30
+    interval_in_seconds = interval_in_minutes * 60
+    # Run the seeding function immediately
+    seed_database()
+    # Schedule periodic execution
+    asyncio.create_task(run_periodically(interval_in_seconds, seed_database))
+
+# @router.on_event("startup")
+# def startup_event():
+#     seed_state = SeedState()
+#     with next(get_db()) as db:
+#         seed_state.seed_database(db)
 
 
 @router.post("/login", response_model=Token)
@@ -239,11 +242,19 @@ def getChatWithEmployee(req: Request,
 
 
 @router.post("/api/note/",
-             tags=["chat"],
+             tags=["note"],
              )
 def postNoteInfos(noteObject: InsertNoteSchema,
                   db: Session = Depends(get_db)):
     return takeNote(noteObject, db)
+
+
+@router.get("/api/note/",
+            tags=["note"],
+            response_model=list[ReturnGetNoteSchema])
+def getNoteInfos(req: Request,
+                 db: Session = Depends(get_db)) -> list[ReturnGetNoteSchema]:
+    return getAllNotes(req, db)
 
 
 @router.get("/api/role",

@@ -2,7 +2,6 @@ from pydantic import BaseModel
 
 
 class NoteBaseSchema(BaseModel):
-    id: int
     title: str
     content: str
     shared: bool
@@ -10,3 +9,7 @@ class NoteBaseSchema(BaseModel):
 
 class InsertNoteSchema(NoteBaseSchema):
     userId: int
+
+
+class ReturnGetNoteSchema(NoteBaseSchema):
+    id: int
