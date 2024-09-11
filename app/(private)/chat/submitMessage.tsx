@@ -1,7 +1,18 @@
 "use server";
 
 import { MessageFormState } from "@/app/lib/definitions";
-import { redirect } from "next/dist/server/api-utils";
+import { redirect } from "next/navigation";
+import { router } from 'react';
+
+const formatDate = () => {
+  const date = new Date(Date.now());
+
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+  const day = String(date.getDate()).padStart(2, '0');
+
+  return `${year}-${month}-${day}`;
+};
 
 export async function SubmitMessage(
   state: MessageFormState,
@@ -10,16 +21,11 @@ export async function SubmitMessage(
   const customer_id: number = Number(formData.get("customer_id"));
   const employee_id: number = Number(formData.get("employee_id"));
   const messageSend: string = formData.get("messageSend") as string;
-  const date: string = formData.get("date") as string;
+  const date: string = formatDate();
   const senderId: number = Number(formData.get("senderId"));
-
-  console.log("customer_id", customer_id);
-  console.log("employee_id", employee_id);
-  console.log("senderId", senderId);
 
   const accessToken: string = formData.get("accessToken") as string;
 
-  console.log("accessToken", accessToken);
   const response = await fetch("http://fastapi:8000/api/chat", {
     method: 'POST',
     headers: {
@@ -36,5 +42,5 @@ export async function SubmitMessage(
     }),
   });
 
-  return state;
+  return redirect("/chatrefresh");
 }

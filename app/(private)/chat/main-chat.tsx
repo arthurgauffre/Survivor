@@ -6,6 +6,7 @@ import { ArrowLeftIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { SubmitMessage } from "@/app/(private)/chat/submitMessage";
 import Image from "next/image";
 import { customFetch } from "@/app/components/customFetch";
+import { set } from "zod";
 
 export function LeftMessage({
   image,
@@ -54,10 +55,10 @@ export function SendButton({
       className="bg-blue-500 rounded-md text-white"
     >
       {pending ? (
-        "Submitting..."
+        <p className="px-2">sending...</p>
       ) : (
         <>
-          <PaperAirplaneIcon className="h-5 w-10 " />
+          <PaperAirplaneIcon className="h-5 w-10" />
           <span className="sr-only">Send message</span>
         </>
       )}
@@ -88,6 +89,7 @@ export function InputChat({
           type="text"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
+          onSubmit={(e) => setMessage("")}
           className="flex h-9 w-full rounded-md border border-neutral-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:placeholder:text-neutral-400 dark:focus-visible:ring-neutral-300"
           placeholder="Type a message ..."
         />
@@ -103,13 +105,6 @@ export function InputChat({
           name="employee_id"
           value={role === "coaches" ? userId : contactId}
           type="number"
-          className="hidden"
-        />
-        <input
-          id="date"
-          name="date"
-          value={"2022-01-01"}
-          type="text"
           className="hidden"
         />
         <input
@@ -209,11 +204,17 @@ export function MainChat({
       </header>
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {posts.map((post) => (
-          <LeftMessage key={post.id} image={contact.image} text={post.message} />
-        ))}
-        <RightMessage text="I'm good, thanks! How about you?" />
-        <LeftMessage image={contact.image} text="lol, I'm good too!" />
+        {posts.reverse().map((post) =>
+          post.senderId !== userId ? (
+            <div key={post.id}>
+              <LeftMessage image={contact.image} text={post.message} />
+            </div>
+          ) : (
+            <div key={post.id}>
+              <RightMessage text={post.message} />
+            </div>
+          )
+        )}
       </div>
       {/* Message Input */}
       <InputChat
