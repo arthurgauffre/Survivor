@@ -165,7 +165,7 @@ export function MainChat({
     async function fetchPosts() {
       try {
         const res = await customFetch(
-          `http://fastapi:8000/api/chat/${contact.contact_id}`,
+          `http://localhost:8000/api/chat/${contact.contact_id}`,
           accessToken
         );
         if (!res.ok) {
