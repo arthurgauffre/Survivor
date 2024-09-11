@@ -118,7 +118,7 @@ export function MainChat({
       }
     }
     fetchPosts();
-  }, [contact.contact_id]);
+  }, [accessToken, contact.contact_id]);
 
   if (!posts) return <div>Loading...</div>;
 
