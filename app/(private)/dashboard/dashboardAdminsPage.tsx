@@ -17,17 +17,15 @@ export default function DashboardAdminsPage({accessToken, userId }: {accessToken
             <div className="flex flex-wrap justify-start gap-40">
               <div>
                 <p className="text-gray-500 text-xs">Customers</p>
-                <p>666</p>
-                <p className="text-sm text-green-500">6.66</p>
+                <p>5</p>
               </div>
               <div>
                 <p className="text-gray-500 text-xs">Doing meetings</p>
-                <p>666</p>
-                <p className="text-sm text-red-500">6.66</p>
+                <p>34</p>
               </div>
               <div>
                 <p className="text-gray-500 text-xs">Customers by coach</p>
-                <p>666</p>
+                <p>45</p>
               </div>
             </div>
             <CustomersChart />
@@ -42,17 +40,15 @@ export default function DashboardAdminsPage({accessToken, userId }: {accessToken
             <div className="flex flex-wrap justify-start gap-40">
               <div>
                 <p className="text-gray-500 text-xs">Monthly</p>
-                <p>666</p>
-                <p className="text-sm text-green-500">6.66</p>
+                <p>45</p>
               </div>
               <div>
                 <p className="text-gray-500 text-xs">Weekly</p>
-                <p>666</p>
-                <p className="text-sm text-red-500">6.66</p>
+                <p>34</p>
               </div>
               <div>
                 <p className="text-gray-500 text-xs">Daily (Avg)</p>
-                <p>666</p>
+                <p>76</p>
               </div>
             </div>
             <EventsChart />
