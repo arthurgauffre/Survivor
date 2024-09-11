@@ -35,7 +35,8 @@ from crud.encounters.encountersGet import getEncounterForCustomer
 from schemas.tokenSchemas import Token
 from schemas.eventsSchemas import EmployeeEventsSchema
 from schemas.employeeSchemas import EmployeePersonalInfoSchema
-from schemas.customerSchemas import CustomerBasicSchema
+from schemas.customerSchemas import (CustomerBasicSchema,
+                                     CustomerWithCoachSchema)
 from schemas.encounterSchemas import EncounterByCustomerSchema
 from schemas.clothesSchemas import ClothesAllSchema
 from schemas.paymentsHistorySchemas import PaymentHistorySchema
@@ -115,18 +116,20 @@ def getCustomers(db: Session = Depends(get_db)) -> list[
     return getAllRealCustomers(db)
 
 
-@router.get("/api/customers/{customer_id}", response_model=CustomerBasicSchema,
+@router.get("/api/customers/{customer_id}",
+            response_model=CustomerWithCoachSchema,
             tags=["customers"],
             )
 def getCustomer(customer_id: int, db: Session = Depends(get_db)
-                ) -> CustomerBasicSchema:
+                ) -> CustomerWithCoachSchema:
     return getACustomer(db, customer_id)
 
 
 @router.get("/api/customers/{customer_id}/image",
             tags=["customers"],
             )
-def getCustomerImg(customer_id: int, db: Session = Depends(get_db)) -> str | None:
+def getCustomerImg(customer_id: int,
+                   db: Session = Depends(get_db)) -> str | None:
     return getCurrentCustomerImg(db, customer_id)
 
 

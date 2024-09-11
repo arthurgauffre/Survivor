@@ -2,7 +2,7 @@ import base64
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from schemas.customerSchemas import CustomerBasicSchema
+from schemas.customerSchemas import CustomerWithCoachSchema
 from schemas.paymentsHistorySchemas import PaymentHistorySchema
 from database.tableRelationships import Customer, Employee, EmployeeCustomer, PayementHistory, User
 
@@ -26,7 +26,7 @@ def getAllRealCustomers(db: Session):
                 "description": customer.description,
                 "astrologicalSign": customer.astrologicalSign,
                 "phone_number": customer.phone_number,
-                "address": customer.address,
+                "address": customer.address
             }
         )
     return listOfAllCustomers
@@ -48,7 +48,7 @@ def getACustomer(db: Session, customer_id: int):
         Employee.id == employeeLinked.employee_id).first()
     if employee:
         coachId = employee.user_id
-    return CustomerBasicSchema(
+    return CustomerWithCoachSchema(
         id=customer.user_id,
         name=user.name,
         surname=user.surname,
