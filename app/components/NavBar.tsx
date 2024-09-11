@@ -15,6 +15,7 @@ import {
   ChatBubbleLeftEllipsisIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import Image from "next/image";
 
 import Navigation from "@/app/components/Navigation";
 import { logout } from "@/app/auth/auth";
@@ -35,19 +36,14 @@ const userNavigation: {
 }[] = [
   { name: "Your Profile", href: "profil", click: undefined },
   { name: "Settings", href: "#", click: undefined },
-  {
-    name: "Sign out",
-    href: "#",
-    click: async () => {
-      await logout();
-    },
-  },
 ];
 
 export default function AdminNavBar({
   UserRole,
+  UserImage,
 }: {
   readonly UserRole: string;
+  readonly UserImage: string;
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -75,7 +71,7 @@ export default function AdminNavBar({
         </div>
         <PopoverGroup className="hidden lg:flex lg:gap-x-12">
           <div className="ml-10 flex items-baseline gap-6">
-            <Navigation mobileMenuOpen={mobileMenuOpen} UserRole={UserRole}/>
+            <Navigation mobileMenuOpen={mobileMenuOpen} UserRole={UserRole} />
           </div>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-3">
@@ -86,18 +82,16 @@ export default function AdminNavBar({
           {/* LANGUAGE */}
           <img alt="" src={user.language} className="h-8 w-8 rounded-full" />
           {/* PROFILE */}
-          <Menu as="div" className="relative">
-            <div>
-              <MenuButton className="relative flex max-w-xs items-center rounded-full bg-gray-800 text-sm focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800">
-                <span className="absolute -inset-1.5" />
-                <span className="sr-only">Open user menu</span>
-                <img
-                  alt=""
-                  src={user.imageUrl}
-                  className="h-8 w-8 rounded-full"
-                />
-              </MenuButton>
-            </div>
+          <Menu as="div">
+            <MenuButton>
+              <Image
+                src={`data:image/png;base64,${UserImage}`}
+                alt=""
+                width={32}
+                height={32}
+                className="rounded-full"
+              />
+            </MenuButton>
             <MenuItems
               transition
               className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 transition focus:outline-none data-[closed]:scale-95 data-[closed]:transform data-[closed]:opacity-0 data-[enter]:duration-100 data-[leave]:duration-75 data-[enter]:ease-out data-[leave]:ease-in"
@@ -112,6 +106,16 @@ export default function AdminNavBar({
                   </a>
                 </MenuItem>
               ))}
+              <MenuItem>
+                <button
+                  className="block px-4 py-2 text-sm text-left w-full text-gray-700 data-[focus]:bg-gray-100"
+                  onClick={async () => {
+                    await logout();
+                  }}
+                >
+                  Sign out
+                </button>
+              </MenuItem>
             </MenuItems>
           </Menu>
         </div>
@@ -140,7 +144,10 @@ export default function AdminNavBar({
           <div className="mt-6 flow-root">
             <div className="-my-6 divide-y divide-gray-500/10">
               <div className="space-y-2 py-6">
-                <Navigation mobileMenuOpen={mobileMenuOpen} UserRole={UserRole}/>
+                <Navigation
+                  mobileMenuOpen={mobileMenuOpen}
+                  UserRole={UserRole}
+                />
               </div>
               <div className="py-6">
                 <a
@@ -152,10 +159,12 @@ export default function AdminNavBar({
                 <div className="-mx-3 block rounded-lg px-3 py-2.5 text-base font-semibold leading-7 text-gray-900 hover:bg-gray-50">
                   <div className="flex items-center px-5">
                     <div className="flex-shrink-0">
-                      <img
+                      <Image
+                        src={`data:image/png;base64,${UserImage}`}
                         alt=""
-                        src={user.imageUrl}
-                        className="h-10 w-10 rounded-full"
+                        width={40}
+                        height={40}
+                        className="rounded-full"
                       />
                     </div>
                     <div className="ml-3">
@@ -188,6 +197,14 @@ export default function AdminNavBar({
                         {item.name}
                       </a>
                     ))}
+                    <button
+                      className="block rounded-md px-3 py-2 text-base font-medium"
+                      onClick={async () => {
+                        await logout();
+                      }}
+                    >
+                      Sign out
+                    </button>
                   </div>
                 </div>
               </div>

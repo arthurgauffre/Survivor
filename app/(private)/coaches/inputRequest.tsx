@@ -2,8 +2,8 @@ export default function InputRequest({
   title,
   placeholderString,
 }: {
-  title: string;
-  placeholderString: string;
+  readonly title: string;
+  readonly placeholderString: string;
 }) {
   return (
     <div className="rounded-md">

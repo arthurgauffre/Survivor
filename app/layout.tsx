@@ -1,9 +1,6 @@
 import "@/app/globals.css";
 import { Inter } from "next/font/google";
 
-// import NavBar from "./components/navbar";
-// import { verifySession } from "@/app/lib/dal";
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
@@ -16,20 +13,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // return (
-  //   <html lang="en">
-  //     <body className="{inter.className} text-[#334760] sticky top-0">
-  //       <div className="min-h-screen bg-[#f5f6fa]">
-  //         <NavBar />
-  //         {children}
-  //       </div>
-  //     </body>
-  //   </html>
-  // );
 
   return (
     <html lang="en">
-      <body className="{inter.className} min-h-screen bg-[#f5f6fa] text-[#334760]">{children}</body>
+      <body className="{inter.className} bg-[#f5f6fa] text-[#334760]">{children}</body>
     </html>
   );
 }

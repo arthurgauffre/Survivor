@@ -1,15 +1,15 @@
-from random import choice
-import requests
-from passwordOperations import getPasswordHash
-from loginTokenRetriever import loginToken
-from sqlalchemy.orm import Session
 import os
-from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor
-from fetch.fetchingCustomer import SessionFactory
+from random import choice
 
+import requests
 from database.tableRelationships import (Customer, Employee, EmployeeCustomer,
                                          User)
+from dotenv import load_dotenv
+from fetch.fetchingCustomer import SessionFactory
+from loginTokenRetriever import loginToken
+from passwordOperations import getPasswordHash
+from sqlalchemy.orm import Session
 
 load_dotenv()
 
@@ -40,7 +40,7 @@ def getAllEmployees(access_token, db):
     employeesData = response.json()
 
     for employee in employeesData:
-        actualId = (employee.get('id')) + 100
+        actualId = (employee.get('id')) + db.query(Customer).count()
         user = User(
             id=actualId,
             password=getPasswordHash(EMPLOYEE_PASSWORD),
@@ -77,7 +77,7 @@ def fetchEmployeeDetail(employee, access_token, db):
     }
     # employees = db.query(Employee).all()
 
-    actualEmployeeId = (employee.user_id) - 100
+    actualEmployeeId = (employee.user_id) - db.query(Customer).count()
 
     try:
         # Fetch employee details

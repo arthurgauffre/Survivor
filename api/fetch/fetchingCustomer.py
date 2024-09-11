@@ -1,15 +1,14 @@
-import requests
 import os
-from dotenv import load_dotenv
-
-from database.database import engine
-from sqlalchemy.orm import sessionmaker
 from concurrent.futures import ThreadPoolExecutor
-from passwordOperations import getPasswordHash
-from loginTokenRetriever import loginToken
-from database.tableRelationships import (Customer,
-                                         PayementHistory, Clothes, User)
 
+import requests
+from database.database import engine
+from database.tableRelationships import (Clothes, Customer, PayementHistory,
+                                         User)
+from dotenv import load_dotenv
+from loginTokenRetriever import loginToken
+from passwordOperations import getPasswordHash
+from sqlalchemy.orm import sessionmaker
 
 load_dotenv()
 
@@ -187,7 +186,7 @@ def getCustomerImage(access_token, customerId, headers, database):
 
     if image_response.status_code == 401:
         access_token = loginToken()
-        return getCustomerImage(access_token, customerId, headers, database)
+        getCustomerImage(access_token, customerId, headers, database)
 
     if image_response.status_code == 200:
         currentUser = database.query(User).filter(

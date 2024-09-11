@@ -6,19 +6,19 @@ import EventsChart from "@/app/components/charts/EventsChart";
 import MeetingsChart from "@/app/components/charts/MeetingsChart";
 
 export default async function Dashboard() {
-  const session: { isAuth: boolean; userId: any; role: string } =
+  const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
     await verifySession();
   const userRole = session?.role;
 
-  console.log("session: ", session);
-  console.log("User Role: ", userRole);
-
-  if (userRole === "admin") {
-    return <DashboardPage />;
-  } else if (userRole === "user") {
-    return <DashboardPage />;
-  } else {
-    redirect("/login");
+  switch (userRole) {
+    case "admin":
+      return <DashboardPage />;
+    case "user":
+      return <DashboardPage />
+    case "coach":
+      return <DashboardPage />;
+    default:
+      redirect("/login");
   }
 }
 

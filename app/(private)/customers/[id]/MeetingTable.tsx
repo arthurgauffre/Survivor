@@ -20,7 +20,7 @@ function Rating(numberStar: number) {
 export default function MeetingTable({
   meetings,
 }: {
-  meetings: {
+  readonly meetings: {
     id: number;
     customer_id: number;
     date: string;

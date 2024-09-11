@@ -1,9 +1,10 @@
 import uuid
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Column, ForeignKey, Integer, String, LargeBinary
-from sqlalchemy.orm import relationship
 
 from database.database import Base
+from sqlalchemy import (Boolean, Column, ForeignKey, Integer, LargeBinary,
+                        String)
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 # List of all tables in the database in relation with the API Soul connection
 
@@ -129,12 +130,24 @@ class Clothes(Base):
 # Chat table
 class Chat(Base):
     __tablename__ = "chat"
-    id = Column(Integer, primary_key=True, index=True, nullable=False)
+    id = Column(Integer, primary_key=True, index=True, nullable=False,
+                autoincrement=True)
     customer_id = Column(UUID(as_uuid=True), ForeignKey("customers.id"))
     employee_id = Column(UUID(as_uuid=True), ForeignKey("employees.id"))
     message = Column(String, index=True)
     date = Column(String, index=True)
     senderId = Column(Integer, index=True)
+
+
+# Note table
+class Note(Base):
+    __tablename__ = "notes"
+    id = Column(Integer, primary_key=True, index=True, nullable=False,
+                autoincrement=True)
+    user_id = Column(Integer, ForeignKey("users.id"))
+    title = Column(String, index=True)
+    content = Column(String, index=True)
+    shared = Column(Boolean, index=True)
 
 
 # Employee / Customer relationship table

@@ -24,26 +24,33 @@ export const LoginFormSchema = z.object({
 
 export type LoginFormState =
   | {
-      errors?: {
-        name?: string[];
-        email?: string[];
-        password?: string[];
-      };
-      message?: string;
-    }
+    errors?: {
+      name?: string[];
+      email?: string[];
+      password?: string[];
+    };
+    message?: string;
+  }
   | undefined;
 
 
 export type MessageFormState =
-| {
+  | {
     errors?: {
-      sendMessage?: string[];
+      customer_id: number,
+      employee_id: number,
+      messageSend: string,
+      date: string,
+      senderId: number,
+      accessToken: string,
     };
     message?: string;
   }
-| undefined;
+  | undefined;
 
 export type SessionPayload = {
-  userId: string | number;
+  accessToken: string;
+  userId: number;
+  role: string;
   expiresAt: Date;
 };

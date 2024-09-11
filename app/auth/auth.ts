@@ -4,9 +4,10 @@ import {
   LoginFormState,
   LoginFormSchema,
   SignUpFormSchema,
-} from '@/app/lib/definitions';
-import { createSession, deleteSession } from '@/app/lib/session';
+} from '../lib/definitions';
+import { createSession, deleteSession } from '../lib/session';
 import { redirect } from 'next/dist/server/api-utils';
+import { format } from 'path';
 
 export async function signUp(
   state: LoginFormState,
@@ -63,7 +64,7 @@ export async function signUp(
 
   // 4. Create a session for the user
   // const userId = user.id.toString();
-  await createSession("1", "user");
+  await createSession(1, "user");
 }
 
 export async function login(
@@ -84,45 +85,45 @@ export async function login(
     };
   }
 
+  let responseRole: {
+    role: string
+    id: number
+  } = {
+    role: "",
+    id: 0
+  };
+
   let response: {
     access_token: string
+  } = {
+    access_token: ""
   };
+
   try {
     const responseData: Response = await fetch('http://fastapi:8000/login', {
       method: 'POST',
       headers: {
         'Content-type': 'application/json',
       },
-      body: JSON.stringify({ email: 'jeanne.martin@soul-connection.fr', password: 'password' }),
+      body: JSON.stringify({ email: formData.get('email'), password: formData.get('password') }),
     })
     response = await responseData.json()
   } catch (error) {
     return errorMessage;
   }
-  console.log(response)
-  // 2. Query the database for the user with the given email
-  // const user = await db.query.users.findFirst({
-  //   where: eq(users.email, validatedFields.data.email),
-  // });
-
-  // If user is not found, return early
-  // if (!user) {
-  //   return errorMessage;
-  // }
-  // 3. Compare the user's password with the hashed password in the database
-  // const passwordMatch = await bcrypt.compare(
-  //   validatedFields.data.password,
-  //   user.password,
-  // );
-
-  // If the password does not match, return early
-  // if (!passwordMatch) {
-  //   return errorMessage;
-  // }
-
-  // 4. If login successful, create a session for the user and redirect
-  // const userId = user.id.toString();
-  await createSession("1", "admin");
+  try {
+    const responseData: Response = await fetch('http://fastapi:8000/api/role', {
+      method: 'GET',
+      headers: {
+        'Content-type': 'application/json',
+        'Authorization': `Bearer ${response.access_token}`
+      }
+    })
+    responseRole = await responseData.json()
+  } catch (error) {
+    return errorMessage;
+  }
+  await createSession(responseRole.id, responseRole.role.toLocaleLowerCase(), response.access_token);
 }
 
 export async function logout() {

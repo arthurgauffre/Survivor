@@ -8,7 +8,8 @@
     "dev": "concurrently \"npm run next-dev\" \"npm run fastapi-dev\"",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "test": "vitest"
   },
   "dependencies": {
     "@headlessui/react": "^2",
@@ -41,5 +42,13 @@
     "tailwindcss-animate": "^1.0.7",
     "typescript": "^5",
     "zod": "^3"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "^10.4.0",
+    "@testing-library/jest-dom": "^6.5.0",
+    "@testing-library/react": "^16.0.1",
+    "@vitejs/plugin-react": "^4.3.1",
+    "jsdom": "^25.0.0",
+    "vitest": "^2.0.5"
   }
 }
