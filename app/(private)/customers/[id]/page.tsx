@@ -87,7 +87,7 @@ export async function PaymentHistoryPage({ params, accessToken }: { params: { id
   // let events = await eventsData.json();
   return (
     <SpawnHeadband
-      title={params.id}
+      title={"Customer Profile"}
       elemRight={
         <div className="flex">
           <a href="/customers">
