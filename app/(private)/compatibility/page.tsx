@@ -13,7 +13,7 @@ export default async function Page() {
   switch (userRole) {
     case "admin":
       return <CompatibilityPage accessToken={accessToken} />;
-    case "user":
+    case "customer":
       redirect("/dashboard");
     case "coach":
       return <CompatibilityPage accessToken={accessToken} />;
