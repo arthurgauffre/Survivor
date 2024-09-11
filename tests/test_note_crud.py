@@ -14,7 +14,7 @@ from api.schemas.noteSchemas import InsertNoteSchema, ReturnGetNoteSchema
 db_mock = MagicMock()
 
 
-def test_take_note_user_exists(monkeypatch):
+def test_take_note_user_exists():
     # Define sample data
     note_object = InsertNoteSchema(
         title="Sample Note",
@@ -37,7 +37,7 @@ def test_take_note_user_exists(monkeypatch):
     db_mock.commit.assert_called_once()
 
 
-def test_take_note_user_not_found(monkeypatch):
+def test_take_note_user_not_found():
     # Define sample data
     note_object = InsertNoteSchema(
         title="Sample Note",
@@ -56,7 +56,7 @@ def test_take_note_user_not_found(monkeypatch):
     assert exc_info.value.detail == "User not found"
 
 
-def test_get_all_notes_no_auth_header(monkeypatch):
+def test_get_all_notes_no_auth_header():
     # Mock the request without an authorization header
     req_mock = MagicMock(Request)
     req_mock.headers.get.return_value = None
@@ -66,7 +66,7 @@ def test_get_all_notes_no_auth_header(monkeypatch):
     assert result is None
 
 
-def test_get_all_notes_valid_auth_header_user_exists_employee(monkeypatch):
+def test_get_all_notes_valid_auth_header_user_exists_employee():
     # Mock a valid request with an authorization header
     req_mock = MagicMock(Request)
     auth_header = "Bearer some_jwt_token"
@@ -103,7 +103,7 @@ def test_get_all_notes_valid_auth_header_user_exists_employee(monkeypatch):
         assert [note.dict() for note in result] == [note.dict() for note in expected]
 
 
-def test_get_all_notes_valid_auth_header_user_exists_customer(monkeypatch):
+def test_get_all_notes_valid_auth_header_user_exists_customer():
     # Mock a valid request with an authorization header
     req_mock = MagicMock(Request)
     auth_header = "Bearer some_jwt_token"
@@ -138,8 +138,7 @@ def test_get_all_notes_valid_auth_header_user_exists_customer(monkeypatch):
         assert [note.dict() for note in result] == [note.dict() for note in expected]
 
 
-
-def test_get_all_notes_valid_auth_header_user_not_found(monkeypatch):
+def test_get_all_notes_valid_auth_header_user_not_found():
     # Mock a valid request with an authorization header
     req_mock = MagicMock(Request)
     auth_header = "Bearer some_jwt_token"
