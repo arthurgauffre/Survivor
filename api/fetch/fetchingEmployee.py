@@ -1,15 +1,15 @@
-from random import choice
-import requests
-from passwordOperations import getPasswordHash
-from loginTokenRetriever import loginToken
-from sqlalchemy.orm import Session
 import os
-from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor
-from fetch.fetchingCustomer import SessionFactory
+from random import choice
 
+import requests
 from database.tableRelationships import (Customer, Employee, EmployeeCustomer,
                                          User)
+from dotenv import load_dotenv
+from fetch.fetchingCustomer import SessionFactory
+from loginTokenRetriever import loginToken
+from passwordOperations import getPasswordHash
+from sqlalchemy.orm import Session
 
 load_dotenv()
 

@@ -1,8 +1,7 @@
-from fastapi import HTTPException
-from sqlalchemy.orm import Session
-
-from schemas.encounterSchemas import EncounterByCustomerSchema
 from database.tableRelationships import Customer, Encounter
+from fastapi import HTTPException
+from schemas.encounterSchemas import EncounterByCustomerSchema
+from sqlalchemy.orm import Session
 
 
 def getEncounterForCustomer(db: Session, customer_id: int):

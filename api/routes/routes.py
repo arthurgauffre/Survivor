@@ -1,43 +1,44 @@
-from fastapi import APIRouter, Body, Depends, Request
-from fastapi.security import OAuth2PasswordBearer
-from fastapi.staticfiles import StaticFiles
+import asyncio
+
 import jwt
-from pydantic import SecretStr
-from sqlalchemy.orm import Session
-
-from crud.chat.chatGet import getChatData, getDataInChat
-from database.tableRelationships import Employee, User, Customer
-from schemas.chatSchemas import (ChatDataSchema, ChatMessagesSchema,
-                                 SendChatDataSchema)
-from crud.chat.chatPost import sendChatData
-from seedingDB import SeedState
 from auth.autenticateUser import getAccessToken
-from crud.tips.tipsGet import getAllTips
-from schemas.tipsSchemas import AllTipsSchema
-from crud.events.eventsGet import getAllEventsPerEmployee
-from crud.clothes.clothesGet import (getAllBottomFromAUser,
-                                     getAllClothesImgs, getAllHatFromAUser,
-                                     getAllShoesFromAUser,
+from crud.chat.chatGet import getChatData, getDataInChat
+from crud.chat.chatPost import sendChatData
+from crud.clothes.clothesGet import (getAllBottomFromAUser, getAllClothesImgs,
+                                     getAllHatFromAUser, getAllShoesFromAUser,
                                      getAllTopFromAUser)
-
-from crud.customers.customerGet import getAllRealCustomers
-from crud.customers.customerGet import getACustomer
-from crud.customers.customerGet import getCurrentCustomerImg
-from crud.customers.customerGet import getCustomerPaymentHistory
+from crud.customers.customerGet import (getACustomer, getAllRealCustomers,
+                                        getCurrentCustomerImg,
+                                        getCustomerPaymentHistory)
 from crud.employees.employeesGet import (getAllRealEmployees,
                                          getAnEmployeePersonalInfos,
                                          getCurrentEmployeeImg)
 from crud.encounters.encountersGet import getEncounterForCustomer
-from schemas.tokenSchemas import Token
-from schemas.eventsSchemas import EmployeeEventsSchema
-from schemas.employeeSchemas import EmployeePersonalInfoSchema
-from schemas.customerSchemas import CustomerBasicSchema
-from schemas.encounterSchemas import EncounterByCustomerSchema
-from schemas.clothesSchemas import ClothesAllSchema
-from schemas.paymentsHistorySchemas import PaymentHistorySchema
+from crud.events.eventsGet import getAllEventsPerEmployee, getListOfAllEvents
+from crud.notes.noteGet import getAllNotes
+from crud.notes.notePost import takeNote
 
+from crud.tips.tipsGet import getAllTips
 from database.database import get_db
-
+from database.tableRelationships import Customer, Employee, User
+from fastapi import APIRouter, Body, Depends, Request
+from fastapi.security import OAuth2PasswordBearer
+from fastapi.staticfiles import StaticFiles
+from pydantic import SecretStr
+from schemas.chatSchemas import (ChatDataSchema, ChatMessagesSchema,
+                                 SendChatDataSchema)
+from schemas.clothesSchemas import ClothesAllSchema
+from schemas.customerSchemas import (CustomerBasicSchema,
+                                     CustomerWithCoachSchema)
+from schemas.employeeSchemas import EmployeePersonalInfoSchema
+from schemas.encounterSchemas import EncounterByCustomerSchema
+from schemas.eventsSchemas import EmployeeEventsSchema
+from schemas.noteSchemas import InsertNoteSchema, ReturnGetNoteSchema
+from schemas.paymentsHistorySchemas import PaymentHistorySchema
+from schemas.tipsSchemas import AllTipsSchema
+from schemas.tokenSchemas import Token
+from seedingDB import SeedState
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 
@@ -53,36 +54,39 @@ router.mount("/static/clothes", StaticFiles(
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 
 
-# def seed_database():
-#     seed_state = SeedState()
-#     with next(get_db()) as db:
-#         seed_state.seed_database(db)
-
-
-# async def run_periodically(interval: int, func):
-#     """Runs a function periodically every `interval` seconds."""
-#     while True:
-#         func()
-#         await asyncio.sleep(interval)
-
-
-# @router.on_event("startup")
-# async def startup_event():
-#     interval_in_minutes = 10
-#     interval_in_seconds = interval_in_minutes * 60
-#     # Run the seeding function immediately
-#     seed_database()
-#     # Schedule periodic execution
-#     asyncio.create_task(run_periodically(interval_in_seconds, seed_database))
-
-@router.on_event("startup")
-def startup_event():
+def seed_database():
     seed_state = SeedState()
     with next(get_db()) as db:
         seed_state.seed_database(db)
 
 
-@router.post("/login", response_model=Token)
+async def run_periodically(interval: int, func):
+    """Runs a function periodically every `interval` seconds."""
+    while True:
+        func()
+        await asyncio.sleep(interval)
+
+
+@router.on_event("startup")
+async def startup_event():
+    print("Starting up...")
+    interval_in_minutes = 30
+    interval_in_seconds = interval_in_minutes * 60
+    # Run the seeding function immediately
+    seed_database()
+    # Schedule periodic execution
+    asyncio.create_task(run_periodically(interval_in_seconds, seed_database))
+
+# @router.on_event("startup")
+# def startup_event():
+#     seed_state = SeedState()
+#     with next(get_db()) as db:
+#         seed_state.seed_database(db)
+
+
+@router.post("/login",
+             tags=["auth"],
+             response_model=Token)
 def loginForAccessToken(
     db: Session = Depends(get_db),
     email: str = Body(...),
@@ -108,18 +112,20 @@ def getCustomers(db: Session = Depends(get_db)) -> list[
     return getAllRealCustomers(db)
 
 
-@router.get("/api/customers/{customer_id}", response_model=CustomerBasicSchema,
+@router.get("/api/customers/{customer_id}",
+            response_model=CustomerWithCoachSchema,
             tags=["customers"],
             )
 def getCustomer(customer_id: int, db: Session = Depends(get_db)
-                ) -> CustomerBasicSchema:
+                ) -> CustomerWithCoachSchema:
     return getACustomer(db, customer_id)
 
 
 @router.get("/api/customers/{customer_id}/image",
             tags=["customers"],
             )
-def getCustomerImg(customer_id: int, db: Session = Depends(get_db)) -> str | None:
+def getCustomerImg(customer_id: int,
+                   db: Session = Depends(get_db)) -> str | None:
     return getCurrentCustomerImg(db, customer_id)
 
 
@@ -193,6 +199,14 @@ def getGivenCustomerShoes(customer_id: int, db: Session = Depends(get_db)):
     return getAllShoesFromAUser(db, customer_id)
 
 
+@router.get("/api/events/",
+            tags=["events"],
+            response_model=list[EmployeeEventsSchema],
+            )
+def getAllEvents(db: Session = Depends(get_db)):
+    return getListOfAllEvents(db)
+
+
 @router.get("/api/events/{employee_id}",
             tags=["events"],
             response_model=list[EmployeeEventsSchema],
@@ -234,6 +248,22 @@ def getAllChatData(user_id: int,
 def getChatWithEmployee(req: Request,
                         db: Session = Depends(get_db)) -> list[ChatDataSchema]:
     return getChatData(req, db)
+
+
+@router.post("/api/note/",
+             tags=["note"],
+             )
+def postNoteInfos(noteObject: InsertNoteSchema,
+                  db: Session = Depends(get_db)):
+    return takeNote(noteObject, db)
+
+
+@router.get("/api/note/",
+            tags=["note"],
+            response_model=list[ReturnGetNoteSchema])
+def getNoteInfos(req: Request,
+                 db: Session = Depends(get_db)) -> list[ReturnGetNoteSchema]:
+    return getAllNotes(req, db)
 
 
 @router.get("/api/role",

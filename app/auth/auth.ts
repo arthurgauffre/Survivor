@@ -4,8 +4,8 @@ import {
   LoginFormState,
   LoginFormSchema,
   SignUpFormSchema,
-} from '@/app/lib/definitions';
-import { createSession, deleteSession } from '@/app/lib/session';
+} from '../lib/definitions';
+import { createSession, deleteSession } from '../lib/session';
 import { redirect } from 'next/dist/server/api-utils';
 import { format } from 'path';
 

@@ -1,9 +1,6 @@
 import "@/app/globals.css";
 import { Inter } from "next/font/google";
 
-// import NavBar from "./components/navbar";
-// import { verifySession } from "@/app/lib/dal";
-
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {

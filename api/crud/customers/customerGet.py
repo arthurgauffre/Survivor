@@ -1,10 +1,10 @@
 import base64
+from database.tableRelationships import (Customer, Employee, EmployeeCustomer,
+                                         PayementHistory, User)
 from fastapi import HTTPException
-from sqlalchemy.orm import Session
-
-from schemas.customerSchemas import CustomerBasicSchema
+from schemas.customerSchemas import CustomerWithCoachSchema
 from schemas.paymentsHistorySchemas import PaymentHistorySchema
-from database.tableRelationships import Customer, PayementHistory, User
+from sqlalchemy.orm import Session
 
 
 def getAllRealCustomers(db: Session):
@@ -26,13 +26,14 @@ def getAllRealCustomers(db: Session):
                 "description": customer.description,
                 "astrologicalSign": customer.astrologicalSign,
                 "phone_number": customer.phone_number,
-                "address": customer.address,
+                "address": customer.address
             }
         )
     return listOfAllCustomers
 
 
 def getACustomer(db: Session, customer_id: int):
+    coachId = None
     customer = db.query(Customer).filter(
         Customer.user_id == customer_id).first()
     if not customer:
@@ -41,7 +42,13 @@ def getACustomer(db: Session, customer_id: int):
         User.id == customer.user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    return CustomerBasicSchema(
+    employeeLinked = db.query(EmployeeCustomer).filter(
+        EmployeeCustomer.customer_id == customer.id).first()
+    employee = db.query(Employee).filter(
+        Employee.id == employeeLinked.employee_id).first()
+    if employee:
+        coachId = employee.user_id
+    return CustomerWithCoachSchema(
         id=customer.user_id,
         name=user.name,
         surname=user.surname,
@@ -51,7 +58,8 @@ def getACustomer(db: Session, customer_id: int):
         description=customer.description,
         astrologicalSign=customer.astrologicalSign,
         phone_number=customer.phone_number,
-        address=customer.address
+        address=customer.address,
+        linkedCoach=coachId
     )
 
 

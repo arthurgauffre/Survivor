@@ -5,30 +5,28 @@ import {useState } from "react";
 import Image from "next/image";
 
 export default function ImgDisplay({
-  images = [],
+  images,
 }: {
   readonly images: {
     id: number;
     customer_id: number;
     type: string;
-    link: string;
+    img_content: string;
   }[];
 }) {
   let [i, setI] = useState(0);
   let listLen = images.length;
 
-  // Ensure that the index is always valid
   const prevIndex: number = i - 1 < 0 ? listLen - 1 : i - 1;
   const nextIndex: number = (i + 1) % listLen;
 
-  // const test: CSSProperties = {maxWidth: '13rem', maxHeight: '13rem', objectFit: 'cover'};
   return (
     <div className="sm:grid sm:grid-cols-3 relative aspect-h-1 justify-center items-center aspect-w-1 w-full overflow-hidden rounded-md lg:aspect-none max-h-80">
       <div className="grow justify-center items-center text-center flex">
         {images[prevIndex] && (
           <Image
             alt="previous image"
-            src={images[prevIndex].link}
+            src={`data:image/png;base64, ${images[prevIndex].img_content}`}
             width={200}
             height={200}
             className="max-w-48 max-h-48 object-cover max-sm:hidden"
@@ -47,7 +45,7 @@ export default function ImgDisplay({
         {images[prevIndex] && (
           <Image
             alt="active image"
-            src={images[i].link}
+            src={`data:image/png;base64, ${images[i].img_content}`}
             width={200}
             height={200}
             className="max-w-48 max-h-48 object-cover"
@@ -66,7 +64,7 @@ export default function ImgDisplay({
         {images[nextIndex] && (
           <Image
             alt="next image"
-            src={images[nextIndex].link}
+            src={`data:image/png;base64, ${images[nextIndex].img_content}`}
             width={200}
             height={200}
             className="max-w-48 max-h-48 object-cover max-sm:hidden"
