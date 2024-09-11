@@ -70,7 +70,7 @@ export function ChatUi({
         <nav className="p-2">
           {contacts.map((contact) => (
             <button
-              onClick={() => selectContact(contact.contact_id)}
+              onClick={() => handleContactSelect(contact.contact_id)}
               key={contact.contact_id}
               className="w-full"
             >
