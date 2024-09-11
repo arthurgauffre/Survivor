@@ -1,6 +1,6 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { redirect, useRouter } from "next/navigation";
 import "@/app/components/table.css";
 import SpawnHeadband from "@/app/components/SpawnHeadband";
 import DropdownMenu from "@/app/components/DropdownMenu";
@@ -36,7 +36,7 @@ export default function CoachesTable({
     astrologicalSign: string;
   }[];
   readonly CoachImages: {
-    id: number;
+    id: number; 
     image_url: string
   }[];
 }): JSX.Element {
@@ -53,9 +53,9 @@ export default function CoachesTable({
             <CloudArrowDownIcon className="h-6 w-6 mr-2"></CloudArrowDownIcon>
             <p>Export</p>
           </button>
-          <button className="ml-4 bg-[#2263b3] text-white py-2 px-2 rounded text-sm">
+          <a href="/employeeRegister" className="ml-4 bg-[#2263b3] text-white py-2 px-2 rounded text-sm">
             <PlusIcon className="h-6 w-6"></PlusIcon>
-          </button>
+          </a>
         </div>
       }
     >
