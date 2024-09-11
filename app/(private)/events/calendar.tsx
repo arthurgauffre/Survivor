@@ -54,6 +54,7 @@ export default function Calendar({
     location_name: string;
   }[];
 }) {
+  console.log(events);
   const [currentMonth, setCurrentMonth] = useState(new Date());
   let firstEventOfMonth = events.filter((event) =>
     event.date.includes(
@@ -113,7 +114,7 @@ export default function Calendar({
   }, {});
 
   return (
-    <div className="mb-8 w-full justify-center">
+    <div className="mb-8 w-full justify-center bg-white p-2 rounded-lg">
       <div className="p-4">
         <CalendarBar
           currentMonth={currentMonth}

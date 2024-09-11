@@ -1,97 +1,35 @@
-"use client";
-
 import SpawnHeadband from "@/app/components/SpawnHeadband";
 import Calendar from "./calendar";
 import { PlusIcon } from "@heroicons/react/20/solid";
+import { verifySession } from "@/app/lib/session";
+import { customFetch } from "@/app/components/customFetch";
+import { redirect } from "next/navigation";
 
-const events = [
-  {
-    id: 1,
-    name: "Cooking Class",
-    date: "2024-06-26",
-    duration: 120,
-    max_participants: 181,
-    location_x: "48.5734",
-    location_y: "7.7521",
-    type: "Seminar",
-    employee_id: 8,
-    location_name: "Place Kléber, Strasbourg",
-  },
-  {
-    id: 2,
-    name: "Wine Tasting",
-    date: "2024-07-03",
-    duration: 90,
-    max_participants: 198,
-    location_x: "50.6292",
-    location_y: "3.0573",
-    type: "Gala",
-    employee_id: 18,
-    location_name: "Grand Place, Lille",
-  },
-  {
-    id: 3,
-    name: "Wine Tasting",
-    date: "2024-07-03",
-    duration: 90,
-    max_participants: 198,
-    location_x: "50.6292",
-    location_y: "3.0573",
-    type: "Gala",
-    employee_id: 18,
-    location_name: "Grand Place, Lille",
-  },
-  {
-    id: 4,
-    name: "Wine Tasting",
-    date: "2024-07-03",
-    duration: 90,
-    max_participants: 198,
-    location_x: "50.6292",
-    location_y: "3.0573",
-    type: "Gala",
-    employee_id: 18,
-    location_name: "Grand Place, Lille",
-  },
-  {
-    id: 5,
-    name: "Wine Tasting",
-    date: "2024-07-03",
-    duration: 90,
-    max_participants: 198,
-    location_x: "50.6292",
-    location_y: "3.0573",
-    type: "Gala",
-    employee_id: 18,
-    location_name: "Grand Place, Lille",
-  },
-  {
-    id: 6,
-    name: "Wine Tasting",
-    date: "2024-07-03",
-    duration: 90,
-    max_participants: 198,
-    location_x: "50.6292",
-    location_y: "3.0573",
-    type: "Gala",
-    employee_id: 18,
-    location_name: "Grand Place, Lille",
-  },
-  {
-    id: 7,
-    name: "Wine Tasting",
-    date: "2024-09-10",
-    duration: 90,
-    max_participants: 198,
-    location_x: "50.6292",
-    location_y: "3.0573",
-    type: "Gala",
-    employee_id: 18,
-    location_name: "Grand Place, Lille",
-  },
-];
+export default async function ResponsiveCalendarMap() {
+  const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
+    await verifySession();
+  const userRole = session?.role;
+  const accessToken: string = session?.accessToken;
+  let data;
 
-export default function ResponsiveCalendarMap() {
+  switch (userRole) {
+    case "admin":
+      data = await customFetch("http://fastapi:8000/api/events/" + session.userId, accessToken);
+      break;
+    case "user":
+      data = await customFetch("http://fastapi:8000/api/customers/" + session.userId, accessToken);
+      let client = await data.json();
+      data = await customFetch("http://fastapi:8000/api/events/" + client.linkedCoach, accessToken);
+      break;
+    case "coach":
+      data = await customFetch("http://fastapi:8000/api/events/" + session.userId, accessToken);
+      break;
+    default:
+      redirect("/login");
+  }
+
+  let events = await data.json();
+
   return (
     <SpawnHeadband
       title="Events"

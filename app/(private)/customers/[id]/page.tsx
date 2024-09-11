@@ -137,7 +137,7 @@ export async function PaymentHistoryPage({ params, accessToken }: { readonly par
             <p className="overflow-auto max-w-60 mb-2">Email: {customer.email}</p>
             <p className="overflow-auto max-w-60 mb-2">Address: {customer.address}</p>
             <p className="overflow-auto max-w-60 mb-2">Last Activity: {customer.lastseen}</p>
-            <p className="overflow-auto max-w-60 mb-2">Coach {customer.coach}</p>
+            <p className="overflow-auto max-w-60 mb-2">Coach {customer.linkedCoach}</p>
           </div>
         </div>
         <div className="flex-none border bg-white p-2 grow">
