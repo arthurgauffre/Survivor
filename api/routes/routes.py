@@ -260,9 +260,9 @@ def postNoteInfos(noteObject: InsertNoteSchema,
 
 @router.get("/api/note/",
             tags=["note"],
-            response_model=list[ReturnGetNoteSchema])
+            )
 def getNoteInfos(req: Request,
-                 db: Session = Depends(get_db)) -> list[ReturnGetNoteSchema]:
+                 db: Session = Depends(get_db)):
     return getAllNotes(req, db)
 
 

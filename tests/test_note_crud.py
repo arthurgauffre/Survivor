@@ -72,44 +72,53 @@ def test_get_all_notes_no_auth_header(monkeypatch):
     assert result == None
 
 
-# def test_get_all_notes_valid_auth_header_user_exists_employee(monkeypatch):
-#     # Mock a valid request with an authorization header
-#     req_mock = MagicMock(Request)
-#     auth_header = "Bearer some_jwt_token"
-#     req_mock.headers.get.return_value = auth_header
+def test_get_all_notes_valid_auth_header_user_exists_employee(monkeypatch):
+    # Mock a valid request with an authorization header
+    req_mock = MagicMock(Request)
+    auth_header = "Bearer some_jwt_token"
+    req_mock.headers.get.return_value = auth_header
 
-#     # Mock JWT decoding
-#     decoded_token = {"sub": "test@example.com"}
-#     with patch("jwt.decode", return_value=decoded_token):
-#         email = decoded_token["sub"]
+    # Mock JWT decoding
+    decoded_token = {"sub": "test@example.com"}
+    with patch("jwt.decode", return_value=decoded_token):
+        email = decoded_token["sub"]
 
-#         # Mock database queries
-#         user = User(id=1, email=email)
-#         employee = Employee(id=1, user_id=user.id)
-#         customer = Customer(id=1, user_id=user.id)
-#         all_related_customers = [EmployeeCustomer(employee_id=employee.id,
-#                                                   customer_id=customer.id)]
-#         notes = [Note(
-#             id=1, title="Shared Note", content="Note content", shared=True,
-#             user_id=customer.user_id
-#         )]
+        # Mock database queries
+        user = User(id=1, email=email)
+        employee = Employee(id=1, user_id=user.id)
+        customer = Customer(id=1, user_id=user.id)
+        all_related_customers = [EmployeeCustomer(employee_id=employee.id,
+                                                  customer_id=customer.id)]
+        notes = [Note(
+            id=1, title="Shared Note", content="Note content", shared=True,
+            user_id=customer.user_id
+        )]
 
-#         db_mock.query.return_value.filter.return_value.first.return_value = user
-#         db_mock.query.return_value.filter.return_value.all.side_effect = [
-#             employee, customer, all_related_customers, notes]
+        db_mock.query.return_value.filter.return_value.first.side_effect = [user, employee, customer, customer]  # 4 calls
+        db_mock.query.return_value.filter.return_value.all.side_effect = [all_related_customers, notes]
 
-#         #                                                                                                                                                                                                                                                                                                                                                                                                               ("api.database.database", db_mock)
+        # db_mock.query.return_value.filter.return_value.first.return_value = user
+        # db_mock.query.return_value.filter.return_value.first.return_value = employee
+        # db_mock.query.return_value.filter.return_value.first.return_value = customer
+        # db_mock.query.return_value.filter.return_value.all.return_value = all_related_customers
+        # db_mock.query.return_value.filter.return_value.first.return_value = customer
+        # db_mock.query.return_value.filter.return_value.all.return_value = notes
 
-#         result = getAllNotes(req=req_mock, db=db_mock)
+        # db_mock.query.return_value.filter.return_value.all.side_effect = [
+        #     employee, customer, all_related_customers, notes]
 
-#         expected = [ReturnGetNoteSchema(
-#             title="Shared Note",
-#             content="Note content",
-#             shared=True,
-#             id=1
-#         )]
+        #                                                                                                                                                                                                                                                                                                                                                                                                               ("api.database.database", db_mock)
 
-#         assert result == expected
+        result = getAllNotes(req=req_mock, db=db_mock)
+
+        expected = [ReturnGetNoteSchema(
+            title="Shared Note",
+            content="Note content",
+            shared=True,
+            id=1
+        )]
+
+        assert [note.dict() for note in result] == [note.dict() for note in expected]
 
 
 # def test_get_all_notes_valid_auth_header_user_exists_customer(monkeypatch):
@@ -160,11 +169,10 @@ def test_get_all_notes_valid_auth_header_user_not_found(monkeypatch):
     with patch("jwt.decode", return_value=decoded_token):
         email = decoded_token["sub"]
 
-        # Mock database queries
-        db_mock.query.return_value.filter.return_value.first.return_value = None
+        db_mock = MagicMock()
 
-        #                                                                                                                                                                                                                                                                                                                                                                                                               ("api.database.database", db_mock)
+        db_mock.query.return_value.filter.return_value.first.return_value = None
 
         result = getAllNotes(req=req_mock, db=db_mock)
 
-        assert result == None
+        assert result is None
