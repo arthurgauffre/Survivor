@@ -23,17 +23,17 @@ export default async function Page({params}: {readonly params: {id: string}}) {
 
   switch (userRole) {
     case "admin":
-      return <PaymentHistoryPage params={params} accessToken={accessToken} />;
+      return <PaymentHistoryPage params={params} accessToken={accessToken} userId={session.userId} />;
     case "user":
       redirect("/dashboard");
     case "coach":
-      return <PaymentHistoryPage params={params} accessToken={accessToken} />;
+      return <PaymentHistoryPage params={params} accessToken={accessToken} userId={session.userId} />;
     default:
       redirect("/login");
   }
 }
 
-export async function PaymentHistoryPage({ params, accessToken }: { params: { id: string }, accessToken: string }): Promise<JSX.Element> {
+export async function PaymentHistoryPage({ params, accessToken, userId }: { params: { id: string }, accessToken: string, userId: number }): Promise<JSX.Element> {
   // let customersData = await fetch(
   //   "http://localhost:3000/api/customers/" + params.id
   // );
@@ -88,6 +88,9 @@ export async function PaymentHistoryPage({ params, accessToken }: { params: { id
     customer = await customerData.json();
   }
   catch (e) {}
+  if (userId != customer.linkedCoach) {
+    redirect("/customers");
+  }
   try {
     let meetingsData = await customFetch(
       "http://fastapi:8000/api/encounters/customer/" + params.id, accessToken

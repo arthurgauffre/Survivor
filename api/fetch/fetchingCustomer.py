@@ -265,10 +265,6 @@ def getClothesImage(customerId, database, headers):
         clothes_datas = clothes_response.json()
     except BaseException:
         pass
-    if database.query(Clothes).filter(
-            Clothes.customer_id == customer.id).first():
-        database.query(Clothes).filter(
-            Clothes.customer_id == customer.id).delete()
     for clothes_data in clothes_datas:
         clothe_image_url = f'https://soul-connection.fr/api/clothes/{
             clothes_data.get("id")}/image'
@@ -278,7 +274,6 @@ def getClothesImage(customerId, database, headers):
         except BaseException:
             getClothesImage(customerId, database, headers)
         if not (isinstance(clothe_image_response, requests.models.Response)):
-            # TODO
             pass
         if clothe_image_response.status_code == 401:
             access_token = loginToken()
@@ -299,4 +294,4 @@ def getClothesImage(customerId, database, headers):
             currentClothe.customer_id = specificClothes.customer_id
             currentClothe.type = specificClothes.type
             currentClothe.img_content = specificClothes.img_content
-        return clothe_image_response.status_code
+    return clothe_image_response.status_code

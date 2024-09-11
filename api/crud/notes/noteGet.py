@@ -30,10 +30,10 @@ def getAllNotes(req: Request, db: Session):
         allRelatedCustomers = db.query(EmployeeCustomer).filter(
             EmployeeCustomer.employee_id == employee.id).all()
         for customer in allRelatedCustomers:
-            customer = db.query(Customer).filter(
+            actualCustomer = db.query(Customer).filter(
                 Customer.id == customer.customer_id).first()
             allNotes = db.query(Note).filter(
-                Note.user_id == customer.user_id).all()
+                Note.user_id == actualCustomer.user_id).all()
             for note in allNotes:
                 if note.shared is True:
                     finalReturn.append(ReturnGetNoteSchema(
