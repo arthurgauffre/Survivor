@@ -52,7 +52,7 @@ export async function PaymentHistoryPage({ params, accessToken }: { params: { id
     amount: number;
     comment: string;
   }[] = [];
-  let picture: {image_url: string;} = {image_url: ""};
+  let picture: string = "";
   try {
     let meetingsData = await customFetch(
       "http://fastapi:8000/api/encounters/customer/" + params.id, accessToken
@@ -79,9 +79,8 @@ export async function PaymentHistoryPage({ params, accessToken }: { params: { id
     );
     picture = await pictureData.json();
   } catch (e) {
-    picture = {image_url: ""};
+    picture = "";
   }
-  console.log(picture);
   // let eventsData = await fetch(
   //   "http://localhost:3000/api/encounters/customer/" + params.id
   // );
@@ -105,7 +104,7 @@ export async function PaymentHistoryPage({ params, accessToken }: { params: { id
           <div className="sm:flex flex-col items-center justify-center text-center border-b p-2">
             <Image
               alt="Image of user"
-              src={picture.image_url}
+              src={`data:image/png;base64,${picture}`}
               width={56}
               height={56}
               className="rounded-full"

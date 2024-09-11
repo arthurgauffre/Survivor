@@ -31,7 +31,6 @@ export async function TipsPage({ accessToken }: { accessToken: string }) {
     let data = await customFetch("http://fastapi:8000/api/tips", accessToken);
     posts = await data.json();
   } catch (e) {
-    console.log("i");
   }
   if (!Array.isArray(posts)) {
     posts = [];
