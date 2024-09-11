@@ -14,7 +14,7 @@ import { verifySession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import { customFetch } from "@/app/components/customFetch";
 
-export default async function Page({params}: {params: {id: string}}) {
+export default async function Page({params}: {readonly params: {id: string}}) {
   const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
     await verifySession();
   const userRole = session?.role;
@@ -32,11 +32,10 @@ export default async function Page({params}: {params: {id: string}}) {
   }
 }
 
-export async function PaymentHistoryPage({ params, accessToken }: { params: { id: string }, accessToken: string }): Promise<JSX.Element> {
-  // let customersData = await fetch(
-  //   "http://localhost:3000/api/customers/" + params.id
-  // );
-  // let customers = await customersData.json();
+export async function PaymentHistoryPage({ params, accessToken }: { readonly params: { id: string }, readonly accessToken: string }): Promise<JSX.Element> {
+  const data = await customFetch("http://fastapi:8000/api/customers/" + params.id, accessToken)
+  const customer = await data.json()
+
   let meetings: {
     id: number;
     customer_id: number;
@@ -87,7 +86,7 @@ export async function PaymentHistoryPage({ params, accessToken }: { params: { id
   // let events = await eventsData.json();
   return (
     <SpawnHeadband
-      title={params.id}
+      title={"Customer Profile"}
       elemRight={
         <div className="flex">
           <a href="/customers">
@@ -109,7 +108,7 @@ export async function PaymentHistoryPage({ params, accessToken }: { params: { id
               height={56}
               className="rounded-full"
             />
-            <p className="mt-2">profile name</p>
+            <p className="mt-2">{customer.name} {customer.surname}</p>
             {/* Added margin-top to separate text from the image */}
           </div>
 
@@ -119,31 +118,26 @@ export async function PaymentHistoryPage({ params, accessToken }: { params: { id
           </div>
           <div className="border-b flex justify-center p-2 gap-2">
             <div className="text-center">
-              <p>23</p>
+              <p>{meetings.length}</p>
               <p>Total</p>
               <p>Encounters</p>
             </div>
             <div className="text-center">
-              <p>20</p>
+              <p>{meetings.filter( (e) => {return e.rating > 3}).length }</p>
               <p>Positives</p>
             </div>
             <div className="text-center">
-              <p>3</p>
+              <p>{meetings.filter( (e) => {return e.date == new Date()}).length}</p>
               <p>In Progress</p>
             </div>
           </div>
           <div className="border-b p-2">
-            <p>short detail</p>
-            <p>User ID:</p>
-            <p>{params.id}</p>
-            <p>Email:</p>
-            <p>test@example.com</p>
-            <p>Address:</p>
-            <p>16 tue theodore blanc</p>
-            <p>Last Activity:</p>
-            <p>8 min</p>
-            <p>Coach</p>
-            <p>Paul Du Pont</p>
+            <p className="overflow-auto max-w-60 mb-2">{customer.description}</p>
+            <p className="overflow-auto max-w-60 mb-2">User ID: {customer.id}</p>
+            <p className="overflow-auto max-w-60 mb-2">Email: {customer.email}</p>
+            <p className="overflow-auto max-w-60 mb-2">Address: {customer.address}</p>
+            <p className="overflow-auto max-w-60 mb-2">Last Activity: {customer.lastseen}</p>
+            <p className="overflow-auto max-w-60 mb-2">Coach {customer.linkedCoach}</p>
           </div>
         </div>
         <div className="flex-none border bg-white p-2 grow">

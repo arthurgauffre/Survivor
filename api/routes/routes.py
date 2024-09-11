@@ -17,6 +17,7 @@ from crud.encounters.encountersGet import getEncounterForCustomer
 from crud.events.eventsGet import getAllEventsPerEmployee
 from crud.notes.noteGet import getAllNotes
 from crud.notes.notePost import takeNote
+
 from crud.tips.tipsGet import getAllTips
 from database.database import get_db
 from database.tableRelationships import Customer, Employee, User
@@ -27,7 +28,8 @@ from pydantic import SecretStr
 from schemas.chatSchemas import (ChatDataSchema, ChatMessagesSchema,
                                  SendChatDataSchema)
 from schemas.clothesSchemas import ClothesAllSchema
-from schemas.customerSchemas import CustomerBasicSchema
+from schemas.customerSchemas import (CustomerBasicSchema,
+                                     CustomerWithCoachSchema)
 from schemas.employeeSchemas import EmployeePersonalInfoSchema
 from schemas.encounterSchemas import EncounterByCustomerSchema
 from schemas.eventsSchemas import EmployeeEventsSchema
@@ -110,18 +112,20 @@ def getCustomers(db: Session = Depends(get_db)) -> list[
     return getAllRealCustomers(db)
 
 
-@router.get("/api/customers/{customer_id}", response_model=CustomerBasicSchema,
+@router.get("/api/customers/{customer_id}",
+            response_model=CustomerWithCoachSchema,
             tags=["customers"],
             )
 def getCustomer(customer_id: int, db: Session = Depends(get_db)
-                ) -> CustomerBasicSchema:
+                ) -> CustomerWithCoachSchema:
     return getACustomer(db, customer_id)
 
 
 @router.get("/api/customers/{customer_id}/image",
             tags=["customers"],
             )
-def getCustomerImg(customer_id: int, db: Session = Depends(get_db)) -> str | None:
+def getCustomerImg(customer_id: int,
+                   db: Session = Depends(get_db)) -> str | None:
     return getCurrentCustomerImg(db, customer_id)
 
 
