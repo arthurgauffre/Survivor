@@ -87,7 +87,9 @@ async def startup_event():
 #         seed_state.seed_database(db)
 
 
-@router.post("/login", response_model=Token)
+@router.post("/login",
+             tags=["auth"],
+             response_model=Token)
 def loginForAccessToken(
     db: Session = Depends(get_db),
     email: str = Body(...),
