@@ -17,7 +17,6 @@ from crud.encounters.encountersGet import getEncounterForCustomer
 from crud.events.eventsGet import getAllEventsPerEmployee, getListOfAllEvents
 from crud.notes.noteGet import getAllNotes
 from crud.notes.notePost import takeNote
-
 from crud.tips.tipsGet import getAllTips
 from database.database import get_db
 from database.tableRelationships import Customer, Employee, User
