@@ -104,12 +104,12 @@ export default function SearchBar({
     async function fetchHat() {
       if (selectedCustomerId) {
         try {
-          console.log("fetching hat");
           const hatData = await customFetch(
-            `http://fastapi:8000/api/clothes/${selectedCustomerId}/hat`,
+            `http://localhost:8000/api/customers/${selectedCustomerId}/clothes/hat`,
             accessToken
           );
           const hat = await hatData.json();
+          console.log(hat.length);
           updateHat(hat);
         } catch (error) {
           console.error(error);
@@ -117,6 +117,63 @@ export default function SearchBar({
       }
     }
     fetchHat();
+  }, [selectedCustomerId, accessToken]);
+
+  useEffect(() => {
+    async function fetchTop() {
+      if (selectedCustomerId) {
+        try {
+          const topData = await customFetch(
+            `http://localhost:8000/api/customers/${selectedCustomerId}/clothes/top`,
+            accessToken
+          );
+          const top = await topData.json();
+          console.log(top.length);
+          updateTop(top);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
+    fetchTop();
+  }, [selectedCustomerId, accessToken]);
+
+  useEffect(() => {
+    async function fetchBottom() {
+      if (selectedCustomerId) {
+        try {
+          const bottomData = await customFetch(
+            `http://localhost:8000/api/customers/${selectedCustomerId}/clothes/bottom`,
+            accessToken
+          );
+          const bottom = await bottomData.json();
+          console.log(bottom.length);
+          updateBottom(bottom);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
+    fetchBottom();
+  }, [selectedCustomerId, accessToken]);
+
+  useEffect(() => {
+    async function fetchShoes() {
+      if (selectedCustomerId) {
+        try {
+          const shoesData = await customFetch(
+            `http://localhost:8000/api/customers/${selectedCustomerId}/clothes/shoes`,
+            accessToken
+          );
+          const shoes = await shoesData.json();
+          console.log(shoes.length);
+          updateShoes(shoes);
+        } catch (error) {
+          console.error(error);
+        }
+      }
+    }
+    fetchShoes();
   }, [selectedCustomerId, accessToken]);
 
   return (
