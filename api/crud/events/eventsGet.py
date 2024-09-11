@@ -26,7 +26,6 @@ def getAllEventsPerEmployee(db: Session, employee_id: int):
                           key=lambda date: datetime.strptime(date, "%Y-%m-%d"))
 
     for date in sorted_dates:
-        print(date)
         actualEvent = db.query(Events).filter(Events.date == date).first()
         listOfAllEvents.append(EmployeeEventsSchema(
             id=actualEvent.id,

@@ -8,16 +8,16 @@ from sqlalchemy.orm import Session
 
 def getAllNotes(req: Request, db: Session):
     finalReturn = []
-    # newHeader = req.headers.get("authorization")
-    # email = None
+    newHeader = req.headers.get("authorization")
+    email = None
     user = None
     customer = None
     employee = None
-    # if newHeader:
-    #     newHeader = newHeader.split(" ")[1]
-    #     decoded = jwt.decode(newHeader, options={"verify_signature": False})
-    #     email = decoded["sub"]
-    email = "margaud.valette188@gmail.com"
+    if newHeader:
+        newHeader = newHeader.split(" ")[1]
+        decoded = jwt.decode(newHeader, options={"verify_signature": False})
+        email = decoded["sub"]
+    # email = "margaud.valette188@gmail.com"
     if email is not None:
         user = db.query(User).filter(
             User.email == email).first()

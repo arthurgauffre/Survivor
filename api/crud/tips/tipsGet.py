@@ -1,4 +1,3 @@
-
 from database.tableRelationships import Tips
 from schemas.tipsSchemas import AllTipsSchema
 from sqlalchemy.orm import Session
