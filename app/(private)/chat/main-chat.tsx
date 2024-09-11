@@ -66,12 +66,19 @@ export function SendButton({
 }
 
 export function InputChat({
+  contactId,
+  userId,
   accessToken,
+  role,
 }: {
+  contactId: number;
   accessToken: string;
+  userId: number;
+  role: string;
 }): JSX.Element {
   const [state, action] = useFormState(SubmitMessage, undefined);
   const [message, setMessage] = useState<string>("");
+  console.log("role", role);
   return (
     <div className="bg-white border-t p-4">
       <form className="flex space-x-2" action={action}>
@@ -87,28 +94,28 @@ export function InputChat({
         <input
           id="customer_id"
           name="customer_id"
-          value={"1"}
+          value={role === "customer" ? userId : contactId}
           type="number"
           className="hidden"
         />
         <input
           id="employee_id"
           name="employee_id"
-          value={"1"}
+          value={role === "coaches" ? userId : contactId}
           type="number"
           className="hidden"
         />
         <input
           id="date"
           name="date"
-          value={"1"}
+          value={"2022-01-01"}
           type="text"
           className="hidden"
         />
         <input
           id="senderId"
           name="senderId"
-          value={"1"}
+          value={userId}
           type="number"
           className="hidden"
         />
@@ -126,12 +133,12 @@ export function InputChat({
 }
 
 export function MainChat({
-  selectedContact,
   toggleSidebar,
   contact,
   accessToken,
+  userId,
+  role,
 }: {
-  selectedContact: number;
   toggleSidebar: () => void;
   contact: {
     contact_id: number;
@@ -140,6 +147,8 @@ export function MainChat({
     image: string;
   };
   accessToken: string;
+  userId: number;
+  role: string;
 }): JSX.Element {
   console.log("contact.contact_id", contact.contact_id);
   const [posts, setPosts] = useState<
@@ -156,7 +165,7 @@ export function MainChat({
     async function fetchPosts() {
       try {
         const res = await customFetch(
-          `http://localhost:8000/api/chat/${contact.contact_id}`,
+          `http://fastapi:8000/api/chat/${contact.contact_id}`,
           accessToken
         );
         if (!res.ok) {
@@ -201,14 +210,18 @@ export function MainChat({
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {posts.map((post) => (
-          <RightMessage key={post.id} text={post.message} />
+          <LeftMessage key={post.id} image={contact.image} text={post.message} />
         ))}
-        <LeftMessage image={contact.image} text="Hey, how are you doing?" />
         <RightMessage text="I'm good, thanks! How about you?" />
         <LeftMessage image={contact.image} text="lol, I'm good too!" />
       </div>
       {/* Message Input */}
-      <InputChat accessToken={accessToken} />
+      <InputChat
+        accessToken={accessToken}
+        userId={userId}
+        contactId={contact.contact_id}
+        role={role}
+      />
     </>
   );
 }
