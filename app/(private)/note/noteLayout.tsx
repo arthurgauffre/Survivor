@@ -6,24 +6,8 @@ import {
   ShareIcon,
   PlusIcon,
 } from "@heroicons/react/24/outline";
-
-const notes = [
-  {
-    id: 1,
-    title: "Ma première note",
-    content: "Contenu de la première note...",
-  },
-  {
-    id: 2,
-    title: "Idées d'entraînement",
-    content: "Liste des exercices à faire...",
-  },
-  {
-    id: 3,
-    title: "Ma première note",
-    content: "loreum ipsum...",
-  },
-];
+import { useFormState } from "react-dom";
+import { NewNote } from "@/app/(private)/note/NewNote";
 
 export function LeftNote({
   note,
@@ -39,37 +23,74 @@ export function LeftNote({
   );
 }
 
-export function NoteLayout() {
+export function NoteLayout({
+  notes,
+  userId,
+  userRole,
+  accessToken,
+}: {
+  notes: {
+    title: string;
+    content: string;
+    shared: boolean;
+    id: number;
+  }[];
+
+  userId: number;
+  userRole: string;
+  accessToken: string;
+}): JSX.Element {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedNote, setSelectedNote] = useState(0);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
 
   const handleNewNote = () => {
-    const newNote = { title: "Nouvelle note", content: "" };
-    // get id of the new note
-    setSelectedNote(10);
-    handleNoteSelect(10);
+    const newNote: {
+      title: string;
+      content: string;
+      shared: boolean;
+      userId: number;
+    } = { title: "Nouvelle note", content: "", shared: false, userId: userId };
   };
   const handleNoteSelect = (id: number) => {
     setSelectedNote(id);
   };
+
+  const [state, action] = useFormState(NewNote, undefined);
 
   return (
     <div className="flex h-[calc(100vh-80px)] bg-gray-100">
       <div
         className={`bg-white w-full flex-shrink-0 sm:max-w-xs ${
           sidebarOpen ? "hidden" : "block"
-        } md:block`}
+        } md:block border-r`}
       >
         <div className="p-4 flex">
           <h2 className="text-xl grow font-semibold">Mes Notes</h2>
-          <button
-            className="ml-4 bg-[#2263b3] text-white py-2 px-2 rounded text-sm"
-            onClick={handleNewNote}
-          >
-            <PlusIcon className="h-4 w-4"></PlusIcon>
-          </button>
+          {userRole === "customer" && (
+          <form className="flex space-x-2" action={action}>
+            <input
+              id="userId"
+              name="userId"
+              defaultValue={userId}
+              type="number"
+              className="hidden"
+            />
+            <input
+              id="accessToken"
+              name="accessToken"
+              defaultValue={accessToken}
+              type="text"
+              className="hidden"
+            />
+            <button
+              type="submit"
+              className="ml-4 bg-[#2263b3] text-white py-2 px-2 rounded text-sm"
+            >
+              <PlusIcon className="h-4 w-4"></PlusIcon>
+            </button>
+          </form>)}
         </div>
         <div className="p-2">
           <nav className="p-2">

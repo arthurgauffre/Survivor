@@ -62,7 +62,7 @@ export function ChatUi({
       <div
         className={`bg-white w-full flex-shrink-0 sm:max-w-xs ${
           sidebarOpen ? "hidden" : "block"
-        } md:block`}
+        } md:block border-r`}
       >
         <div className="p-4">
           <h2 className="text-xl font-semibold">Conversations</h2>

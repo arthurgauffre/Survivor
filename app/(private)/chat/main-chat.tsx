@@ -182,7 +182,7 @@ export function MainChat({
   if (!posts) return <div>Loading...</div>;
 
   return (
-    <div className="border-l">
+    <>
       {/* Chat Header */}
       <header className="bg-white border-b p-4 flex items-center">
         <button className="md:hidden" onClick={toggleSidebar}>
@@ -221,6 +221,6 @@ export function MainChat({
         contactId={contact.contact_id}
         role={role}
       />
-    </div>
+    </>
   );
 }

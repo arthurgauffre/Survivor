@@ -81,7 +81,7 @@ export default function AdminNavBar({
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-3">
           {/* NOTE */}
-          <a href="NOTE" className="h-8 w-8">
+          <a href="note" className="h-8 w-8">
             <PencilSquareIcon />
           </a>
           {/* CHAT */}
@@ -186,7 +186,7 @@ export default function AdminNavBar({
                     </div>
                     <div className="ml-auto flex gap-3">
                       {/* NOTE */}
-                      <a href="NOTE" className="h-8 w-8">
+                      <a href="note" className="h-8 w-8">
                         <PencilSquareIcon />
                       </a>
                       {/* CHAT */}
