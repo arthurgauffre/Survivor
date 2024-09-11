@@ -15,7 +15,7 @@ export default async function Page() {
   switch (userRole) {
     case "admin":
       return <TipsPage accessToken={accessToken} />;
-    case "user":
+    case "customer":
       return <TipsPage accessToken={accessToken} />
     case "coach":
       return <TipsPage accessToken={accessToken} />;

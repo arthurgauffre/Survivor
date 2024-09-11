@@ -16,18 +16,9 @@ else
 fi
 pip install -r requirements.txt
 
-# cd tests || exit
-# docker compose up --build -d
-# cd ../ || exit
 
-# until docker exec postgres pg_isready -U "${POSTGRES_USER}" -d "${POSTGRES_DB}" 2>/dev/null; do
-#   printf '.'
-#   sleep 2
-# done
+# Set PYTHONPATH
+export PYTHONPATH=$PYTHONPATH:./api
 
 # Run the tests
-python3 -m pytest tests
-
-# cd tests || exit
-# docker compose down
-# cd ../ || exit
+python3 -m pytest -vv tests

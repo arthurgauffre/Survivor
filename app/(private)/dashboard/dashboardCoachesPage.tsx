@@ -79,7 +79,7 @@ export default async function DashboardCoachesPage({ accessToken, userId }: { ac
         accessToken
       );
       let encounters = await data.json();
-      encountersList.push(...encounters);
+      encountersList.push(encounters);
     } catch (error) {
       console.error(error);
     }

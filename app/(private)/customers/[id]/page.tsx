@@ -24,7 +24,7 @@ export default async function Page({params}: {readonly params: {id: string}}) {
   switch (userRole) {
     case "admin":
       return <PaymentHistoryPage params={params} accessToken={accessToken} userId={session.userId} />;
-    case "user":
+    case "customer":
       redirect("/dashboard");
     case "coach":
       return <PaymentHistoryPage params={params} accessToken={accessToken} userId={session.userId} />;
