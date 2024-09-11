@@ -67,7 +67,6 @@ export default function Calendar({
         new Date(new Date().valueOf() - 1000 * 60 * 60 * 24)
     )[0];
   }
-  console.log(firstEventOfMonth);
   const [isClient, setIsClient] = useState(false);
   const [selectedEvent, setSelectedEvent] = useState(firstEventOfMonth);
 

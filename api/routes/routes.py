@@ -5,9 +5,10 @@ import jwt
 from pydantic import SecretStr
 from sqlalchemy.orm import Session
 
-from crud.chat.chatGet import getChatData
+from crud.chat.chatGet import getChatData, getDataInChat
 from database.tableRelationships import Employee, User, Customer
-from schemas.chatSchemas import ChatDataSchema, SendChatDataSchema
+from schemas.chatSchemas import (ChatDataSchema, ChatMessagesSchema,
+                                 SendChatDataSchema)
 from crud.chat.chatPost import sendChatData
 from seedingDB import SeedState
 from auth.autenticateUser import getAccessToken
@@ -25,8 +26,7 @@ from crud.customers.customerGet import getCurrentCustomerImg
 from crud.customers.customerGet import getCustomerPaymentHistory
 from crud.employees.employeesGet import (getAllRealEmployees,
                                          getAnEmployeePersonalInfos,
-                                         getCurrentEmployeeImg,
-                                         getListOfCustomerForEmployee)
+                                         getCurrentEmployeeImg)
 from crud.encounters.encountersGet import getEncounterForCustomer
 from schemas.tokenSchemas import Token
 from schemas.eventsSchemas import EmployeeEventsSchema
@@ -158,13 +158,6 @@ def getTheCurrentEmployeeImg(employee_id: int, db: Session = Depends(
     return getCurrentEmployeeImg(db, employee_id)
 
 
-# @router.get("/api/{employee_id}/customers",
-#             tags=["employees"],
-#             )
-# def getCustomersOfAnEmployee(employee_id: int, db: Session = Depends(get_db)):
-#     return getListOfCustomerForEmployee(db, employee_id)
-
-
 @router.get("/api/clothes",
             tags=["clothes"], response_model=list[ClothesAllSchema],
             )
@@ -224,7 +217,17 @@ def chatWithEmployee(chatData: SendChatDataSchema,
     return sendChatData(chatData, db)
 
 
-@router.get("/api/chat",
+@router.get("/api/chat/{user_id}",
+            tags=["chat"],
+            response_model=list[ChatMessagesSchema],
+            )
+def getAllChatData(user_id: int,
+                   db: Session = Depends(get_db)
+                   ) -> list[ChatMessagesSchema]:
+    return getDataInChat(db, user_id)
+
+
+@router.get("/api/chat/",
             tags=["chat"],
             response_model=list[ChatDataSchema],
             )

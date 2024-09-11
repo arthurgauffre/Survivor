@@ -40,7 +40,7 @@ def getAllEmployees(access_token, db):
     employeesData = response.json()
 
     for employee in employeesData:
-        actualId = (employee.get('id')) + 100
+        actualId = (employee.get('id')) + db.query(Customer).count()
         user = User(
             id=actualId,
             password=getPasswordHash(EMPLOYEE_PASSWORD),
@@ -77,7 +77,7 @@ def fetchEmployeeDetail(employee, access_token, db):
     }
     # employees = db.query(Employee).all()
 
-    actualEmployeeId = (employee.user_id) - 100
+    actualEmployeeId = (employee.user_id) - db.query(Customer).count()
 
     try:
         # Fetch employee details

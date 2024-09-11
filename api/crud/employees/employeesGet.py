@@ -1,5 +1,4 @@
 import base64
-import random
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
@@ -33,8 +32,12 @@ def getAnEmployeePersonalInfos(db: Session, employee_id: int):
     listOfCustomers = []
     user = db.query(User).filter(
         User.id == employee_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="Employee not found")
     actualEmployee = db.query(Employee).filter(
         Employee.user_id == user.id).first()
+    if not actualEmployee:
+        raise HTTPException(status_code=404, detail="Employee not found")
     relationEmployeeCustomers = db.query(EmployeeCustomer).filter(
         EmployeeCustomer.employee_id == actualEmployee.id).all()
     for relation in relationEmployeeCustomers:
@@ -62,18 +65,3 @@ def getCurrentEmployeeImg(db: Session, employee_id: int):
     if not user.img_profil_content:
         return None
     return base64.b64encode(user.img_profil_content).decode("utf-8")
-
-
-def getListOfCustomerForEmployee(db: Session, employee_id: int):
-    actualEmployee = db.query(Employee).filter(
-        Employee.user_id == employee_id).first()
-    allCustomers = db.query(EmployeeCustomer).all()
-    listOfCustomers = []
-
-    for customer in allCustomers:
-        customer = db.query(Customer).filter(
-            Customer.id == customer.customer_id).first()
-        if customer.employee_id == actualEmployee.id:
-            listOfCustomers.append(customer.user_id)
-
-    return listOfCustomers

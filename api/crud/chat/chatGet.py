@@ -1,9 +1,9 @@
-from fastapi import Request
+from fastapi import HTTPException, Request
 import jwt
 from sqlalchemy.orm import Session
 from sqlalchemy import desc
 
-from schemas.chatSchemas import ChatDataSchema
+from schemas.chatSchemas import ChatDataSchema, ChatMessagesSchema
 from database.tableRelationships import Chat, Customer, Employee, User
 
 
@@ -31,12 +31,11 @@ def getChatData(req: Request, db: Session):
         chatOfEmployee = db.query(Chat).filter(
             Chat.employee_id == employee.id).order_by(desc(Chat.date)).all()
         for chat in chatOfEmployee:
-            print(chat.customer_id)
             if chat.customer_id not in listOfId:
                 customer = db.query(Customer).filter(
                     Customer.id == chat.customer_id).first()
                 finalReturn.append(ChatDataSchema(
-                    id=employee.user_id,
+                    id=customer.user_id,
                     idOfOtherPerson=customer.user_id,
                     lastMessage=chat.message,
                     dateOfLastMessage=chat.date,
@@ -52,7 +51,7 @@ def getChatData(req: Request, db: Session):
                 employee = db.query(Employee).filter(
                     Employee.id == chat.employee_id).first()
                 finalReturn.append(ChatDataSchema(
-                    id=customer.user_id,
+                    id=employee.user_id,
                     idOfOtherPerson=employee.user_id,
                     lastMessage=chat.message,
                     dateOfLastMessage=chat.date,
@@ -60,4 +59,40 @@ def getChatData(req: Request, db: Session):
                 ))
                 listOfId.append(chat.employee_id)
 
+    return finalReturn
+
+
+def getDataInChat(db: Session, user_id: int):
+    finalReturn = []
+    user = db.query(User).filter(
+        User.id == user_id).first()
+    if user is not None:
+        employee = db.query(Employee).filter(
+            Employee.user_id == user.id).first()
+        customer = db.query(Customer).filter(
+            Customer.user_id == user.id).first()
+    if employee is not None:
+        chatOfEmployee = db.query(Chat).filter(
+            Chat.employee_id == employee.id).all()
+        for chat in chatOfEmployee:
+
+            finalReturn.append(ChatMessagesSchema(
+                id=chat.id,
+                contactId=employee.user_id,
+                senderId=chat.senderId,
+                message=chat.message,
+                date=chat.date
+            ))
+        return finalReturn
+    if customer is not None:
+        chatOfCustomer = db.query(Chat).filter(
+            Chat.customer_id == customer.id).all()
+        for chat in chatOfCustomer:
+            finalReturn.append(ChatMessagesSchema(
+                id=chat.id,
+                contactId=customer.user_id,
+                senderId=chat.senderId,
+                message=chat.message,
+                date=chat.date
+            ))
     return finalReturn

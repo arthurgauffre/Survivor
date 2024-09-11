@@ -35,8 +35,12 @@ def getAllRealCustomers(db: Session):
 def getACustomer(db: Session, customer_id: int):
     customer = db.query(Customer).filter(
         Customer.user_id == customer_id).first()
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
     user = db.query(User).filter(
         User.id == customer.user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
     return CustomerBasicSchema(
         id=customer.user_id,
         name=user.name,
@@ -52,11 +56,9 @@ def getACustomer(db: Session, customer_id: int):
 
 
 def getCurrentCustomerImg(db: Session, customer_id: int):
-    customer = db.query(Customer).filter(
-        Customer.user_id == customer_id).first()
     user = db.query(User).filter(
-        User.id == customer.user_id).first()
-    if not customer:
+        User.id == customer_id).first()
+    if not user:
         raise HTTPException(status_code=404, detail="Customer not found")
     if not user.img_profil_content:
         return None
@@ -66,8 +68,13 @@ def getCurrentCustomerImg(db: Session, customer_id: int):
 def getCustomerPaymentHistory(db: Session, customer_id: int):
     customer = db.query(Customer).filter(
         Customer.user_id == customer_id).first()
+    if not customer:
+        raise HTTPException(status_code=404, detail="Customer not found")
     payementHistory = db.query(PayementHistory).filter(
         PayementHistory.customer_id == customer.id).all()
+    if not payementHistory:
+        raise HTTPException(status_code=404,
+                            detail="No payment history found for this customer")
     AllpayementHistory = []
     for payement in payementHistory:
         AllpayementHistory.append(PaymentHistorySchema(

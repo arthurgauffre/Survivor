@@ -10,9 +10,6 @@ export default async function Dashboard() {
     await verifySession();
   const userRole = session?.role;
 
-  console.log("session: ", session);
-  console.log("User Role: ", userRole);
-
   switch (userRole) {
     case "admin":
       return <DashboardPage />;
