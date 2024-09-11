@@ -14,7 +14,7 @@ from crud.employees.employeesGet import (getAllRealEmployees,
                                          getAnEmployeePersonalInfos,
                                          getCurrentEmployeeImg)
 from crud.encounters.encountersGet import getEncounterForCustomer
-from crud.events.eventsGet import getAllEventsPerEmployee
+from crud.events.eventsGet import getAllEventsPerEmployee, getListOfAllEvents
 from crud.notes.noteGet import getAllNotes
 from crud.notes.notePost import takeNote
 
@@ -197,6 +197,14 @@ def getGivenCustomerBottom(customer_id: int, db: Session = Depends(get_db)):
             )
 def getGivenCustomerShoes(customer_id: int, db: Session = Depends(get_db)):
     return getAllShoesFromAUser(db, customer_id)
+
+
+@router.get("/api/events/",
+            tags=["events"],
+            response_model=list[EmployeeEventsSchema],
+            )
+def getAllEvents(db: Session = Depends(get_db)):
+    return getListOfAllEvents(db)
 
 
 @router.get("/api/events/{employee_id}",

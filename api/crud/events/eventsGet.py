@@ -6,6 +6,31 @@ from schemas.eventsSchemas import EmployeeEventsSchema
 from sqlalchemy.orm import Session
 
 
+def getListOfAllEvents(db: Session):
+    events = db.query(Events).all()
+    if not events:
+        raise HTTPException(status_code=404, detail="No events found")
+    listOfAllEvents = []
+
+    for event in events:
+        employee = db.query(Employee).filter(
+            Employee.id == event.employee_id).first()
+        listOfAllEvents.append(EmployeeEventsSchema(
+            id=event.id,
+            name=event.name,
+            date=event.date,
+            duration=event.duration,
+            max_participants=event.max_participants,
+            location_x=event.location_x,
+            location_y=event.location_y,
+            type=event.type,
+            employee_id=employee.user_id,
+            location_name=event.location_name
+        ))
+
+    return listOfAllEvents
+
+
 def getAllEventsPerEmployee(db: Session, employee_id: int):
     employee = db.query(Employee).filter(
         Employee.user_id == employee_id).first()

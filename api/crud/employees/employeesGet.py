@@ -10,10 +10,19 @@ from sqlalchemy.orm import Session
 def getAllRealEmployees(db: Session):
     employees = db.query(Employee).all()
     listOfAllEmployees = []
+    listOfCustomers = []
 
     for employee in employees:
         user = db.query(User).filter(
             User.id == employee.user_id).first()
+        actualEmployee = db.query(Employee).filter(
+            Employee.user_id == user.id).first()
+        relationEmployeeCustomers = db.query(EmployeeCustomer).filter(
+            EmployeeCustomer.employee_id == actualEmployee.id).all()
+        for relation in relationEmployeeCustomers:
+            customer = db.query(Customer).filter(
+                Customer.id == relation.customer_id).first()
+            listOfCustomers.append(customer.user_id)
         listOfAllEmployees.append(
             {
                 "id": employee.user_id,
@@ -23,7 +32,7 @@ def getAllRealEmployees(db: Session):
                 "birthdate": user.birthdate,
                 "gender": user.gender,
                 "work": employee.work,
-                "customer_list": []
+                "customer_list": listOfCustomers
             }
         )
     return listOfAllEmployees
