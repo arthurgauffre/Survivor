@@ -1,10 +1,9 @@
-from fastapi import HTTPException, Request
 import jwt
-from sqlalchemy.orm import Session
-from sqlalchemy import desc
-
-from schemas.chatSchemas import ChatDataSchema, ChatMessagesSchema
 from database.tableRelationships import Chat, Customer, Employee, User
+from fastapi import HTTPException, Request
+from schemas.chatSchemas import ChatDataSchema, ChatMessagesSchema
+from sqlalchemy import desc
+from sqlalchemy.orm import Session
 
 
 def getChatData(req: Request, db: Session):

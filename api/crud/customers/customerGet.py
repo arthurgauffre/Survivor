@@ -1,10 +1,11 @@
 import base64
-from fastapi import HTTPException
-from sqlalchemy.orm import Session
 
+from database.tableRelationships import (Customer, Employee, EmployeeCustomer,
+                                         PayementHistory, User)
+from fastapi import HTTPException
 from schemas.customerSchemas import CustomerBasicSchema
 from schemas.paymentsHistorySchemas import PaymentHistorySchema
-from database.tableRelationships import Customer, Employee, EmployeeCustomer, PayementHistory, User
+from sqlalchemy.orm import Session
 
 
 def getAllRealCustomers(db: Session):

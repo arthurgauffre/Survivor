@@ -1,9 +1,9 @@
-from fastapi import HTTPException
-from sqlalchemy.orm import Session
-
-from schemas.eventsSchemas import EmployeeEventsSchema
-from database.tableRelationships import Employee, Events
 from datetime import datetime
+
+from database.tableRelationships import Employee, Events
+from fastapi import HTTPException
+from schemas.eventsSchemas import EmployeeEventsSchema
+from sqlalchemy.orm import Session
 
 
 def getAllEventsPerEmployee(db: Session, employee_id: int):

@@ -1,47 +1,42 @@
 import asyncio
-from fastapi import APIRouter, Body, Depends, Request
-from fastapi.security import OAuth2PasswordBearer
-from fastapi.staticfiles import StaticFiles
+
 import jwt
-from pydantic import SecretStr
-from sqlalchemy.orm import Session
-
-from crud.notes.noteGet import getAllNotes
-from crud.notes.notePost import takeNote
-from schemas.noteSchemas import InsertNoteSchema, ReturnGetNoteSchema
-from crud.chat.chatGet import getChatData, getDataInChat
-from database.tableRelationships import Employee, User, Customer
-from schemas.chatSchemas import (ChatDataSchema, ChatMessagesSchema,
-                                 SendChatDataSchema)
-from crud.chat.chatPost import sendChatData
-from seedingDB import SeedState
 from auth.autenticateUser import getAccessToken
-from crud.tips.tipsGet import getAllTips
-from schemas.tipsSchemas import AllTipsSchema
-from crud.events.eventsGet import getAllEventsPerEmployee
-from crud.clothes.clothesGet import (getAllBottomFromAUser,
-                                     getAllClothesImgs, getAllHatFromAUser,
-                                     getAllShoesFromAUser,
+from crud.chat.chatGet import getChatData, getDataInChat
+from crud.chat.chatPost import sendChatData
+from crud.clothes.clothesGet import (getAllBottomFromAUser, getAllClothesImgs,
+                                     getAllHatFromAUser, getAllShoesFromAUser,
                                      getAllTopFromAUser)
-
-from crud.customers.customerGet import getAllRealCustomers
-from crud.customers.customerGet import getACustomer
-from crud.customers.customerGet import getCurrentCustomerImg
-from crud.customers.customerGet import getCustomerPaymentHistory
+from crud.customers.customerGet import (getACustomer, getAllRealCustomers,
+                                        getCurrentCustomerImg,
+                                        getCustomerPaymentHistory)
 from crud.employees.employeesGet import (getAllRealEmployees,
                                          getAnEmployeePersonalInfos,
                                          getCurrentEmployeeImg)
 from crud.encounters.encountersGet import getEncounterForCustomer
-from schemas.tokenSchemas import Token
-from schemas.eventsSchemas import EmployeeEventsSchema
-from schemas.employeeSchemas import EmployeePersonalInfoSchema
-from schemas.customerSchemas import CustomerBasicSchema
-from schemas.encounterSchemas import EncounterByCustomerSchema
-from schemas.clothesSchemas import ClothesAllSchema
-from schemas.paymentsHistorySchemas import PaymentHistorySchema
-
+from crud.events.eventsGet import getAllEventsPerEmployee
+from crud.notes.noteGet import getAllNotes
+from crud.notes.notePost import takeNote
+from crud.tips.tipsGet import getAllTips
 from database.database import get_db
-
+from database.tableRelationships import Customer, Employee, User
+from fastapi import APIRouter, Body, Depends, Request
+from fastapi.security import OAuth2PasswordBearer
+from fastapi.staticfiles import StaticFiles
+from pydantic import SecretStr
+from schemas.chatSchemas import (ChatDataSchema, ChatMessagesSchema,
+                                 SendChatDataSchema)
+from schemas.clothesSchemas import ClothesAllSchema
+from schemas.customerSchemas import CustomerBasicSchema
+from schemas.employeeSchemas import EmployeePersonalInfoSchema
+from schemas.encounterSchemas import EncounterByCustomerSchema
+from schemas.eventsSchemas import EmployeeEventsSchema
+from schemas.noteSchemas import InsertNoteSchema, ReturnGetNoteSchema
+from schemas.paymentsHistorySchemas import PaymentHistorySchema
+from schemas.tipsSchemas import AllTipsSchema
+from schemas.tokenSchemas import Token
+from seedingDB import SeedState
+from sqlalchemy.orm import Session
 
 router = APIRouter()
 

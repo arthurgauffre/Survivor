@@ -1,9 +1,9 @@
 import jwt
-from sqlalchemy.orm import Session
+from database.tableRelationships import (Customer, Employee, EmployeeCustomer,
+                                         Note, User)
 from fastapi import Request
-
 from schemas.noteSchemas import ReturnGetNoteSchema
-from database.tableRelationships import Customer, Employee, EmployeeCustomer, Note, User
+from sqlalchemy.orm import Session
 
 
 def getAllNotes(req: Request, db: Session):

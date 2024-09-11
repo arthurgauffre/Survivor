@@ -1,18 +1,14 @@
-from sqlalchemy.orm import Session
-from fastapi import HTTPException, status
-
-from database.tableRelationships import Employee
-
-from sqlalchemy.orm import sessionmaker
 from database.database import engine
-from fetch.fetchingEvents import fetchingAllEvents
-from fetch.fetchingEncounter import getAllEncounters, getEncounterById
-from fetch.fetchingTips import fetchingAllTips
+from database.tableRelationships import Employee
+from fastapi import HTTPException, status
 from fetch.fetchingCustomer import fetchingAllCustomer, fetchingCustomerDetail
-from loginTokenRetriever import loginToken
 from fetch.fetchingEmployee import (fillingEmployeeCustomerTable,
                                     getAllEmployees, getEmployeeDetail)
-
+from fetch.fetchingEncounter import getAllEncounters, getEncounterById
+from fetch.fetchingEvents import fetchingAllEvents
+from fetch.fetchingTips import fetchingAllTips
+from loginTokenRetriever import loginToken
+from sqlalchemy.orm import Session
 
 access_token = loginToken()
 while access_token == {}:

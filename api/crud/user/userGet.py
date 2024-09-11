@@ -1,7 +1,6 @@
 from database.tableRelationships import Customer, Employee, User
 from sqlalchemy.orm import Session
 
-
 # def getEmployee(db: Session, email: str):
 #     employee = db.query(Employee).filter(Employee.email == email).first()
 #     if employee:

@@ -1,8 +1,7 @@
 
-from sqlalchemy.orm import Session
-
-from schemas.tipsSchemas import AllTipsSchema
 from database.tableRelationships import Tips
+from schemas.tipsSchemas import AllTipsSchema
+from sqlalchemy.orm import Session
 
 
 def getAllTips(db: Session):

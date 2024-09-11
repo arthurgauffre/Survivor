@@ -1,9 +1,10 @@
 import base64
-from fastapi import HTTPException
-from sqlalchemy.orm import Session
 
+from database.tableRelationships import (Customer, Employee, EmployeeCustomer,
+                                         User)
+from fastapi import HTTPException
 from schemas.employeeSchemas import EmployeePersonalInfoSchema
-from database.tableRelationships import Customer, Employee, EmployeeCustomer, User
+from sqlalchemy.orm import Session
 
 
 def getAllRealEmployees(db: Session):
