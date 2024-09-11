@@ -2,7 +2,6 @@
 
 import { MessageFormState } from "@/app/lib/definitions";
 import { redirect } from "next/navigation";
-import { router } from 'react';
 
 const formatDate = () => {
   const date = new Date(Date.now());
