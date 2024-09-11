@@ -5,7 +5,7 @@ from dotenv import load_dotenv
 from concurrent.futures import ThreadPoolExecutor
 from fetch.fetchingCustomer import SessionFactory
 from loginTokenRetriever import loginToken
-from database.tableRelationships import Employee, Events
+from database.tableRelationships import Customer, Employee, Events
 
 load_dotenv()
 
@@ -45,7 +45,7 @@ def fetchSingleEvent(event_data, access_token, db):
                 Events.id == event_data.get('id')).first()
             if not existing_event:
                 # Create new event
-                actualId = (event_details.get('employee_id')) + 100
+                actualId = (event_details.get('employee_id')) + db.query(Customer).count()
                 actualEmployee = db.query(Employee).filter(
                     Employee.user_id == actualId).first(
                 )
@@ -55,11 +55,11 @@ def fetchSingleEvent(event_data, access_token, db):
                     date=event_data.get('date'),
                     duration=event_data.get('duration'),
                     max_participants=event_data.get('max_participants'),
-                    location_x=event_data.get('location_x'),
-                    location_y=event_data.get('location_y'),
-                    type=event_data.get('type'),
+                    location_x=event_details.get('location_x'),
+                    location_y=event_details.get('location_y'),
+                    type=event_details.get('type'),
                     employee_id=actualEmployee.id,
-                    location_name=event_data.get('location_name'))
+                    location_name=event_details.get('location_name'))
                 session.add(new_event)
             else:
                 # Update existing event

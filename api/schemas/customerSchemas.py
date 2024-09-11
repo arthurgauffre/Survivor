@@ -12,3 +12,4 @@ class CustomerBasicSchema(BaseModel):
     astrologicalSign: str
     phone_number: str
     address: str
+    linkedCoach: int | None

@@ -1,13 +1,13 @@
 "use client";
 
 import { ChevronRightIcon, ChevronLeftIcon } from "@heroicons/react/24/outline";
-import { CSSProperties, useState } from "react";
+import {useState } from "react";
 import Image from "next/image";
 
 export default function ImgDisplay({
   images = [],
 }: {
-  images: {
+  readonly images: {
     id: number;
     customer_id: number;
     type: string;

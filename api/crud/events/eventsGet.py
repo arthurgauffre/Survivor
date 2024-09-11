@@ -1,22 +1,34 @@
+from fastapi import HTTPException
 from sqlalchemy.orm import Session
 
-from database.tableRelationships import Events
+from schemas.eventsSchemas import EmployeeEventsSchema
+from database.tableRelationships import Employee, Events
 from datetime import datetime
 
 
 def getAllEventsPerEmployee(db: Session, employee_id: int):
-    events = db.query(Events).filter(Events.employee_id == employee_id).all()
+    employee = db.query(Employee).filter(
+        Employee.user_id == employee_id).first()
+    if not employee:
+        raise HTTPException(status_code=404, detail="Employee not found")
+    events = db.query(Events).filter(
+        Events.employee_id == employee.id).all()
+    if not events:
+        raise HTTPException(status_code=404,
+                            detail="No events found for this employee")
     datesOfAllEvents = []
     listOfAllEvents = []
 
     for event in events:
         datesOfAllEvents.append(str(event.date))
 
-    sorted_dates = sorted(datesOfAllEvents, key=lambda date: datetime.strptime(date, "%Y-%m-%d"))
+    sorted_dates = sorted(datesOfAllEvents,
+                          key=lambda date: datetime.strptime(date, "%Y-%m-%d"))
 
     for date in sorted_dates:
+        print(date)
         actualEvent = db.query(Events).filter(Events.date == date).first()
-        listOfAllEvents.append(Events(
+        listOfAllEvents.append(EmployeeEventsSchema(
             id=actualEvent.id,
             name=actualEvent.name,
             date=actualEvent.date,
@@ -25,7 +37,7 @@ def getAllEventsPerEmployee(db: Session, employee_id: int):
             location_x=actualEvent.location_x,
             location_y=actualEvent.location_y,
             type=actualEvent.type,
-            employee_id=actualEvent.employee_id,
+            employee_id=employee.user_id,
             location_name=actualEvent.location_name
         ))
 

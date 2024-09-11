@@ -9,7 +9,7 @@ export default function Navigation({
   UserRole,
 }: {
   readonly mobileMenuOpen: boolean;
-  readonly UserRole : string;
+  readonly UserRole: string;
 }) {
   const pathname = usePathname();
   let navigation = [];
@@ -44,6 +44,27 @@ export default function Navigation({
         current: "/dashboard" === pathname,
       },
 
+      { name: "Tips", href: "/tips", current: "/tips" === pathname },
+      { name: "Events", href: "/events", current: "/events" === pathname },
+      { name: "Clothes", href: "/clothes", current: "/clothes" === pathname },
+      {
+        name: "Compatibility",
+        href: "/compatibility",
+        current: "/compatibility" === pathname,
+      },
+    ];
+  } else if (UserRole === "coach") {
+    navigation = [
+      {
+        name: "Dashboard",
+        href: "/dashboard",
+        current: "/dashboard" === pathname,
+      },
+      {
+        name: "Customers",
+        href: "/customers",
+        current: "/customers" === pathname,
+      },
       { name: "Tips", href: "/tips", current: "/tips" === pathname },
       { name: "Events", href: "/events", current: "/events" === pathname },
       { name: "Clothes", href: "/clothes", current: "/clothes" === pathname },

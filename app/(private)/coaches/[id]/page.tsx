@@ -14,14 +14,33 @@ import GenderDoughnutChart from "@/app/components/charts/GenderDoughnutChart";
 import { data } from "autoprefixer";
 import Image from "next/image";
 
-const Links = {
-    customers_id: [17],
-};
+import { verifySession } from "@/app/lib/session";
+import { redirect } from "next/navigation";
+import { customFetch } from "@/app/components/customFetch";
 
-export default async function Page({
-    params,
+export default async function Page({params}: {params: {id: string}}) {
+  const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
+    await verifySession();
+  const userRole = session?.role;
+  const accessToken: string = session?.accessToken;
+
+  switch (userRole) {
+    case "admin":
+      return <CoachesIdProfilPage params={params} accessToken={accessToken} />;
+    case "user":
+      redirect("/dashboard");
+    case "coach":
+      redirect("/dashboard");
+    default:
+      redirect("/login");
+  }
+}
+
+export async function CoachesIdProfilPage({
+    params, accessToken
 }: {
     params: { id: string };
+    accessToken: string;
 }): Promise<JSX.Element> {
 
     let postsEmployees: {
@@ -44,11 +63,7 @@ export default async function Page({
         customer_list: [],
     };
 
-    let Img: {
-        image_url: string;
-    } = {
-        image_url: "",
-    };
+    let Img: string = "";
 
     let postsEvents: {
         id: number;
@@ -57,8 +72,6 @@ export default async function Page({
         location: string;
         description: string;
     }[] = [];
-
-    let postsCustomerList: number[] = [];
 
     let postsCustomerRatings: {
         id: number;
@@ -94,8 +107,8 @@ export default async function Page({
     };
 
     try {
-        let dataEmployees = await fetch(
-            "http://fastapi:8000/api/employees/" + params.id
+        let dataEmployees = await customFetch(
+            "http://fastapi:8000/api/employees/" + params.id, accessToken
         );
         postsEmployees = await dataEmployees.json();
     } catch (e) {
@@ -103,18 +116,18 @@ export default async function Page({
     }
 
     try {
-        let dataImg = await fetch(
-            "http://fastapi:8000/api/employees/" + params.id + "/image"
+        let dataImg = await customFetch(
+            "http://fastapi:8000/api/employees/" + params.id + "/image", accessToken
         );
         Img = await dataImg.json();
     } catch (e) {
         console.log(e);
     }
-    const imgUrl: string = Img.image_url;
+    const img: string = Img;
 
     try {
-        let dataEvents = await fetch(
-            "http://fastapi:8000/api/events/" + params.id
+        let dataEvents = await customFetch(
+            "http://fastapi:8000/api/events/" + params.id, accessToken
         );
         postsEvents = await dataEvents.json();
     }
@@ -122,19 +135,12 @@ export default async function Page({
         console.log(e);
     }
 
-    try {
-        let dataCustomerList = await fetch("http://fastapi:8000/api/" + params.id + "/customers")
-        postsCustomerList = await dataCustomerList.json()
-    } catch (e) {
-        console.log(e);
-    }
-
     let ratingMeetings: number[] = [0, 0, 0, 0, 0];
     let GenderStats: number[] = [0, 0, 0]
-    for (const customerId of postsCustomerList) {
+    for (const customerId of postsEmployees.customer_list) {
         try {
-            let dataCustomers = await fetch(
-                "http://fastapi:8000/api/encounters/customer/" + customerId
+            let dataCustomers = await customFetch(
+                "http://fastapi:8000/api/encounters/customer/" + customerId, accessToken
             );
             postsCustomerRatings = await dataCustomers.json();
         } catch (e) {
@@ -144,7 +150,7 @@ export default async function Page({
             ratingMeetings[rating.rating - 1] += 1;
         }
         try {
-            let dataCustomer = await fetch("http://fastapi:8000/api/customers/" + customerId)
+            let dataCustomer = await customFetch("http://fastapi:8000/api/customers/" + customerId, accessToken)
             postsCustomer = await dataCustomer.json()
         } catch (e) {
             console.log(e);
@@ -181,7 +187,7 @@ export default async function Page({
                     <div className="sm:flex flex-col items-center justify-center text-center border-b p-2">
                         <Image
                             alt="Image of user"
-                            src={imgUrl}
+                            src={`data:image/png;base64,${img}`}
                             width={56}
                             height={56}
                             className="rounded-full"
@@ -216,7 +222,7 @@ export default async function Page({
 
                         <div className="mt-4">
                             <p className="text-gray-500">Number of clients:</p>
-                            <p>{postsCustomerList.length}</p>
+                            <p>{postsEmployees.customer_list.length}</p>
                         </div>
                     </div>
                 </div>

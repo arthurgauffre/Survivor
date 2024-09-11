@@ -1,5 +1,6 @@
 'server-only';
 
+import type { SessionPayload } from '@/app/lib/definitions';
 import { SignJWT, jwtVerify } from 'jose';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
@@ -27,9 +28,9 @@ export async function decrypt(session: string | undefined = '') {
     }
 }
 
-export async function createSession(userId: string, role: string) {
+export async function createSession(userId: number, role: string, accessToken: string) {
     const expiresAt = new Date(Date.now() + 60 * 60 * 1000);
-    const session = await encrypt({ userId, role, expiresAt });
+    const session = await encrypt({ userId, role, expiresAt, accessToken });
 
     cookies().set('session', session, {
         httpOnly: true,
@@ -42,7 +43,7 @@ export async function createSession(userId: string, role: string) {
     redirect('/dashboard');
 }
 
-export async function verifySession() {
+export async function verifySession(): Promise<{ isAuth: boolean; userId: number; role: string; accessToken: string }> {
     const cookie = cookies().get('session')?.value;
     const session = await decrypt(cookie);
 
@@ -50,7 +51,7 @@ export async function verifySession() {
         redirect('/login');
     }
 
-    return { isAuth: true, userId: Number(session.userId) };
+    return { isAuth: true, userId: session.userId as number, accessToken: session.accessToken as string, role: session.role as string };
 }
 
 export async function updateSession() {

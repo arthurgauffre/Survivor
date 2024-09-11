@@ -38,8 +38,8 @@ class SeedState:
             with open("seeded.txt", "w") as f:
                 f.write("Database seeded")
             return {"message": "Database seeded successfully"}
-        # else:
-        #     self._is_seeded = True
+        else:
+            self._is_seeded = True
 
     def check_seeded(self):
         if self._is_seeded is False:
