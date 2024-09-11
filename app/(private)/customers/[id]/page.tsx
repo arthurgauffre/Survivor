@@ -13,6 +13,7 @@ import SpawnHeadband from "@/app/components/SpawnHeadband";
 import { verifySession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import { customFetch } from "@/app/components/customFetch";
+import { number, string } from "zod";
 
 export default async function Page({params}: {params: {id: string}}) {
   const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
@@ -37,6 +38,32 @@ export async function PaymentHistoryPage({ params, accessToken }: { params: { id
   //   "http://localhost:3000/api/customers/" + params.id
   // );
   // let customers = await customersData.json();
+  let customer: {
+    id: number,
+    email: string,
+    name: string,
+    surname: string,
+    birthdate: string,
+    gender: string,
+    description: string,
+    astrologicalSign: string,
+    phone_number: string,
+    address: string,
+    linkedCoach: number,
+  } = {
+    id: 0,
+    email: "",
+    name: "",
+    surname: "",
+    birthdate: "",
+    gender: "",
+    description: "",
+    astrologicalSign: "",
+    phone_number: "",
+    address: "",
+    linkedCoach: 0,
+    };
+
   let meetings: {
     id: number;
     customer_id: number;
@@ -53,6 +80,14 @@ export async function PaymentHistoryPage({ params, accessToken }: { params: { id
     comment: string;
   }[] = [];
   let picture: string = "";
+
+  try {
+    let customerData = await customFetch(
+      "http://fastapi:8000/api/customers/" + params.id, accessToken
+    );
+    customer = await customerData.json();
+  }
+  catch (e) {}
   try {
     let meetingsData = await customFetch(
       "http://fastapi:8000/api/encounters/customer/" + params.id, accessToken
@@ -100,7 +135,7 @@ export async function PaymentHistoryPage({ params, accessToken }: { params: { id
       }
     >
       <div className="flex flex-wrap gap-2">
-        <div className="flex-col border bg-white">
+        <div className="flex-col border md:max-w-80 bg-white">
           <div className="sm:flex flex-col items-center justify-center text-center border-b p-2">
             <Image
               alt="Image of user"
@@ -109,7 +144,7 @@ export async function PaymentHistoryPage({ params, accessToken }: { params: { id
               height={56}
               className="rounded-full"
             />
-            <p className="mt-2">profile name</p>
+            <p className="mt-2">{customer.name} {customer.surname}</p>
             {/* Added margin-top to separate text from the image */}
           </div>
 
@@ -119,31 +154,27 @@ export async function PaymentHistoryPage({ params, accessToken }: { params: { id
           </div>
           <div className="border-b flex justify-center p-2 gap-2">
             <div className="text-center">
-              <p>23</p>
+              <p>{meetings.length}</p>
               <p>Total</p>
               <p>Encounters</p>
-            </div>
-            <div className="text-center">
-              <p>20</p>
-              <p>Positives</p>
-            </div>
-            <div className="text-center">
-              <p>3</p>
-              <p>In Progress</p>
             </div>
           </div>
           <div className="border-b p-2">
             <p>short detail</p>
             <p>User ID:</p>
-            <p>{params.id}</p>
+            <p>{customer.id}</p>
             <p>Email:</p>
-            <p>test@example.com</p>
+            <p>{customer.email}</p>
+            <p>Phone number</p>
+            <p>{customer.phone_number}</p>
             <p>Address:</p>
-            <p>16 tue theodore blanc</p>
-            <p>Last Activity:</p>
-            <p>8 min</p>
-            <p>Coach</p>
-            <p>Paul Du Pont</p>
+            <p>{customer.address}</p>
+            <p>Coach Id:</p>
+            <p>{customer.linkedCoach}</p>
+            <p>Astrological Sign:</p>
+            <p>{customer.astrologicalSign}</p>
+            <p>Description:</p>
+            <p className="break-words	">{customer.description}</p>
           </div>
         </div>
         <div className="flex-none border bg-white p-2 grow">

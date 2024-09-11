@@ -39,6 +39,22 @@ export default function SearchBar({
   const [bottom, setBottom] = useState<Image[]>([]);
   const [shoes, setShoes] = useState<Image[]>([]);
 
+  const  updateHat = (hat: Image[]) => {
+    setHat(hat);
+  }
+
+  const  updateTop = (top: Image[]) => {
+    setTop(top);
+  }
+
+  const  updateBottom = (bottom: Image[]) => {
+    setBottom(bottom);
+  }
+
+  const  updateShoes = (shoes: Image[]) => {
+    setShoes(shoes);
+  }
+  
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.toLowerCase();
     setQuery(searchTerm);
@@ -85,46 +101,23 @@ export default function SearchBar({
   }, [selectedIndex]);
 
   useEffect(() => {
-    async function fetchAll() {
+    async function fetchHat() {
       if (selectedCustomerId) {
         try {
-          console.log(accessToken);
-          const tamere = await customFetch("http://fastapi:8000/api/customers", accessToken);
-          console.log("=====================================================");
-
-          // const hatData = await customFetch(
-          //   `http://fastapi:8000/api/customers/${selectedCustomerId}/clothes/hat`,
-          //   accessToken
-          // );
-          // const topData = await customFetch(
-          //   `http://fastapi:8000/api/customers/${selectedCustomerId}/clothes/top`,
-          //   accessToken
-          // );
-          // const bottomData = await customFetch(
-          //   `http://fastapi:8000/api/customers/${selectedCustomerId}/clothes/bottom`,
-          //   accessToken
-          // );
-          // const shoesData = await customFetch(
-          //   `http://fastapi:8000/api/customers/${selectedCustomerId}/clothes/shoes`,
-          //   accessToken
-          // );
-
-          // console.log("hatData: ", hatData);
-          // setHat(await hatData.json());
-          // setTop(await topData.json());
-          // setBottom(await bottomData.json());
-          // setShoes(await shoesData.json());
+          console.log("fetching hat");
+          const hatData = await customFetch(
+            `http://fastapi:8000/api/clothes/${selectedCustomerId}/hat`,
+            accessToken
+          );
+          const hat = await hatData.json();
+          updateHat(hat);
         } catch (error) {
-          console.log(error);
-          setHat([]);
-          setTop([]);
-          setBottom([]);
-          setShoes([]);
+          console.error(error);
         }
       }
     }
-    fetchAll();
-  }, [selectedCustomerId]);
+    fetchHat();
+  }, [selectedCustomerId, accessToken]);
 
   return (
     <div>
