@@ -22,7 +22,7 @@ export default async function Page() {
   }
 }
 
-export async function CustomersPage({ accessToken }: { accessToken: string }) {
+export async function CustomersPage({accessToken}: {readonly accessToken: string}) {
   try {
     let customersData = await customFetch("http://fastapi:8000/api/customers", accessToken);
     let customers = await customersData.json();
@@ -40,13 +40,13 @@ export async function CustomersPage({ accessToken }: { accessToken: string }) {
       IMGS.push(Img);
     }
 
-    return <CustomersTable customers={customers} customersImage={IMGS} />;
+    return <CustomersTable customers={customers} customersImage={IMGS} accessToken={accessToken}/>;
   } catch (e) {
-    return <CustomersTable customers={[]} customersImage={[]} />;
+    return <CustomersTable customers={[]} customersImage={[]} accessToken={accessToken}/>;
   }
 }
 
-export async function CustomersCoachingPage({ accessToken, userId }: { accessToken: string, userId: number }) {
+export async function CustomersCoachingPage({ accessToken, userId }: { readonly accessToken: string, readonly userId: number }) {
   try {
     let employee: {
       id: number;
@@ -60,7 +60,7 @@ export async function CustomersCoachingPage({ accessToken, userId }: { accessTok
     }
     let employeeData = await customFetch("http://fastapi:8000/api/employees/" + userId, accessToken);
     employee = await employeeData.json();
-    
+
     let customersData = await customFetch("http://fastapi:8000/api/customers", accessToken);
     let customers = await customersData.json();
 
@@ -79,8 +79,8 @@ export async function CustomersCoachingPage({ accessToken, userId }: { accessTok
       IMGS.push(Img);
     }
 
-    return <CustomersTable customers={customers} customersImage={IMGS} />;
+    return <CustomersTable customers={customers} customersImage={IMGS} accessToken={accessToken}/>;
   } catch (e) {
-    return <CustomersTable customers={[]} customersImage={[]} />;
+    return <CustomersTable customers={[]} customersImage={[]} accessToken={accessToken}/>;
   }
 }
