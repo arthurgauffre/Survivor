@@ -1,10 +1,13 @@
 import React from "react";
+import { DateTime } from "luxon";
 import { ArrowLeftIcon } from "@heroicons/react/24/outline";
 import "@/app/components/table.css";
 import SpawnHeadband from "@/app/components/SpawnHeadband";
 import CoachesChartEventsStatistics from "@/app/components/coachesChartEventsStatistics";
 import CoachesRatingsChart from "@/app/components/charts/coachesRatingsChart";
 import GenderDoughnutChart from "@/app/components/charts/GenderDoughnutChart";
+import AgeDoughnutChart from "@/app/components/charts/AgeDoughnutChart";
+import SignAstroChart from "@/app/components/charts/SignAstroChart";
 import Image from "next/image";
 
 import { verifySession } from "@/app/lib/session";
@@ -107,6 +110,11 @@ export async function CoachesIdProfilPage({
     address: "",
   };
 
+  let sliceOfCustomersAge: number[] = [0, 0, 0];
+  let actualTime: number = DateTime.now().year;
+
+  let SignAstroCustomerList: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
   try {
     let dataEmployees = await customFetch(
       "http://fastapi:8000/api/employees/" + params.id,
@@ -159,6 +167,54 @@ export async function CoachesIdProfilPage({
         accessToken
       );
       postsCustomer = await dataCustomer.json();
+      if (actualTime - +(postsCustomer.birthdate.split("-")[0]) < 30) {
+        sliceOfCustomersAge[0] += 1;
+      } else if (
+        actualTime - +(postsCustomer.birthdate.split("-")[0]) >= 30 &&
+        actualTime - +(postsCustomer.birthdate.split("-")[0]) < 50
+      ) {
+        sliceOfCustomersAge[1] += 1;
+      } else {
+        sliceOfCustomersAge[2] += 1;
+      }
+      switch (postsCustomer.astrologicalSign) {
+        case "Aries":
+          SignAstroCustomerList[0] += 1;
+          break;
+        case "Taurus":
+          SignAstroCustomerList[1] += 1;
+          break;
+        case "Gemini":
+          SignAstroCustomerList[2] += 1;
+          break;
+        case "Cancer":
+          SignAstroCustomerList[3] += 1;
+          break;
+        case "Leo":
+          SignAstroCustomerList[4] += 1;
+          break;
+        case "Virgo":
+          SignAstroCustomerList[5] += 1;
+          break;
+        case "Libra":
+          SignAstroCustomerList[6] += 1;
+          break;
+        case "Scorpio":
+          SignAstroCustomerList[7] += 1;
+          break;
+        case "Sagittarius":
+          SignAstroCustomerList[8] += 1;
+          break;
+        case "Capricorn":
+          SignAstroCustomerList[9] += 1;
+          break;
+        case "Aquarius":
+          SignAstroCustomerList[10] += 1;
+          break;
+        case "Pisces":
+          SignAstroCustomerList[11] += 1;
+          break;
+      }
     } catch (e) {
       console.log(e);
     }
@@ -231,10 +287,13 @@ export async function CoachesIdProfilPage({
             </div>
           </div>
         </div>
-        <div className="sm:flex sm:flex-wrap sm:w-full gap-2">
-          <div className="sm:w-full bg-white p-2 rounded-md">
+        <div className="sm:flex sm:flex-wrap md:flex sm:w-full gap-2">
+          <div className="sm:w-full md:flex bg-white p-2 rounded-md">
             <div className="md:w-1/2 max-h-80">
               <CoachesChartEventsStatistics data={postsEvents} />
+            </div>
+            <div className="md:w-1/2 max-h-80">
+              <SignAstroChart data={SignAstroCustomerList}/>
             </div>
           </div>
           <div className="sm:w-full bg-white md:flex md:flex-row p-2 rounded-md max-sm:my-1 space-x-2">
@@ -243,6 +302,9 @@ export async function CoachesIdProfilPage({
             </div>
             <div className="- j komax-h-80">
               <GenderDoughnutChart data={GenderStats} />
+            </div>
+            <div className="- j komax-h-80">
+              <AgeDoughnutChart data={sliceOfCustomersAge} />
             </div>
           </div>
         </div>

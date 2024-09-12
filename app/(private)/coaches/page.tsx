@@ -2,7 +2,6 @@ import CoachesTable from "@/app/(private)/coaches/coachesTable";
 import { verifySession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import { customFetch } from "@/app/components/customFetch";
-import { HTTP_METHODS } from "next/dist/server/web/http";
 
 
 export default async function Page() {
@@ -23,7 +22,7 @@ export default async function Page() {
   }
 }
 
-export async function CoachesPage ({accessToken}: {accessToken: string}) {
+export async function CoachesPage ({accessToken}: {readonly accessToken: string}) {
   try {
     let data = await customFetch("http://fastapi:8000/api/employees", accessToken);
     let coaches: {
