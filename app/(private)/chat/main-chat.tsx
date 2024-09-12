@@ -6,7 +6,6 @@ import { ArrowLeftIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { SubmitMessage } from "@/app/(private)/chat/submitMessage";
 import Image from "next/image";
 import { customFetch } from "@/app/components/customFetch";
-import { set } from "zod";
 
 export function LeftMessage({
   image,

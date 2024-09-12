@@ -6,8 +6,6 @@ import {
   SignUpFormSchema,
 } from '../lib/definitions';
 import { createSession, deleteSession } from '../lib/session';
-import { redirect } from 'next/dist/server/api-utils';
-import { format } from 'path';
 
 export async function signUp(
   state: LoginFormState,

@@ -1,9 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { useFormState, useFormStatus } from "react-dom";
-import { ArrowLeftIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
-import { SubmitMessage } from "@/app/(private)/chat/submitMessage";
 import Image from "next/image";
 import { MainChat } from "@/app/(private)/chat/main-chat";
 

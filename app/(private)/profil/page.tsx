@@ -1,4 +1,3 @@
-import { UserCircleIcon } from "@heroicons/react/24/solid";
 import SpawnHeadband from "@/app/components/SpawnHeadband";
 import { customFetch } from "@/app/components/customFetch";
 import { verifySession } from "@/app/lib/session";
