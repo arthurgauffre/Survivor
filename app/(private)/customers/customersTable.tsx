@@ -1,6 +1,5 @@
 "use client";
 import { useRouter } from "next/navigation";
-import InputRequest from "./inputRequest";
 import {
   MagnifyingGlassIcon,
   AdjustmentsHorizontalIcon,
@@ -24,21 +23,26 @@ const ActionsActions = [
 export default function CustomersTable({
   customers,
   customersImage,
+  accessToken,
 }: {
   readonly customers: {
     id: number;
     email: string;
     name: string;
     surname: string;
-    birth_date: string;
+    birthdate: string;
     gender: string;
     description: string;
     astrologicalSign: string;
+    phone_number: string;
+    address: string;
+    linkedCoach: number;
   }[];
   readonly customersImage: {
     id: number;
     image_url: string;
   }[];
+  readonly accessToken: string;
 }): JSX.Element {
   let littleText = "You have total of " + customers.length + " Customers";
   const router = useRouter();
@@ -60,7 +64,7 @@ export default function CustomersTable({
       }
     >
       <div style={{ color: "Black" }}>
-        <ul role="list" className="divide-y-2 divide-gray-100">
+        <ul className="divide-y-2 divide-gray-100">
           <li className="flex gap-x-6 py-5 justify-between border-1 bg-white rounded-t-md px-4">
             <div className="flex">
               <DropdownMenu
@@ -127,7 +131,7 @@ export default function CustomersTable({
                     </td>
                     <td>
                       <span className="cell-header">Phone:</span>
-                      {person.birth_date}
+                      {person.phone_number}
                     </td>
                     <td>
                       <span className="cell-header">Payement Method:</span>

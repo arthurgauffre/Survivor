@@ -22,7 +22,7 @@ export default async function Page() {
   }
 }
 
-export async function CustomersPage({accessToken}: {accessToken: string}) {
+export async function CustomersPage({accessToken}: {readonly accessToken: string}) {
   try {
     let customersData = await customFetch("http://fastapi:8000/api/customers", accessToken);
     let customers = await customersData.json();
@@ -40,8 +40,8 @@ export async function CustomersPage({accessToken}: {accessToken: string}) {
       IMGS.push(Img);
     }
 
-    return <CustomersTable customers={customers} customersImage={IMGS}/>;
+    return <CustomersTable customers={customers} customersImage={IMGS} accessToken={accessToken}/>;
   } catch (e) {
-    return <CustomersTable customers={[]} customersImage={[]}/>;
+    return <CustomersTable customers={[]} customersImage={[]} accessToken={accessToken}/>;
   }
 }

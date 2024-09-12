@@ -13,6 +13,7 @@ import SpawnHeadband from "@/app/components/SpawnHeadband";
 import { verifySession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import { customFetch } from "@/app/components/customFetch";
+import PaymentMethod from "@/app/components/PaymentMethod";
 
 export default async function Page({params}: {readonly params: {id: string}}) {
   const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
