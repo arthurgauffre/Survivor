@@ -161,53 +161,38 @@ def test_get_all_notes_valid_auth_header_user_not_found():
 
 
 def test_update_note_success():
-    # Mock the database session
     db_mock = MagicMock()
 
-    # Mock the existing note to be found
     note_id = 1
     note = Note(id=note_id, title="Old Title", content="Old Content", shared=False)
 
-    # Mock the query to return the existing note
     db_mock.query.return_value.filter.return_value.first.return_value = note
 
-    # Mock the input note data for updating
     updated_note = NoteBaseSchema(title="New Title", content="New Content", shared=True)
 
-    # Call the function under test
     result = updateNote(noteObject=updated_note, noteId=note_id, db=db_mock)
 
-    # Assert that the update query was called with the correct parameters
     db_mock.query.return_value.filter.return_value.update.assert_called_once_with(
         {"title": "New Title", "content": "New Content", "shared": True}
     )
 
-    # Assert that commit was called
     db_mock.commit.assert_called_once()
 
-    # Assert the success message is returned
     assert result == {"message": "Note updated successfully"}
 
 
-# Test when the note is not found (404 error)
 def test_update_note_not_found():
-    # Mock the database session
     db_mock = MagicMock()
 
-    # Mock the query to return None, indicating the note was not found
     db_mock.query.return_value.filter.return_value.first.return_value = None
 
-    # Mock the input note data
     updated_note = NoteBaseSchema(title="New Title", content="New Content", shared=True)
     note_id = 1
 
-    # Call the function and expect it to raise HTTPException
     with pytest.raises(HTTPException) as exc_info:
         updateNote(noteObject=updated_note, noteId=note_id, db=db_mock)
 
-    # Assert that the correct HTTPException is raised
     assert exc_info.value.status_code == 404
     assert exc_info.value.detail == "Note not found"
 
-    # Assert that commit was not called since the note was not found
     db_mock.commit.assert_not_called()
