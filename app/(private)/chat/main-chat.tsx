@@ -6,6 +6,7 @@ import { ArrowLeftIcon, PaperAirplaneIcon } from "@heroicons/react/24/outline";
 import { SubmitMessage } from "@/app/(private)/chat/submitMessage";
 import Image from "next/image";
 import { customFetch } from "@/app/components/customFetch";
+import { set } from "zod";
 
 export function LeftMessage({
   image,
@@ -52,13 +53,12 @@ export function SendButton({
       aria-disabled={pending}
       type="submit"
       className="bg-blue-500 rounded-md text-white"
-      onClick={() => setMessage("")}
     >
       {pending ? (
-        "Submitting..."
+        <p className="px-2">sending...</p>
       ) : (
         <>
-          <PaperAirplaneIcon className="h-5 w-10 " />
+          <PaperAirplaneIcon className="h-5 w-10" />
           <span className="sr-only">Send message</span>
         </>
       )}
@@ -66,13 +66,72 @@ export function SendButton({
   );
 }
 
+export function InputChat({
+  contactId,
+  userId,
+  accessToken,
+  role,
+}: {
+  contactId: number;
+  accessToken: string;
+  userId: number;
+  role: string;
+}): JSX.Element {
+  const [state, action] = useFormState(SubmitMessage, undefined);
+  const [message, setMessage] = useState<string>("");
+  console.log("role", role);
+  return (
+    <div className="bg-white border-t p-4">
+      <form className="flex space-x-2" action={action}>
+        <input
+          id="messageSend"
+          name="messageSend"
+          type="text"
+          onChange={(e) => setMessage(e.target.value)}
+          className="flex h-9 w-full rounded-md border border-neutral-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:placeholder:text-neutral-400 dark:focus-visible:ring-neutral-300"
+          placeholder="Type a message ..."
+        />
+        <input
+          id="customer_id"
+          name="customer_id"
+          value={role === "customer" ? userId : contactId}
+          type="number"
+          className="hidden"
+        />
+        <input
+          id="employee_id"
+          name="employee_id"
+          value={role === "coaches" ? userId : contactId}
+          type="number"
+          className="hidden"
+        />
+        <input
+          id="senderId"
+          name="senderId"
+          value={userId}
+          type="number"
+          className="hidden"
+        />
+        <input
+          id="accessToken"
+          name="accessToken"
+          value={accessToken}
+          type="text"
+          className="hidden"
+        />
+        {message && <SendButton setMessage={setMessage} />}
+      </form>
+    </div>
+  );
+}
+
 export function MainChat({
-  selectedContact,
   toggleSidebar,
   contact,
-  accessToken
+  accessToken,
+  userId,
+  role,
 }: {
-  selectedContact: number;
   toggleSidebar: () => void;
   contact: {
     contact_id: number;
@@ -81,9 +140,9 @@ export function MainChat({
     image: string;
   };
   accessToken: string;
+  userId: number;
+  role: string;
 }): JSX.Element {
-  const [state, action] = useFormState(SubmitMessage, undefined);
-  const [message, setMessage] = useState<string>("");
   console.log("contact.contact_id", contact.contact_id);
   const [posts, setPosts] = useState<
     {
@@ -143,26 +202,25 @@ export function MainChat({
       </header>
       {/* Chat Messages */}
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
-        {posts.map((post) => (
-          <li key={post.id}>{post.message}</li>
-        ))}
-        <LeftMessage image={contact.image} text="Hey, how are you doing?" />
-        <RightMessage text="I'm good, thanks! How about you?" />
-        <LeftMessage image={contact.image} text="lol, I'm good too!" />
+        {posts.reverse().map((post) =>
+          post.senderId !== userId ? (
+            <div key={post.id}>
+              <LeftMessage image={contact.image} text={post.message} />
+            </div>
+          ) : (
+            <div key={post.id}>
+              <RightMessage text={post.message} />
+            </div>
+          )
+        )}
       </div>
       {/* Message Input */}
-      <div className="bg-white border-t p-4">
-        <form className="flex space-x-2" action={action}>
-          <input
-            type="text"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-            className="flex h-9 w-full rounded-md border border-neutral-200 bg-transparent px-3 py-1 text-sm shadow-sm transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-neutral-500 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-neutral-950 disabled:cursor-not-allowed disabled:opacity-50 dark:border-neutral-800 dark:placeholder:text-neutral-400 dark:focus-visible:ring-neutral-300"
-            placeholder="Type a message ..."
-          />
-          {message && <SendButton setMessage={setMessage} />}
-        </form>
-      </div>
+      <InputChat
+        accessToken={accessToken}
+        userId={userId}
+        contactId={contact.contact_id}
+        role={role}
+      />
     </>
   );
 }

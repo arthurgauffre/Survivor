@@ -1,8 +1,8 @@
 from fastapi import FastAPI
 from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
-from starlette.middleware.cors import CORSMiddleware
 from routes.routes import router
+from starlette.middleware.cors import CORSMiddleware
 
 app = FastAPI(docs_url="/swagger-ui.html")
 

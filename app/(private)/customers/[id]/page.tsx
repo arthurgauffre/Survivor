@@ -13,7 +13,6 @@ import SpawnHeadband from "@/app/components/SpawnHeadband";
 import { verifySession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import { customFetch } from "@/app/components/customFetch";
-import PaymentMethod from "@/app/components/PaymentMethod";
 
 export default async function Page({params}: {readonly params: {id: string}}) {
   const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
@@ -23,19 +22,42 @@ export default async function Page({params}: {readonly params: {id: string}}) {
 
   switch (userRole) {
     case "admin":
-      return <PaymentHistoryPage params={params} accessToken={accessToken} />;
-    case "user":
+      return <PaymentHistoryPage params={params} accessToken={accessToken} userId={session.userId} />;
+    case "customer":
       redirect("/dashboard");
     case "coach":
-      return <PaymentHistoryPage params={params} accessToken={accessToken} />;
+      return <PaymentHistoryPage params={params} accessToken={accessToken} userId={session.userId} />;
     default:
       redirect("/login");
   }
 }
 
-export async function PaymentHistoryPage({ params, accessToken }: { readonly params: { id: string }, readonly accessToken: string }): Promise<JSX.Element> {
-  const data = await customFetch("http://fastapi:8000/api/customers/" + params.id, accessToken)
-  const customer = await data.json()
+export async function PaymentHistoryPage({ params, accessToken, userId }: { readonly params: { id: string }, readonly accessToken: string, readonly userId: number }): Promise<JSX.Element> {
+  let customer: {
+    id: number,
+    email: string,
+    name: string,
+    surname: string,
+    birthdate: string,
+    gender: string,
+    description: string,
+    astrologicalSign: string,
+    phone_number: string,
+    address: string,
+    linkedCoach: number,
+  } = {
+    id: 0,
+    email: "",
+    name: "",
+    surname: "",
+    birthdate: "",
+    gender: "",
+    description: "",
+    astrologicalSign: "",
+    phone_number: "",
+    address: "",
+    linkedCoach: 0,
+    };
 
   let meetings: {
     id: number;
@@ -53,6 +75,17 @@ export async function PaymentHistoryPage({ params, accessToken }: { readonly par
     comment: string;
   }[] = [];
   let picture: string = "";
+
+  try {
+    let customerData = await customFetch(
+      "http://fastapi:8000/api/customers/" + params.id, accessToken
+    );
+    customer = await customerData.json();
+  }
+  catch (e) {}
+  if (userId != customer.linkedCoach) {
+    redirect("/customers");
+  }
   try {
     let meetingsData = await customFetch(
       "http://fastapi:8000/api/encounters/customer/" + params.id, accessToken
@@ -81,10 +114,6 @@ export async function PaymentHistoryPage({ params, accessToken }: { readonly par
   } catch (e) {
     picture = "";
   }
-  // let eventsData = await fetch(
-  //   "http://localhost:3000/api/encounters/customer/" + params.id
-  // );
-  // let events = await eventsData.json();
   return (
     <SpawnHeadband
       title={"Customer Profile"}
@@ -100,7 +129,7 @@ export async function PaymentHistoryPage({ params, accessToken }: { readonly par
       }
     >
       <div className="flex flex-wrap gap-2">
-        <div className="flex-col border bg-white">
+        <div className="flex-col border md:max-w-80 bg-white">
           <div className="sm:flex flex-col items-center justify-center text-center border-b p-2">
             <Image
               alt="Image of user"
@@ -110,7 +139,6 @@ export async function PaymentHistoryPage({ params, accessToken }: { readonly par
               className="rounded-full"
             />
             <p className="mt-2">{customer.name} {customer.surname}</p>
-            {/* Added margin-top to separate text from the image */}
           </div>
 
           <div className="border-b flex flex-auto justify-center p-2 gap-2">
@@ -123,22 +151,23 @@ export async function PaymentHistoryPage({ params, accessToken }: { readonly par
               <p>Total</p>
               <p>Encounters</p>
             </div>
-            <div className="text-center">
-              <p>{meetings.filter( (e) => {return e.rating > 3}).length }</p>
-              <p>Positives</p>
-            </div>
-            <div className="text-center">
-              <p>{meetings.filter( (e) => {return e.date == new Date()}).length}</p>
-              <p>In Progress</p>
-            </div>
           </div>
           <div className="border-b p-2">
-            <p className="overflow-auto max-w-60 mb-2">{customer.description}</p>
-            <p className="overflow-auto max-w-60 mb-2">User ID: {customer.id}</p>
-            <p className="overflow-auto max-w-60 mb-2">Email: {customer.email}</p>
-            <p className="overflow-auto max-w-60 mb-2">Address: {customer.address}</p>
-            <p className="overflow-auto max-w-60 mb-2">Last Activity: {customer.lastseen}</p>
-            <p className="overflow-auto max-w-60 mb-2">Coach {customer.linkedCoach}</p>
+            <p>short detail</p>
+            <p>User ID:</p>
+            <p>{customer.id}</p>
+            <p>Email:</p>
+            <p>{customer.email}</p>
+            <p>Phone number</p>
+            <p>{customer.phone_number}</p>
+            <p>Address:</p>
+            <p>{customer.address}</p>
+            <p>Coach Id:</p>
+            <p>{customer.linkedCoach}</p>
+            <p>Astrological Sign:</p>
+            <p>{customer.astrologicalSign}</p>
+            <p>Description:</p>
+            <p className="break-words	">{customer.description}</p>
           </div>
         </div>
         <div className="flex-none border bg-white p-2 grow">

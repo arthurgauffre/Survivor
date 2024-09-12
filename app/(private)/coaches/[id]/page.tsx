@@ -28,7 +28,7 @@ export default async function Page({
   switch (userRole) {
     case "admin":
       return <CoachesIdProfilPage params={params} accessToken={accessToken} />;
-    case "user":
+    case "customer":
       redirect("/dashboard");
     case "coach":
       redirect("/dashboard");

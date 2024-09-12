@@ -31,7 +31,9 @@ export function LeftContact({
 
 export function ChatUi({
   contacts,
-  accessToken
+  accessToken,
+  userId,
+  role,
 }: {
   contacts: {
     contact_id: number;
@@ -42,7 +44,9 @@ export function ChatUi({
     image: string;
   }[];
   accessToken: string;
-}) {
+  userId: number;
+  role: string;
+}): JSX.Element {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [selectedContact, setSelectedContact] = useState(0);
 
@@ -67,7 +71,7 @@ export function ChatUi({
           {contacts.map((contact) => (
             <button
               onClick={() => selectContact(contact.contact_id)}
-              key={contact.date}
+              key={contact.contact_id}
               className="w-full"
             >
               <LeftContact
@@ -88,19 +92,24 @@ export function ChatUi({
         className={`flex-1 flex flex-col ${sidebarOpen ? "block" : "hidden"}`}
       >
         <MainChat
-          selectedContact={selectedContact}
           toggleSidebar={toggleSidebar}
           contact={{
-            contact_id: (contacts.find((contact) => contact.contact_id === selectedContact)
-            ?.contact_id) || 1,
-            senderId: (contacts.find((contact) => contact.contact_id === selectedContact)
-            ?.senderId),
-            name: (contacts.find((contact) => contact.contact_id === selectedContact)
-            ?.name) || "",
-            image: (contacts.find((contact) => contact.contact_id === selectedContact
-            )?.image) || ""
+            contact_id:
+              contacts.find((contact) => contact.contact_id === selectedContact)
+                ?.contact_id || 1,
+            senderId: contacts.find(
+              (contact) => contact.contact_id === selectedContact
+            )?.senderId,
+            name:
+              contacts.find((contact) => contact.contact_id === selectedContact)
+                ?.name || "",
+            image:
+              contacts.find((contact) => contact.contact_id === selectedContact)
+                ?.image || "",
           }}
           accessToken={accessToken}
+          userId={userId}
+          role={role}
         />
       </div>
     </div>

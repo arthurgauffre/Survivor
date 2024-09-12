@@ -1,9 +1,8 @@
 
-from fastapi import HTTPException
-from sqlalchemy.orm import Session
-
 from database.tableRelationships import Note, User
+from fastapi import HTTPException
 from schemas.noteSchemas import InsertNoteSchema
+from sqlalchemy.orm import Session
 
 
 def takeNote(noteObject: InsertNoteSchema, db: Session):

@@ -36,7 +36,7 @@ export default function Navigation({
         current: "/compatibility" === pathname,
       },
     ];
-  } else if (UserRole === "user") {
+  } else if (UserRole === "customer") {
     navigation = [
       {
         name: "Dashboard",

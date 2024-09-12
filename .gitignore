@@ -43,3 +43,4 @@ api/images/*/*.jpg
 
 api/alembic/versions/*
 api/seeded.txt
+.coverage

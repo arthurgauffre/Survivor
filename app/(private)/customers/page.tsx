@@ -13,10 +13,10 @@ export default async function Page() {
   switch (userRole) {
     case "admin":
       return <CustomersPage accessToken={accessToken} />;
-    case "user":
+    case "customer":
       redirect("/dashboard");
     case "coach":
-      return <CustomersPage accessToken={accessToken} />;
+      return <CustomersCoachingPage accessToken={accessToken} userId={session.userId}/>;
     default:
       redirect("/login");
   }
@@ -26,6 +26,45 @@ export async function CustomersPage({accessToken}: {readonly accessToken: string
   try {
     let customersData = await customFetch("http://fastapi:8000/api/customers", accessToken);
     let customers = await customersData.json();
+
+    let IMGS: {
+      id: number;
+      image_url: string;
+    }[] = [];
+
+    for (let customer of customers) {
+      let dataImg = await customFetch(
+        "http://fastapi:8000/api/customers/" + customer.id + "/image", accessToken
+      );
+      let Img = await dataImg.json();
+      IMGS.push(Img);
+    }
+
+    return <CustomersTable customers={customers} customersImage={IMGS} accessToken={accessToken}/>;
+  } catch (e) {
+    return <CustomersTable customers={[]} customersImage={[]} accessToken={accessToken}/>;
+  }
+}
+
+export async function CustomersCoachingPage({ accessToken, userId }: { readonly accessToken: string, readonly userId: number }) {
+  try {
+    let employee: {
+      id: number;
+      email: string;
+      name: string;
+      surname: string;
+      birthDate: string;
+      gender: string;
+      work: string;
+      customer_list: number[];
+    }
+    let employeeData = await customFetch("http://fastapi:8000/api/employees/" + userId, accessToken);
+    employee = await employeeData.json();
+
+    let customersData = await customFetch("http://fastapi:8000/api/customers", accessToken);
+    let customers = await customersData.json();
+
+    customers = customers.filter((customer: { id: number }) => employee.customer_list.includes(customer.id));
 
     let IMGS: {
       id: number;

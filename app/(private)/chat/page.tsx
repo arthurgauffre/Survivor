@@ -124,7 +124,7 @@ export async function CustomerPage({
         ?.image || "",
   }));
 
-  return <ChatUi contacts={contacts} accessToken={accessToken} />;
+  return <ChatUi contacts={contacts} accessToken={accessToken} userId={userId} role="customer" />;
 }
 
 export async function CoachesPage({
@@ -254,5 +254,5 @@ export async function CoachesPage({
         ?.image || "Image",
   }));
 
-  return <ChatUi contacts={contacts} accessToken={accessToken} />;
+  return <ChatUi contacts={contacts} accessToken={accessToken} userId={userId} role="coaches" />;
 }

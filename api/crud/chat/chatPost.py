@@ -1,7 +1,7 @@
-from fastapi import HTTPException
-from sqlalchemy.orm import Session
 from database.tableRelationships import Chat, Customer, Employee
+from fastapi import HTTPException
 from schemas.chatSchemas import SendChatDataSchema
+from sqlalchemy.orm import Session
 
 
 def sendChatData(chatData: SendChatDataSchema, db: Session):

@@ -1,9 +1,10 @@
 import uuid
-from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy import Boolean, Column, ForeignKey, Integer, String, LargeBinary
-from sqlalchemy.orm import relationship
 
 from database.database import Base
+from sqlalchemy import (Boolean, Column, ForeignKey, Integer, LargeBinary,
+                        String)
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import relationship
 
 # List of all tables in the database in relation with the API Soul connection
 

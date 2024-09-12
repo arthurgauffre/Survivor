@@ -1,10 +1,10 @@
 import base64
 from calendar import c
-from fastapi import HTTPException
-from sqlalchemy.orm import Session
 
-from schemas.clothesSchemas import ClothesAllSchema
 from database.tableRelationships import Clothes, Customer
+from fastapi import HTTPException
+from schemas.clothesSchemas import ClothesAllSchema
+from sqlalchemy.orm import Session
 
 
 def getAllClothesImgs(db: Session):

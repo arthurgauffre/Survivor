@@ -1,6 +1,6 @@
 "use client";
 
-import { login } from "@/app/auth/auth";
+import { login } from "../../auth/auth";
 import { useFormState, useFormStatus } from "react-dom";
 
 export function LoginForm() {

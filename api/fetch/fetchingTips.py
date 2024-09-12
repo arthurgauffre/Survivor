@@ -1,9 +1,9 @@
-import requests
 import os
-from dotenv import load_dotenv
 
-from loginTokenRetriever import loginToken
+import requests
 from database.tableRelationships import Tips
+from dotenv import load_dotenv
+from loginTokenRetriever import loginToken
 
 load_dotenv()
 

@@ -1,11 +1,11 @@
-import requests
 import os
-from dotenv import load_dotenv
-
 from concurrent.futures import ThreadPoolExecutor
+
+import requests
+from database.tableRelationships import Customer, Employee, Events
+from dotenv import load_dotenv
 from fetch.fetchingCustomer import SessionFactory
 from loginTokenRetriever import loginToken
-from database.tableRelationships import Customer, Employee, Events
 
 load_dotenv()
 
