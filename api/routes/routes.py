@@ -1,5 +1,6 @@
 import asyncio
 
+from crud.notes.noteUpdate import updateNote
 from auth.autenticateUser import getAccessToken
 from crud.chat.chatGet import getChatData, getDataInChat
 from crud.chat.chatPost import sendChatData
@@ -31,7 +32,7 @@ from schemas.customerSchemas import (CustomerBasicSchema,
 from schemas.employeeSchemas import EmployeePersonalInfoSchema
 from schemas.encounterSchemas import EncounterByCustomerSchema
 from schemas.eventsSchemas import EmployeeEventsSchema
-from schemas.noteSchemas import InsertNoteSchema
+from schemas.noteSchemas import InsertNoteSchema, NoteBaseSchema
 from schemas.paymentsHistorySchemas import PaymentHistorySchema
 from schemas.tipsSchemas import AllTipsSchema
 from schemas.tokenSchemas import Token
@@ -254,6 +255,15 @@ def getChatWithEmployee(req: Request,
 def postNoteInfos(noteObject: InsertNoteSchema,
                   db: Session = Depends(get_db)):
     return takeNote(noteObject, db)
+
+
+@router.put("/api/note/{note_id}",
+            tags=["note"],
+            dependencies=[Depends(oauth2_scheme)])
+def putNoteInfos(noteObject: NoteBaseSchema,
+                 noteId: int,
+                 db: Session = Depends(get_db)):
+    return updateNote(noteObject, noteId, db)
 
 
 @router.get("/api/note/",
