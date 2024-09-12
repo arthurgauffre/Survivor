@@ -17,7 +17,6 @@ def getAllNotes(req: Request, db: Session):
         newHeader = newHeader.split(" ")[1]
         decoded = jwt.decode(newHeader, options={"verify_signature": False})
         email = decoded["sub"]
-    # email = "margaud.valette188@gmail.com"
     if email is not None:
         user = db.query(User).filter(
             User.email == email).first()

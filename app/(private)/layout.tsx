@@ -15,10 +15,15 @@ export default async function PrivateLayout({
   } = await verifySession();
   const userRole = session?.role;
 
-  let imageData;
+  let imageData: Response;
+  let userData: Response;
   if (userRole === "admin") {
     imageData = await customFetch(
-      "http://fastapi:8000/api/customers/" + session.userId + "/image",
+      "http://fastapi:8000/api/employees/" + session.userId + "/image",
+      session.accessToken
+    );
+    userData = await customFetch(
+      "http://fastapi:8000/api/employees/" + session.userId,
       session.accessToken
     );
   } else {
@@ -26,12 +31,25 @@ export default async function PrivateLayout({
       "http://fastapi:8000/api/customers/" + session.userId + "/image",
       session.accessToken
     );
+    userData = await customFetch(
+      "http://fastapi:8000/api/customers/" + session.userId,
+      session.accessToken
+    );
   }
   const userImage: string = await imageData.json();
+  const userInfo: {
+    id: number;
+    email: string;
+    name: string;
+    surname: string;
+    birthdate: string;
+    gender: string;
+    work: string;
+  } = await userData.json();
 
   return (
     <main>
-      <NavBar UserRole={userRole} UserImage={userImage} />
+      <NavBar UserRole={userRole} UserImage={userImage} userInfo={userInfo} />
       {children}
     </main>
   );

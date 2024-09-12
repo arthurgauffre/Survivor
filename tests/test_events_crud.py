@@ -1,9 +1,10 @@
 from unittest.mock import MagicMock
 from fastapi import HTTPException
+from sqlalchemy.orm import Session
 import pytest
 
 from api.crud.employees.employeesGet import Employee
-from api.crud.events.eventsGet import Events, getListOfAllEvents
+from api.crud.events.eventsGet import Events, getAllEventsPerEmployee, getListOfAllEvents
 from api.schemas.eventsSchemas import EmployeeEventsSchema
 
 
@@ -52,3 +53,29 @@ def test_get_list_of_all_events_no_events():
 
     assert exc_info.value.status_code == 404
     assert exc_info.value.detail == "No events found"
+
+
+def test_get_all_events_per_employee_employee_not_found():
+    db_mock = MagicMock(spec=Session)
+    db_mock.query.return_value.filter.return_value.first.return_value = None
+
+    with pytest.raises(HTTPException) as exc_info:
+        getAllEventsPerEmployee(db_mock, employee_id=1)
+
+    assert exc_info.value.status_code == 404
+    assert exc_info.value.detail == "Employee not found"
+
+
+def test_get_all_events_per_employee_no_events_found():
+    db_mock = MagicMock(spec=Session)
+
+    employee_mock = Employee(id=1, user_id=1)
+    db_mock.query.return_value.filter.return_value.first.return_value = employee_mock
+
+    db_mock.query.return_value.filter.return_value.all.return_value = []
+
+    with pytest.raises(HTTPException) as exc_info:
+        getAllEventsPerEmployee(db_mock, employee_id=1)
+
+    assert exc_info.value.status_code == 404
+    assert exc_info.value.detail == "No events found for this employee"

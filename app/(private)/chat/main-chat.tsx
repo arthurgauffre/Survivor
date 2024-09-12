@@ -78,7 +78,6 @@ export function InputChat({
 }): JSX.Element {
   const [state, action] = useFormState(SubmitMessage, undefined);
   const [message, setMessage] = useState<string>("");
-  console.log("role", role);
   return (
     <div className="bg-white border-t p-4">
       <form className="flex space-x-2" action={action}>
@@ -93,28 +92,28 @@ export function InputChat({
         <input
           id="customer_id"
           name="customer_id"
-          value={role === "customer" ? userId : contactId}
+          defaultValue={role === "customer" ? userId : contactId}
           type="number"
           className="hidden"
         />
         <input
           id="employee_id"
           name="employee_id"
-          value={role === "coaches" ? userId : contactId}
+          defaultValue={role === "coaches" ? userId : contactId}
           type="number"
           className="hidden"
         />
         <input
           id="senderId"
           name="senderId"
-          value={userId}
+          defaultValue={userId}
           type="number"
           className="hidden"
         />
         <input
           id="accessToken"
           name="accessToken"
-          value={accessToken}
+          defaultValue={accessToken}
           type="text"
           className="hidden"
         />
@@ -142,7 +141,6 @@ export function MainChat({
   userId: number;
   role: string;
 }): JSX.Element {
-  console.log("contact.contact_id", contact.contact_id);
   const [posts, setPosts] = useState<
     {
       id: number;
@@ -200,7 +198,7 @@ export function MainChat({
         <h1 className="ml-3 text-xl font-semibold">{contact.name}</h1>
       </header>
       {/* Chat Messages */}
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div className="flex-1 overflow-auto p-4 space-y-4">
         {posts.reverse().map((post) =>
           post.senderId !== userId ? (
             <div key={post.id}>

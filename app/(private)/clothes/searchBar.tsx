@@ -54,7 +54,7 @@ export default function SearchBar({
   const  updateShoes = (shoes: Image[]) => {
     setShoes(shoes);
   }
-  
+
   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const searchTerm = e.target.value.toLowerCase();
     setQuery(searchTerm);
@@ -109,7 +109,6 @@ export default function SearchBar({
             accessToken
           );
           const hat = await hatData.json();
-          console.log(hat.length);
           updateHat(hat);
         } catch (error) {
           console.error(error);
@@ -128,7 +127,6 @@ export default function SearchBar({
             accessToken
           );
           const top = await topData.json();
-          console.log(top.length);
           updateTop(top);
         } catch (error) {
           console.error(error);
@@ -147,7 +145,6 @@ export default function SearchBar({
             accessToken
           );
           const bottom = await bottomData.json();
-          console.log(bottom.length);
           updateBottom(bottom);
         } catch (error) {
           console.error(error);
@@ -166,7 +163,6 @@ export default function SearchBar({
             accessToken
           );
           const shoes = await shoesData.json();
-          console.log(shoes.length);
           updateShoes(shoes);
         } catch (error) {
           console.error(error);

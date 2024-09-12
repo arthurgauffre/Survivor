@@ -5,7 +5,6 @@ import MeetingsChart from "@/app/components/charts/MeetingsChart";
 
 
 export default function DashboardClientsPage({accessToken, userId}: {accessToken: string, userId: number}) {
-  console.log("DashboardClientsPage");  
   return (
       <SpawnHeadband title="Dashboard" littleText="Welcome!">
         <div className="flex flex-wrap gap-6 text-black">
@@ -31,7 +30,7 @@ export default function DashboardClientsPage({accessToken, userId}: {accessToken
             </div>
             <CustomersChart />
           </div>
-  
+
           {/* Row 1, Column 2 */}
           <div className="w-full lg:w-[48%] bg-white shadow-md rounded-md p-4">
             <div>Events</div>
@@ -55,12 +54,12 @@ export default function DashboardClientsPage({accessToken, userId}: {accessToken
             </div>
             <EventsChart />
           </div>
-  
+
           {/* Row 2, Column 1 */}
           <div className="w-full lg:w-[48%] bg-white shadow-md rounded-md p-4">
             <div>Customers by Country</div>
           </div>
-  
+
           {/* Row 2, Column 2 */}
           <div className="w-full lg:w-[48%] bg-white shadow-md rounded-md p-4">
             <div>Meetings Top Sources</div>
@@ -74,4 +73,3 @@ export default function DashboardClientsPage({accessToken, userId}: {accessToken
       </SpawnHeadband>
     );
   }
-  

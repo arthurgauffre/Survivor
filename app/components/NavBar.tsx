@@ -14,20 +14,15 @@ import {
   Bars3Icon,
   ChatBubbleLeftEllipsisIcon,
   XMarkIcon,
+  PencilSquareIcon,
 } from "@heroicons/react/24/outline";
 import Image from "next/image";
 
 import Navigation from "@/app/components/Navigation";
 import { logout } from "@/app/auth/auth";
 
-const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-  language:
-    "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/320px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png",
-};
+const language =
+  "https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg/320px-Flag_of_the_United_States_%28DoS_ECA_Color_Standard%29.svg.png";
 
 const userNavigation: {
   name: string;
@@ -41,9 +36,19 @@ const userNavigation: {
 export default function AdminNavBar({
   UserRole,
   UserImage,
+  userInfo,
 }: {
   readonly UserRole: string;
   readonly UserImage: string;
+  readonly userInfo: {
+    id: number;
+    email: string;
+    name: string;
+    surname: string;
+    birthdate: string;
+    gender: string;
+    work: string;
+  };
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -75,12 +80,20 @@ export default function AdminNavBar({
           </div>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-3">
-          {/* NOTIFICATIONS */}
-          <a href="chat" className="h-8 w-8">
-            <ChatBubbleLeftEllipsisIcon />
-          </a>
+          {UserRole !== "admin" && (
+            <>
+              {/* NOTE */}
+              <a href="note" className="h-8 w-8">
+                <PencilSquareIcon />
+              </a>
+              {/* CHAT */}
+              <a href="chat" className="h-8 w-8">
+                <ChatBubbleLeftEllipsisIcon />
+              </a>
+            </>
+          )}
           {/* LANGUAGE */}
-          <img alt="" src={user.language} className="h-8 w-8 rounded-full" />
+          <img alt="" src={language} className="h-8 w-8 rounded-full" />
           {/* PROFILE */}
           <Menu as="div">
             <MenuButton>
@@ -169,22 +182,31 @@ export default function AdminNavBar({
                     </div>
                     <div className="ml-3">
                       <div className="text-base font-medium leading-none text-white">
-                        {user.name}
+                        {userInfo.name} {userInfo.surname}
                       </div>
                       <div className="text-sm font-medium leading-none">
-                        {user.email}
+                        {userInfo.email}
                       </div>
                     </div>
-                    {/* LANGUAGE */}
                     <div className="ml-auto flex gap-3">
+                      {UserRole !== "admin" && (
+                        <>
+                          {/* NOTE */}
+                          <a href="note" className="h-8 w-8">
+                            <PencilSquareIcon />
+                          </a>
+                          {/* CHAT */}
+                          <a href="chat" className="h-8 w-8">
+                            <ChatBubbleLeftEllipsisIcon />
+                          </a>
+                        </>
+                      )}
+                      {/* LANGUAGE */}
                       <img
                         alt=""
-                        src={user.language}
+                        src={language}
                         className="h-8 w-8 rounded-full"
                       />
-                      <a href="chat" className="h-8 w-8">
-                        <ChatBubbleLeftEllipsisIcon />
-                      </a>
                     </div>
                   </div>
                   <div className="mt-3 space-y-1 px-2">

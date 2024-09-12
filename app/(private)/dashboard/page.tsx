@@ -5,8 +5,12 @@ import DashboardClientsPage from "./dashboardClientsPage";
 import DashboardAdminPage from "./dashboardAdminsPage";
 
 export default async function Dashboard() {
-  const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
-    await verifySession();
+  const session: {
+    isAuth: boolean;
+    userId: number;
+    role: string;
+    accessToken: string;
+  } = await verifySession();
   const userRole = session?.role;
 
   switch (userRole) {

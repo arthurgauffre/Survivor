@@ -10,7 +10,6 @@ type Image = {
 export default async function FetchingImgOfCustomer({ accessToken, clothes, updateClothes, urlAPI}: { accessToken: string, clothes: Image[], updateClothes: (clothes: Image[]) => void, urlAPI: string }) {
 
     try {
-        console.log(urlAPI);
         const hatData = await customFetch(
             urlAPI,
             accessToken

@@ -48,7 +48,7 @@ export function ChatUi({
   const [selectedContact, setSelectedContact] = useState(0);
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
-  const selectContact = (contact: number) => {
+  const handleContactSelect = (contact: number) => {
     setSelectedContact(contact);
     if (!sidebarOpen) toggleSidebar();
   };
@@ -59,15 +59,15 @@ export function ChatUi({
       <div
         className={`bg-white w-full flex-shrink-0 sm:max-w-xs ${
           sidebarOpen ? "hidden" : "block"
-        } md:block`}
+        } md:block border-r`}
       >
-        <div className="p-4 border-b" style={{ height: "73px" }}>
-          <h2 className="text-xl font-semibold">Conversations</h2>
+        <div className="p-4">
+          <h2 className="text-xl font-semibold">Chat</h2>
         </div>
         <nav className="p-2">
           {contacts.map((contact) => (
             <button
-              onClick={() => selectContact(contact.contact_id)}
+              onClick={() => handleContactSelect(contact.contact_id)}
               key={contact.contact_id}
               className="w-full"
             >

@@ -1,5 +1,4 @@
 import base64
-from calendar import c
 
 from database.tableRelationships import Clothes, Customer
 from fastapi import HTTPException
@@ -29,8 +28,6 @@ def getAllHatFromAUser(db: Session, customer_id: int):
         Clothes.customer_id == customer.id).all()
     listOfAllClothes = []
     for clothe in allClothes:
-        # customer = db.query(Customer).filter(
-        #     Customer.user_id == customer_id).first()
         if clothe.type == "hat/cap":
             listOfAllClothes.append(ClothesAllSchema(
                 id=clothe.id,
@@ -51,8 +48,6 @@ def getAllTopFromAUser(db: Session, customer_id: int):
         Clothes.customer_id == customer.id).all()
     listOfAllClothes = []
     for clothe in allClothes:
-        # customer = db.query(Customer).filter(
-        #     Customer.user_id == customer_id).first()
         if clothe.type == "top":
             listOfAllClothes.append(ClothesAllSchema(
                 id=clothe.id,
@@ -73,8 +68,6 @@ def getAllBottomFromAUser(db: Session, customer_id: int):
         Clothes.customer_id == customer.id).all()
     listOfAllClothes = []
     for clothe in allClothes:
-        # customer = db.query(Customer).filter(
-        #     Customer.user_id == customer_id).first()
         if clothe.type == "bottom":
             listOfAllClothes.append(ClothesAllSchema(
                 id=clothe.id,
@@ -95,8 +88,6 @@ def getAllShoesFromAUser(db: Session, customer_id: int):
         Clothes.customer_id == customer.id).all()
     listOfAllClothes = []
     for clothe in allClothes:
-        # customer = db.query(Customer).filter(
-        #     Customer.user_id == customer_id).first()
         if clothe.type == "shoes":
             listOfAllClothes.append(ClothesAllSchema(
                 id=clothe.id,

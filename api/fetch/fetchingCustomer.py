@@ -45,70 +45,45 @@ def fetchingAllCustomer(access_token, database):
 
     for customer_data in customers_data:
         user = User(
-            # id=customer_data.get('id'),
             password=getPasswordHash(CUSTOMER_PASSWORD),
             email=customer_data.get('email'),
             name=customer_data.get('name'),
             surname=customer_data.get('surname')
         )
 
-        # existing_user = database.query(User).filter(
-        #     User.email == user.email).first()
-
-        # if not existing_user:
         database.add(user)
-        database.flush()  # This will assign an id to the user
+        database.flush()
 
         customer = Customer(
-            user_id=user.id  # Use the generated user.id
+            user_id=user.id
         )
         database.add(customer)
-        # else:
-        #     existing_user.email = user.email
-        #     existing_user.name = user.name
-        #     existing_user.surname = user.surname
-
-    #     if not database.query(Customer).filter(
-    #             Customer.id == customer.id).first():
-    #         database.add(customer)
-    #     else:
-    #         currentCustomer = database.query(Customer).filter(
-    #             Customer.id == customer.id)
-    #         currentCustomer.email = customer.email
-    #         currentCustomer.name = customer.name
-    #         currentCustomer.surname = customer.surname
-
     database.commit()
     return {"message": "All customers have been fetched"}
 
 
 def fetchCustomerDetailThread(customerId, headers, access_token):
-    # Create a new session for each thread
     session = SessionFactory()
 
     try:
-        # Fetch customer details
         url = f'https://soul-connection.fr/api/customers/{customerId.user_id}'
         getCustomerDetail(url, headers, customerId, session)
 
-        # Fetch customer image
         if getCustomerImage(access_token, customerId, headers, session) != 200:
             getCustomerImage(access_token, customerId, headers, session)
 
-        # Fetch payment history
         if getCustomerPaymentHistory(customerId, headers, session) != 200:
             getCustomerPaymentHistory(customerId, headers, session)
 
-        # Fetch clothes image
         if getClothesImage(customerId, session, headers) != 200:
             getClothesImage(customerId, session, headers)
 
-        session.commit()  # Commit the transaction
+        session.commit()
     except Exception as e:
-        session.rollback()  # Rollback in case of an error
+        session.rollback()
         print(f"Error in thread for customer {customerId.id}: {e}")
     finally:
-        session.close()  # Close the session after work is done
+        session.close()
 
 
 def fetchingCustomerDetail(access_token, database):
@@ -121,14 +96,12 @@ def fetchingCustomerDetail(access_token, database):
 
     with ThreadPoolExecutor(
             max_workers=max(1, os.cpu_count() - 4)) as executor:
-        # Submit tasks to the thread pool, each with its own session
         futures = [
             executor.submit(fetchCustomerDetailThread, customerId,
                             headers, access_token)
             for customerId in database.query(Customer).all()
         ]
 
-        # Wait for all tasks to complete
         for future in futures:
             try:
                 future.result()
@@ -208,7 +181,6 @@ def getCustomerPaymentHistory(customerId, headers, database):
     except BaseException:
         getCustomerPaymentHistory(customerId, headers, database)
     if payement_history_response.status_code == 401:
-        # access_token = loginToken()
         getCustomerPaymentHistory(customerId, headers, database)
     payement_history_datas = {}
     try:
@@ -244,7 +216,6 @@ def getCustomerPaymentHistory(customerId, headers, database):
 
 
 def getClothesImage(customerId, database, headers):
-    # try:
     clothes_data = {}
     clothe_image_response = ""
     clothes_response = ""

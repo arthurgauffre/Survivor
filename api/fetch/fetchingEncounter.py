@@ -50,7 +50,7 @@ def getAllEncounters(access_token, db):
 
 
 def getEncounterByIdThread(encounterId, access_token):
-    session = SessionFactory()  # Create a new session for the thread
+    session = SessionFactory()
     headers = {
         'accept': 'application/json',
         'X-Group-Authorization': TOKEN_API,
@@ -67,20 +67,18 @@ def getEncounterByIdThread(encounterId, access_token):
         return
 
     if response.status_code == 401:
-        session.close()  # Close the session if you re-fetch the access token
-        access_token = loginToken()  # Refresh token
+        session.close()
+        access_token = loginToken()
         return getEncounterByIdThread(encounterId, access_token)
 
     try:
         encounter_data = response.json()
     except BaseException:
-        # print(f"Error decoding JSON for encounter {encounterId.id}")
         session.rollback()
         session.close()
-        access_token = loginToken()  # Refresh token
+        access_token = loginToken()
         return getEncounterByIdThread(encounterId, access_token)
 
-    # Fetch the encounter from the database and update it
     actualEncounter = session.query(Encounter).filter(
         Encounter.id == encounterId.id).first()
     if actualEncounter:
@@ -93,21 +91,19 @@ def getEncounterByIdThread(encounterId, access_token):
         print(f"Error committing encounter {encounterId.id}: {e}")
         session.rollback()
     finally:
-        session.close()  # Close the session when done
+        session.close()
 
 
 def getEncounterById(access_token, db):
     with ThreadPoolExecutor(max_workers=max(1, os.cpu_count() - 4)) as executor:
-        # Submit tasks to the thread pool
         futures = [
             executor.submit(getEncounterByIdThread, encounterId, access_token)
             for encounterId in db.query(Encounter).all()
         ]
 
-        # Wait for all tasks to complete
         for future in futures:
             try:
-                future.result()  # This will raise exceptions if any occurred during thread execution
+                future.result()
             except Exception as e:
                 print(f"Error in thread: {e}")
 

@@ -178,20 +178,6 @@ export async function CoachesPage({
     });
   });
 
-  if (contactsReceive[0] !== undefined) {
-    // contactsReceive.map((contact) => ({
-    //   contactsList.filter((customer) => (
-    //     customer.customer_id.includes(contact.customer_id)
-    //   ))[0].message = contact.message,
-    //   contactsList.filter((customer) => (
-    //     customer.customer_id.includes(contact.customer_id)
-    //   ))[0].date = contact.date,
-    //   contactsList.filter((customer) => (
-    //     customer.customer_id.includes(contact.customer_id)
-    //   ))[0].senderId = contact.senderId
-    // }));
-  }
-
   let personalData: {
     id: number;
     name: string;

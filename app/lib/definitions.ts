@@ -48,6 +48,20 @@ export type MessageFormState =
   }
   | undefined;
 
+
+  export type NoteFormState =
+  | {
+    errors?: {
+      title: string,
+      content: string,
+      shared: boolean,
+      userId: number,
+      accessToken: string,
+    };
+    message?: string;
+  }
+  | undefined;
+
 export type SessionPayload = {
   accessToken: string;
   userId: number;
