@@ -1,6 +1,5 @@
 import asyncio
 
-from crud.notes.noteUpdate import updateNote
 from auth.autenticateUser import getAccessToken
 from crud.chat.chatGet import getChatData, getDataInChat
 from crud.chat.chatPost import sendChatData
@@ -17,6 +16,7 @@ from crud.encounters.encountersGet import getEncounterForCustomer
 from crud.events.eventsGet import getAllEventsPerEmployee, getListOfAllEvents
 from crud.notes.noteGet import getAllNotes
 from crud.notes.notePost import takeNote
+from crud.notes.noteUpdate import updateNote
 from crud.role.roleGet import getTheCurrentUserRole
 from crud.tips.tipsGet import getAllTips
 from database.database import get_db
