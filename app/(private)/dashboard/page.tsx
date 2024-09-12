@@ -13,8 +13,6 @@ export default async function Dashboard() {
   } = await verifySession();
   const userRole = session?.role;
 
-  console.log("userRole", userRole);
-
   switch (userRole) {
     case "admin":
       return <DashboardAdminPage accessToken={session.accessToken} userId={session.userId} />;

@@ -65,7 +65,7 @@ export function ChatUi({
         } md:block border-r`}
       >
         <div className="p-4">
-          <h2 className="text-xl font-semibold">Conversations</h2>
+          <h2 className="text-xl font-semibold">Chat</h2>
         </div>
         <nav className="p-2">
           {contacts.map((contact) => (

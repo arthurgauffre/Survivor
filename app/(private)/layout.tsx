@@ -47,8 +47,6 @@ export default async function PrivateLayout({
     work: string;
   } = await userData.json();
 
-  console.log("userInfo", userInfo);
-
   return (
     <main>
       <NavBar UserRole={userRole} UserImage={userImage} userInfo={userInfo} />

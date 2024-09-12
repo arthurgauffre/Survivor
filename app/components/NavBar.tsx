@@ -80,14 +80,18 @@ export default function AdminNavBar({
           </div>
         </PopoverGroup>
         <div className="hidden lg:flex lg:flex-1 lg:justify-end gap-3">
-          {/* NOTE */}
-          <a href="note" className="h-8 w-8">
-            <PencilSquareIcon />
-          </a>
-          {/* CHAT */}
-          <a href="chat" className="h-8 w-8">
-            <ChatBubbleLeftEllipsisIcon />
-          </a>
+          {UserRole !== "admin" && (
+            <>
+              {/* NOTE */}
+              <a href="note" className="h-8 w-8">
+                <PencilSquareIcon />
+              </a>
+              {/* CHAT */}
+              <a href="chat" className="h-8 w-8">
+                <ChatBubbleLeftEllipsisIcon />
+              </a>
+            </>
+          )}
           {/* LANGUAGE */}
           <img alt="" src={language} className="h-8 w-8 rounded-full" />
           {/* PROFILE */}
@@ -185,14 +189,18 @@ export default function AdminNavBar({
                       </div>
                     </div>
                     <div className="ml-auto flex gap-3">
-                      {/* NOTE */}
-                      <a href="note" className="h-8 w-8">
-                        <PencilSquareIcon />
-                      </a>
-                      {/* CHAT */}
-                      <a href="chat" className="h-8 w-8">
-                        <ChatBubbleLeftEllipsisIcon />
-                      </a>
+                      {UserRole !== "admin" && (
+                        <>
+                          {/* NOTE */}
+                          <a href="note" className="h-8 w-8">
+                            <PencilSquareIcon />
+                          </a>
+                          {/* CHAT */}
+                          <a href="chat" className="h-8 w-8">
+                            <ChatBubbleLeftEllipsisIcon />
+                          </a>
+                        </>
+                      )}
                       {/* LANGUAGE */}
                       <img
                         alt=""

@@ -49,7 +49,7 @@ export type MessageFormState =
   | undefined;
 
 
-  export type NewNoteFormState =
+  export type NoteFormState =
   | {
     errors?: {
       title: string,

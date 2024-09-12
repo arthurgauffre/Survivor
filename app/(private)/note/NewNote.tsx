@@ -1,12 +1,12 @@
 "use server";
 
-import { NewNoteFormState } from "@/app/lib/definitions";
+import { NoteFormState } from "@/app/lib/definitions";
 import { redirect } from "next/navigation";
 
 export async function NewNote(
-  state: NewNoteFormState,
+  state: NoteFormState,
   formData: FormData
-): Promise<NewNoteFormState> {
+): Promise<NoteFormState> {
 
   const accessToken: string = formData.get("accessToken") as string;
 

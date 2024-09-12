@@ -41,7 +41,6 @@ export default function CoachesTable({
   let littletext = "You have total of " + coaches.length + " coaches";
   const router = useRouter();
 
-  console.log(coaches[0].customer_list);
   return (
     <SpawnHeadband
       title="Coaches"
