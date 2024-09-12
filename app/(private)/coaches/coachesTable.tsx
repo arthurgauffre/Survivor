@@ -13,8 +13,6 @@ import {
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
 import { MenuButton, Menu, MenuItem, MenuItems } from "@headlessui/react";
-import { number } from "zod";
-import { useState } from "react";
 
 const ActionsActions = [
   { name: "Edit", href: "coaches", class: "" },
@@ -43,6 +41,7 @@ export default function CoachesTable({
   let littletext = "You have total of " + coaches.length + " coaches";
   const router = useRouter();
 
+  console.log(coaches[0].customer_list);
   return (
     <SpawnHeadband
       title="Coaches"
