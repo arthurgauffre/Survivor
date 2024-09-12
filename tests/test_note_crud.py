@@ -4,11 +4,13 @@ from fastapi import HTTPException, Request
 import pytest
 from api.crud.notes.noteGet import getAllNotes
 from api.crud.notes.notePost import takeNote
+from api.crud.notes.noteUpdate import updateNote
 from api.crud.user.userGet import User
 from api.crud.customers.customerGet import Customer
 from api.crud.employees.employeesGet import Employee
 from api.crud.notes.noteGet import Note, EmployeeCustomer
-from api.schemas.noteSchemas import InsertNoteSchema, ReturnGetNoteSchema
+from api.schemas.noteSchemas import (InsertNoteSchema, NoteBaseSchema,
+                                     ReturnGetNoteSchema)
 
 
 db_mock = MagicMock()
@@ -156,3 +158,41 @@ def test_get_all_notes_valid_auth_header_user_not_found():
         result = getAllNotes(req=req_mock, db=db_mock)
 
         assert result is None
+
+
+def test_update_note_success():
+    db_mock = MagicMock()
+
+    note_id = 1
+    note = Note(id=note_id, title="Old Title", content="Old Content", shared=False)
+
+    db_mock.query.return_value.filter.return_value.first.return_value = note
+
+    updated_note = NoteBaseSchema(title="New Title", content="New Content", shared=True)
+
+    result = updateNote(noteObject=updated_note, noteId=note_id, db=db_mock)
+
+    db_mock.query.return_value.filter.return_value.update.assert_called_once_with(
+        {"title": "New Title", "content": "New Content", "shared": True}
+    )
+
+    db_mock.commit.assert_called_once()
+
+    assert result == {"message": "Note updated successfully"}
+
+
+def test_update_note_not_found():
+    db_mock = MagicMock()
+
+    db_mock.query.return_value.filter.return_value.first.return_value = None
+
+    updated_note = NoteBaseSchema(title="New Title", content="New Content", shared=True)
+    note_id = 1
+
+    with pytest.raises(HTTPException) as exc_info:
+        updateNote(noteObject=updated_note, noteId=note_id, db=db_mock)
+
+    assert exc_info.value.status_code == 404
+    assert exc_info.value.detail == "Note not found"
+
+    db_mock.commit.assert_not_called()
