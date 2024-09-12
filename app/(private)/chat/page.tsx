@@ -32,99 +32,72 @@ export async function CustomerPage({
   accessToken: string;
   userId: number;
 }) {
-  const contactData = await customFetch(
-    "http://fastapi:8000/api/chat",
-    accessToken
-  );
-
   const userData = await customFetch(
-    "http://fastapi:8000/api/customers" + userId,
+    "http://fastapi:8000/api/customers/" + userId,
     accessToken
   );
-  const user = userData.json();
-
-  const contactsReceive: {
-    customer_id: number;
-    employee_id: number;
-    message: string;
-    date: string;
-    senderId: number;
-  }[] = await contactData.json();
-
-  let contactsList: {
-    contact_id: number;
-    message: string;
-    date: string;
-    senderId: number;
-  }[] = [];
-  if (contactsReceive[0] !== undefined) {
-    contactsList = contactsReceive.map((contact) => ({
-      contact_id: contact.employee_id,
-      message: contact.message,
-      date: contact.date,
-      senderId: contact.senderId,
-    }));
-  } else {
-    // contactsList = {
-    //   contact_id: user,
-    //   message: undefined,
-    //   date: undefined,
-    //   senderId: undefined,
-    // };
-  }
-
-  let personalData: {
+  const user: {
     id: number;
+    email: string;
     name: string;
-    image: string;
-  }[] = [];
+    surname: string;
+    birthdate: string;
+    gender: string;
+    description: string;
+    astrologicalSign: string;
+    phone_number: string;
+    address: string;
+    linkedCoach: number;
+  } = await userData.json();
 
-  for (const contact of contactsList) {
-    let contactSum: {
-      id: number;
-      name: string;
-      image: string;
-    };
-    const contactData = await customFetch(
-      `http://fastapi:8000/api/employees/${contact.contact_id}`,
-      accessToken
-    );
-    const contactInfo = await contactData.json();
-    const imageData = await customFetch(
-      `http://fastapi:8000/api/employees/${contact.contact_id}/image`,
-      accessToken
-    );
-    const image = await imageData.json();
+  const contactData = await customFetch(
+    `http://fastapi:8000/api/employees/${user.linkedCoach}`,
+    accessToken
+  );
+  const contactInfo: {
+    id: number;
+    email: string;
+    name: string;
+    surname: string;
+    birthdate: string;
+    gender: string;
+    work: string;
+    customer_list: number[];
+  } = await contactData.json();
 
-    contactSum = {
-      id: contact.contact_id,
-      name: contactInfo.name,
-      image: image,
-    };
-    personalData.push(contactSum);
-  }
+  const imageData = await customFetch(
+    `http://fastapi:8000/api/employees/${user.linkedCoach}/image`,
+    accessToken
+  );
+  const image: string = await imageData.json();
+
 
   const contacts: {
     contact_id: number;
-    message: string;
-    date: string;
-    senderId: number;
+    message: string | undefined;
+    date: string | undefined;
+    senderId: number | undefined;
     name: string;
     image: string;
-  }[] = contactsList.map((contact) => ({
-    contact_id: contact.contact_id,
-    message: contact.message,
-    date: contact.date,
-    senderId: contact.senderId,
-    name:
-      personalData.find((personal) => personal.id === contact.contact_id)
-        ?.name || "",
-    image:
-      personalData.find((personal) => personal.id === contact.contact_id)
-        ?.image || "",
-  }));
+  }[] = [
+    {
+      contact_id: user.linkedCoach,
+      message: undefined,
+      date: undefined,
+      senderId: undefined,
+      name: contactInfo.name + " " + contactInfo.surname,
+      image: image,
+    },
+  ];
 
-  return <ChatUi contacts={contacts} accessToken={accessToken} userId={userId} role="customer" />;
+  return (
+    <ChatUi
+      contacts={contacts}
+      accessToken={accessToken}
+      userId={userId}
+      role="customer"
+    />
+  );
 }
 
 export async function CoachesPage({
@@ -240,5 +213,12 @@ export async function CoachesPage({
         ?.image || "Image",
   }));
 
-  return <ChatUi contacts={contacts} accessToken={accessToken} userId={userId} role="coaches" />;
+  return (
+    <ChatUi
+      contacts={contacts}
+      accessToken={accessToken}
+      userId={userId}
+      role="coaches"
+    />
+  );
 }
