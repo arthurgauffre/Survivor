@@ -1,6 +1,6 @@
 import asyncio
 
-import jwt
+from crud.notes.noteUpdate import updateNote
 from auth.autenticateUser import getAccessToken
 from crud.chat.chatGet import getChatData, getDataInChat
 from crud.chat.chatPost import sendChatData
@@ -17,9 +17,9 @@ from crud.encounters.encountersGet import getEncounterForCustomer
 from crud.events.eventsGet import getAllEventsPerEmployee, getListOfAllEvents
 from crud.notes.noteGet import getAllNotes
 from crud.notes.notePost import takeNote
+from crud.role.roleGet import getTheCurrentUserRole
 from crud.tips.tipsGet import getAllTips
 from database.database import get_db
-from database.tableRelationships import Customer, Employee, User
 from fastapi import APIRouter, Body, Depends, Request
 from fastapi.security import OAuth2PasswordBearer
 from fastapi.staticfiles import StaticFiles
@@ -32,7 +32,7 @@ from schemas.customerSchemas import (CustomerBasicSchema,
 from schemas.employeeSchemas import EmployeePersonalInfoSchema
 from schemas.encounterSchemas import EncounterByCustomerSchema
 from schemas.eventsSchemas import EmployeeEventsSchema
-from schemas.noteSchemas import InsertNoteSchema, ReturnGetNoteSchema
+from schemas.noteSchemas import InsertNoteSchema, NoteBaseSchema
 from schemas.paymentsHistorySchemas import PaymentHistorySchema
 from schemas.tipsSchemas import AllTipsSchema
 from schemas.tokenSchemas import Token
@@ -97,7 +97,7 @@ def loginForAccessToken(
 @router.get("/api/encounters/customer/{customer_id}",
             response_model=list[EncounterByCustomerSchema],
             tags=["encounters"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getEmployeesEncounter(customer_id: int, db: Session = Depends(
         get_db)) -> list[EncounterByCustomerSchema]:
     return getEncounterForCustomer(db, customer_id)
@@ -105,7 +105,7 @@ def getEmployeesEncounter(customer_id: int, db: Session = Depends(
 
 @router.get("/api/customers/", response_model=list[CustomerBasicSchema],
             tags=["customers"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getCustomers(db: Session = Depends(get_db)) -> list[
         CustomerBasicSchema]:
     return getAllRealCustomers(db)
@@ -114,7 +114,7 @@ def getCustomers(db: Session = Depends(get_db)) -> list[
 @router.get("/api/customers/{customer_id}",
             response_model=CustomerWithCoachSchema,
             tags=["customers"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getCustomer(customer_id: int, db: Session = Depends(get_db)
                 ) -> CustomerWithCoachSchema:
     return getACustomer(db, customer_id)
@@ -122,7 +122,7 @@ def getCustomer(customer_id: int, db: Session = Depends(get_db)
 
 @router.get("/api/customers/{customer_id}/image",
             tags=["customers"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getCustomerImg(customer_id: int,
                    db: Session = Depends(get_db)) -> str | None:
     return getCurrentCustomerImg(db, customer_id)
@@ -130,7 +130,7 @@ def getCustomerImg(customer_id: int,
 
 @router.get("/api/employees/", response_model=list[EmployeePersonalInfoSchema],
             tags=["employees"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getEmployees(db: Session = Depends(get_db)) -> list[
         EmployeePersonalInfoSchema]:
     return getAllRealEmployees(db)
@@ -139,7 +139,7 @@ def getEmployees(db: Session = Depends(get_db)) -> list[
 @router.get("/api/customers/{customer_id}/payement_history",
             response_model=list[PaymentHistorySchema],
             tags=["customers"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getCustomerPayment(customer_id: int,
                        db: Session = Depends(get_db)) -> list[
                            PaymentHistorySchema]:
@@ -149,7 +149,7 @@ def getCustomerPayment(customer_id: int,
 @router.get("/api/employees/{employee_id}",
             response_model=EmployeePersonalInfoSchema,
             tags=["employees"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getAnEmployeeInfos(employee_id: int, db: Session = Depends(
         get_db)) -> EmployeePersonalInfoSchema:
     return getAnEmployeePersonalInfos(db, employee_id)
@@ -157,7 +157,7 @@ def getAnEmployeeInfos(employee_id: int, db: Session = Depends(
 
 @router.get("/api/employees/{employee_id}/image",
             tags=["employees"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getTheCurrentEmployeeImg(employee_id: int, db: Session = Depends(
         get_db)) -> str | None:
     return getCurrentEmployeeImg(db, employee_id)
@@ -165,35 +165,35 @@ def getTheCurrentEmployeeImg(employee_id: int, db: Session = Depends(
 
 @router.get("/api/clothes",
             tags=["clothes"], response_model=list[ClothesAllSchema],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getClothes(db: Session = Depends(get_db)) -> list[ClothesAllSchema]:
     return getAllClothesImgs(db)
 
 
 @router.get("/api/customers/{customer_id}/clothes/hat",
             tags=["clothes"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getGivenCustomerHat(customer_id: int, db: Session = Depends(get_db)):
     return getAllHatFromAUser(db, customer_id)
 
 
 @router.get("/api/customers/{customer_id}/clothes/top",
             tags=["clothes"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getGivenCustomerTop(customer_id: int, db: Session = Depends(get_db)):
     return getAllTopFromAUser(db, customer_id)
 
 
 @router.get("/api/customers/{customer_id}/clothes/bottom",
             tags=["clothes"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getGivenCustomerBottom(customer_id: int, db: Session = Depends(get_db)):
     return getAllBottomFromAUser(db, customer_id)
 
 
 @router.get("/api/customers/{customer_id}/clothes/shoes",
             tags=["clothes"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getGivenCustomerShoes(customer_id: int, db: Session = Depends(get_db)):
     return getAllShoesFromAUser(db, customer_id)
 
@@ -201,7 +201,7 @@ def getGivenCustomerShoes(customer_id: int, db: Session = Depends(get_db)):
 @router.get("/api/events/",
             tags=["events"],
             response_model=list[EmployeeEventsSchema],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getAllEvents(db: Session = Depends(get_db)):
     return getListOfAllEvents(db)
 
@@ -209,7 +209,7 @@ def getAllEvents(db: Session = Depends(get_db)):
 @router.get("/api/events/{employee_id}",
             tags=["events"],
             response_model=list[EmployeeEventsSchema],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getEmployeeEvents(employee_id: int, db: Session = Depends(get_db)):
     return getAllEventsPerEmployee(db, employee_id)
 
@@ -217,14 +217,14 @@ def getEmployeeEvents(employee_id: int, db: Session = Depends(get_db)):
 @router.get("/api/tips",
             tags=["tips"],
             response_model=list[AllTipsSchema],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getTips(db: Session = Depends(get_db)) -> list[AllTipsSchema]:
     return getAllTips(db)
 
 
 @router.post("/api/chat",
              tags=["chat"],
-             )
+             dependencies=[Depends(oauth2_scheme)])
 def chatWithEmployee(chatData: SendChatDataSchema,
                      db: Session = Depends(get_db)):
     return sendChatData(chatData, db)
@@ -233,7 +233,7 @@ def chatWithEmployee(chatData: SendChatDataSchema,
 @router.get("/api/chat/{user_id}",
             tags=["chat"],
             response_model=list[ChatMessagesSchema],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getAllChatData(user_id: int,
                    db: Session = Depends(get_db)
                    ) -> list[ChatMessagesSchema]:
@@ -243,7 +243,7 @@ def getAllChatData(user_id: int,
 @router.get("/api/chat/",
             tags=["chat"],
             response_model=list[ChatDataSchema],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getChatWithEmployee(req: Request,
                         db: Session = Depends(get_db)) -> list[ChatDataSchema]:
     return getChatData(req, db)
@@ -251,15 +251,24 @@ def getChatWithEmployee(req: Request,
 
 @router.post("/api/note/",
              tags=["note"],
-             )
+             dependencies=[Depends(oauth2_scheme)])
 def postNoteInfos(noteObject: InsertNoteSchema,
                   db: Session = Depends(get_db)):
     return takeNote(noteObject, db)
 
 
+@router.put("/api/note/{note_id}",
+            tags=["note"],
+            dependencies=[Depends(oauth2_scheme)])
+def putNoteInfos(noteObject: NoteBaseSchema,
+                 noteId: int,
+                 db: Session = Depends(get_db)):
+    return updateNote(noteObject, noteId, db)
+
+
 @router.get("/api/note/",
             tags=["note"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getNoteInfos(req: Request,
                  db: Session = Depends(get_db)):
     return getAllNotes(req, db)
@@ -267,30 +276,6 @@ def getNoteInfos(req: Request,
 
 @router.get("/api/role",
             tags=["role"],
-            )
+            dependencies=[Depends(oauth2_scheme)])
 def getRole(req: Request, db: Session = Depends(get_db)):
-    newHeader = req.headers.get("authorization")
-    email = None
-    user = None
-    customer = None
-    employee = None
-    if newHeader:
-        newHeader = newHeader.split(" ")[1]
-        decoded = jwt.decode(newHeader, options={"verify_signature": False})
-        email = decoded["sub"]
-    if email is not None:
-        user = db.query(User).filter(
-            User.email == email).first()
-    if user is not None:
-        employee = db.query(Employee).filter(
-            Employee.user_id == user.id).first()
-        customer = db.query(Customer).filter(
-            Customer.user_id == user.id).first()
-
-    if customer is not None:
-        return {"role": "customer", "id": customer.user_id}
-    elif employee is not None:
-        if employee.work == "Coach":
-            return {"role": employee.work, "id": employee.user_id}
-        else:
-            return {"role": "Admin", "id": employee.user_id}
+    return getTheCurrentUserRole(req, db)

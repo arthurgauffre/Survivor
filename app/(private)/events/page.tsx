@@ -11,18 +11,19 @@ export default async function ResponsiveCalendarMap() {
   const userRole = session?.role;
   const accessToken: string = session?.accessToken;
   let data;
+  let client;
 
   switch (userRole) {
     case "admin":
-      data = await customFetch("http://fastapi:8000/api/events/" + session.userId, accessToken);
+      data = await customFetch("http://fastapi:8000/api/events/", accessToken);
       break;
     case "customer":
       data = await customFetch("http://fastapi:8000/api/customers/" + session.userId, accessToken);
-      let client = await data.json();
+      client = await data.json();
       data = await customFetch("http://fastapi:8000/api/events/" + client.linkedCoach, accessToken);
       break;
     case "coach":
-      data = await customFetch("http://fastapi:8000/api/events/" + session.userId, accessToken);
+      data = await customFetch("http://fastapi:8000/api/events/", accessToken);
       break;
     default:
       redirect("/login");

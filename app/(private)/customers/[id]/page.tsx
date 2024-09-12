@@ -13,7 +13,6 @@ import SpawnHeadband from "@/app/components/SpawnHeadband";
 import { verifySession } from "@/app/lib/session";
 import { redirect } from "next/navigation";
 import { customFetch } from "@/app/components/customFetch";
-import { number, string } from "zod";
 
 export default async function Page({params}: {readonly params: {id: string}}) {
   const session: { isAuth: boolean; userId: number; role: string, accessToken: string } =
@@ -33,11 +32,7 @@ export default async function Page({params}: {readonly params: {id: string}}) {
   }
 }
 
-export async function PaymentHistoryPage({ params, accessToken, userId }: { params: { id: string }, accessToken: string, userId: number }): Promise<JSX.Element> {
-  // let customersData = await fetch(
-  //   "http://localhost:3000/api/customers/" + params.id
-  // );
-  // let customers = await customersData.json();
+export async function PaymentHistoryPage({ params, accessToken, userId }: { readonly params: { id: string }, readonly accessToken: string, readonly userId: number }): Promise<JSX.Element> {
   let customer: {
     id: number,
     email: string,
@@ -119,10 +114,6 @@ export async function PaymentHistoryPage({ params, accessToken, userId }: { para
   } catch (e) {
     picture = "";
   }
-  // let eventsData = await fetch(
-  //   "http://localhost:3000/api/encounters/customer/" + params.id
-  // );
-  // let events = await eventsData.json();
   return (
     <SpawnHeadband
       title={"Customer Profile"}
@@ -148,7 +139,6 @@ export async function PaymentHistoryPage({ params, accessToken, userId }: { para
               className="rounded-full"
             />
             <p className="mt-2">{customer.name} {customer.surname}</p>
-            {/* Added margin-top to separate text from the image */}
           </div>
 
           <div className="border-b flex flex-auto justify-center p-2 gap-2">

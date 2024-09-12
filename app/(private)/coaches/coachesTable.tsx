@@ -13,8 +13,6 @@ import {
   EllipsisHorizontalIcon,
 } from "@heroicons/react/20/solid";
 import { MenuButton, Menu, MenuItem, MenuItems } from "@headlessui/react";
-import { number } from "zod";
-import { useState } from "react";
 
 const ActionsActions = [
   { name: "Edit", href: "coaches", class: "" },
@@ -32,8 +30,8 @@ export default function CoachesTable({
     surname: string;
     birthdate: string;
     gender: string;
-    description: string;
-    astrologicalSign: string;
+    work: string;
+    customer_list: number[];
   }[];
   readonly CoachImages: {
     id: number;
@@ -43,6 +41,7 @@ export default function CoachesTable({
   let littletext = "You have total of " + coaches.length + " coaches";
   const router = useRouter();
 
+  console.log(coaches[0].customer_list);
   return (
     <SpawnHeadband
       title="Coaches"
@@ -87,7 +86,7 @@ export default function CoachesTable({
                   </th>
                   <th>Coach</th>
                   <th>Email</th>
-                  <th>Phone</th>
+                  <th>Gender</th>
                   <th>Number of customers</th>
                   <th align="right" className="pr-4">
                     Actions
@@ -121,12 +120,12 @@ export default function CoachesTable({
                       {person.email}
                     </td>
                     <td>
-                      <span className="cell-header">Phone:</span>
+                      <span className="cell-header">Gender:</span>
                       {person.gender}
                     </td>
                     <td>
                       <span className="cell-header">Number of customers:</span>
-                      {person.birthdate}
+                      {person.customer_list.length}
                     </td>
                     <td align="right" className="pr-6">
                       <span className="cell-header">Actions:</span>
