@@ -1,7 +1,5 @@
 "use server";
 
-import { resolve } from "path";
-
 export async function UpdateNote({
   accessToken,
   note,
@@ -14,14 +12,8 @@ export async function UpdateNote({
     id: number;
   };
 }) {
-  console.log({
-    title: note.title,
-    content: note.content,
-    shared: Boolean(note.shared),
-  });
-  console.log(accessToken);
 
-  const response = await fetch("http://fastapi:8000/api/note/" + note.id.toString(), {
+  const response = await fetch("http://fastapi:8000/api/note/note?noteId=" + note.id.toString(), {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
