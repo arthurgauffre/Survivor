@@ -11,7 +11,7 @@ class CustomerBasicSchema(BaseModel):
     description: str | None
     astrologicalSign: str | None
     phone_number: str | None
-    address: str  | None
+    address: str | None
 
 
 class CustomerWithCoachSchema(CustomerBasicSchema):
