@@ -22,17 +22,17 @@ export default async function Page({params}: {readonly params: {id: string}}) {
 
   switch (userRole) {
     case "admin":
-      return <PaymentHistoryPage params={params} accessToken={accessToken} userId={session.userId} />;
+      return <PaymentHistoryPage params={params} accessToken={accessToken} userId={session.userId} userRole={session.role} />;
     case "customer":
       redirect("/dashboard");
     case "coach":
-      return <PaymentHistoryPage params={params} accessToken={accessToken} userId={session.userId} />;
+      return <PaymentHistoryPage params={params} accessToken={accessToken} userId={session.userId} userRole={session.role} />;
     default:
       redirect("/login");
   }
 }
 
-export async function PaymentHistoryPage({ params, accessToken, userId }: { readonly params: { id: string }, readonly accessToken: string, readonly userId: number }): Promise<JSX.Element> {
+export async function PaymentHistoryPage({ params, accessToken, userId, userRole }: { readonly params: { id: string }, readonly accessToken: string, readonly userId: number, userRole: string }): Promise<JSX.Element> {
   let customer: {
     id: number,
     email: string,
@@ -83,7 +83,7 @@ export async function PaymentHistoryPage({ params, accessToken, userId }: { read
     customer = await customerData.json();
   }
   catch (e) {}
-  if (userId != customer.linkedCoach) {
+  if (userRole != "admin" && userId != customer.linkedCoach) {
     redirect("/customers");
   }
   try {
