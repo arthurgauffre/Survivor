@@ -17,7 +17,6 @@ db_mock = MagicMock()
 
 
 def test_take_note_user_exists():
-    # Define sample data
     note_object = InsertNoteSchema(
         title="Sample Note",
         content="This is a sample note",
@@ -28,7 +27,6 @@ def test_take_note_user_exists():
     user = User(id=1)
     db_mock.query.return_value.filter.return_value.first.return_value = user
 
-    # Mock methods for adding and committing the note
     db_mock.add = MagicMock()
     db_mock.commit = MagicMock()
 
@@ -40,15 +38,13 @@ def test_take_note_user_exists():
 
 
 def test_take_note_user_not_found():
-    # Define sample data
     note_object = InsertNoteSchema(
         title="Sample Note",
         content="This is a sample note",
         shared=True,
-        userId=999  # Non-existent user ID
+        userId=999
     )
 
-    # Mock the query to return None for user
     db_mock.query.return_value.filter.return_value.first.return_value = None
 
     with pytest.raises(HTTPException) as exc_info:
@@ -59,7 +55,6 @@ def test_take_note_user_not_found():
 
 
 def test_get_all_notes_no_auth_header():
-    # Mock the request without an authorization header
     req_mock = MagicMock(Request)
     req_mock.headers.get.return_value = None
 
@@ -69,17 +64,14 @@ def test_get_all_notes_no_auth_header():
 
 
 def test_get_all_notes_valid_auth_header_user_exists_employee():
-    # Mock a valid request with an authorization header
     req_mock = MagicMock(Request)
     auth_header = "Bearer some_jwt_token"
     req_mock.headers.get.return_value = auth_header
 
-    # Mock JWT decoding
     decoded_token = {"sub": "test@example.com"}
     with patch("jwt.decode", return_value=decoded_token):
         email = decoded_token["sub"]
 
-        # Mock database queries
         user = User(id=1, email=email)
         employee = Employee(id=1, user_id=user.id)
         customer = Customer(id=1, user_id=user.id)
@@ -90,7 +82,7 @@ def test_get_all_notes_valid_auth_header_user_exists_employee():
             user_id=customer.user_id
         )]
 
-        db_mock.query.return_value.filter.return_value.first.side_effect = [user, employee, customer, customer]  # 4 calls
+        db_mock.query.return_value.filter.return_value.first.side_effect = [user, employee, customer, customer]
         db_mock.query.return_value.filter.return_value.all.side_effect = [all_related_customers, notes]
 
         result = getAllNotes(req=req_mock, db=db_mock)
@@ -106,17 +98,14 @@ def test_get_all_notes_valid_auth_header_user_exists_employee():
 
 
 def test_get_all_notes_valid_auth_header_user_exists_customer():
-    # Mock a valid request with an authorization header
     req_mock = MagicMock(Request)
     auth_header = "Bearer some_jwt_token"
     req_mock.headers.get.return_value = auth_header
 
-    # Mock JWT decoding
     decoded_token = {"sub": "test@example.com"}
     with patch("jwt.decode", return_value=decoded_token):
         email = decoded_token["sub"]
 
-#         # Mock database queries
         user = User(id=1, email=email)
         customer = Customer(id=1, user_id=user.id)
         notes = [Note(
@@ -141,12 +130,10 @@ def test_get_all_notes_valid_auth_header_user_exists_customer():
 
 
 def test_get_all_notes_valid_auth_header_user_not_found():
-    # Mock a valid request with an authorization header
     req_mock = MagicMock(Request)
     auth_header = "Bearer some_jwt_token"
     req_mock.headers.get.return_value = auth_header
 
-    # Mock JWT decoding
     decoded_token = {"sub": "test@example.com"}
     with patch("jwt.decode", return_value=decoded_token):
         email = decoded_token["sub"]

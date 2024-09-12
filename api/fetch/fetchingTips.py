@@ -32,18 +32,15 @@ def fetchingAllTips(access_token, database):
         access_token = loginToken()
         fetchingAllTips(access_token, database)
 
-    # Parse JSON response and create Customer instances
     tips_data = response.json()
 
     for tip_data in tips_data:
-        # Create a new Customer object
         tip = Tips(
             id=tip_data.get('id'),
             title=tip_data.get('title'),
             tip=tip_data.get('tip')
         )
 
-        # Add the new customer to the customers table
         if not database.query(Tips).filter(
                 Tips.id == tip.id).first():
             database.add(tip)
