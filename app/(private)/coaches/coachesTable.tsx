@@ -35,7 +35,7 @@ export default function CoachesTable({
   }[];
   readonly CoachImages: {
     id: number;
-    image_url: string
+    image_url: string;
   }[];
 }): JSX.Element {
   let littletext = "You have total of " + coaches.length + " coaches";
