@@ -43,3 +43,62 @@ cp .env.example .env
     source .venv/bin/activate
     npm run fastapi-dev
     ```
+
+## Preview
+
+### Login
+
+![login](./image/login.png)
+
+### Dashboard
+
+![dashboard](./image/dashboard.png)
+
+### Tips
+
+![tips](./image/tips.png)
+
+### Events
+
+Events
+![events](./image/events.png)
+Maps
+![events-map](./image/events-map.png)
+
+### Coach
+
+List
+![coaches-list](./image/coaches-list.png)
+Profile
+![coach-profile](./image/coach-profile.png)
+
+### Customer
+
+List
+![customers-list](./image/customers-list.png)
+Profile
+![customer-profile](./image/customer-profile.png)
+
+### Clothes
+
+![clothes](./image/clothes.png)
+
+### Compatibility
+
+![compatibility](./image/compatibility.png)
+
+### Chat
+
+Selection
+![chat](./image/chat.png)
+
+Conversation
+![chat-conversation](./image/chat-conversation.png)
+
+### note
+
+Selection
+![note](./image/note.png)
+
+Conversation
+![note-selection](./image/note-selection.png)
